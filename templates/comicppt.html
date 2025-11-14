@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EpicVerse Comic Viewer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Inter&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(120deg,#ff2222 90%,brown);
+      color: white;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .comic-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      justify-content: center;
+      position: relative;
+      background-repeat: no-repeat;
+    }
+
+    .comic-viewer {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      max-width: 95vw;
+      height: 90vh;
+    }
+
+    .comic-images {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 2px; 
+  height: 100%;
+  width: 100%;
+  padding: 5px;
+}
+
+
+.comic-images img {
+  flex: 1;
+  height: 100%;
+  width: 50%;
+  object-fit: contain;
+  background-color: #ffffff;
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3), 2px 2px 0 #000;
+  border: 2px solid #000;
+  transform: scale(1) rotate(0deg);
+  transition: transform 0.5s ease, opacity 0.5s ease;
+  opacity: 0;
+}
+.comic-images img.show {
+  opacity: 1;
+  transform: scale(1.02) rotate(-1deg);
+}
+
+
+
+    .nav-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.5);
+      border: 2px solid #a19e92;
+      color: #ffffff;
+      font-size: 28px;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s;
+      z-index: 3;
+      box-shadow: 0 0 8px rgba(251, 188, 5, 0.4);
+    }
+
+    .nav-button:hover {
+      background: #fbbc05;
+      color: #ffffff;
+      box-shadow: 0 0 15px #fbbc05;
+    }
+
+    .nav-left {
+      left: 20px;
+    }
+
+    .nav-right {
+      right: 20px;
+    }
+
+    .slide-indicator {
+      font-size: 16px;
+      color: #434343;
+      margin-top: 19px;
+    }
+    .back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #ffffff;
+  padding: 10px 18px;
+  border-radius: 30px;
+  font-size: 16px;
+  text-decoration: none;
+  font-weight: 500;
+  z-index: 10;
+  border: 2px solid #fbbc05;
+  box-shadow: 0 0 8px rgba(251, 188, 5, 0.4);
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #fbbc055a;
+  color: #000;
+  box-shadow: 0 0 15px #fbbc05;
+}
+
+
+    @media (max-width: 768px) {
+      .comic-images {
+        flex-direction: column;
+        height: 90%;
+      }
+
+      .comic-images img {
+        width: 100%;
+        height: 45%;
+        object-fit: contain;
+      }
+
+      .nav-left {
+        left: 10px;
+      }
+
+      .nav-right {
+        right: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a href="../templates/sahasamhomepage.html" class="back-button">
+  <i class="fas fa-arrow-left"></i> Back
+</a>
+
+
+  <main class="comic-container">
+    <div class="comic-viewer">
+      <button class="nav-button nav-left" onclick="prevSlide()">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+
+      <div class="comic-images">
+        <img id="image1" src="../static/comicppt/slides/scn1.jpg" alt="Comic Part 1" />
+        <img id="image2" src="../static/comicppt/scn2.jpg" alt="Comic Part 2" />
+      </div>
+
+      <button class="nav-button nav-right" onclick="nextSlide()">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <div class="slide-indicator" id="slideIndicator">Slide 1 of 14</div>
+  </main>
+
+  <script>
+    const totalScenes = 26;
+    const totalSlides = Math.ceil(totalScenes / 2);
+    let currentSlide = 1;
+
+    const image1 = document.getElementById('image1');
+    const image2 = document.getElementById('image2');
+    const slideIndicator = document.getElementById('slideIndicator');
+    const explaination={
+  scn1: "A phone screen lights up with a notification: 'KTU S8 result published.'",
+  scn2: "Our main character opens the result, eyes wide in shock.",
+  scn3: "His father, furious, scolds him for failing the semester.",
+  scn4: "Alone on his bed, the main character cries silently, overwhelmed by shame.",
+  scn5: "With two suitcases in hand and a bag on his back, he runs away from home.",
+  scn6: "On a moving train, the Ticket Examiner confronts him. He doesn't have a ticket.",
+  scn7: "He is kicked off the train, tumbling onto the ground as the train speeds away.",
+  scn8: "His two suitcases are left behind on the train—only his bag remains with him.",
+  scn9: "He sits alone on a bench at a quiet, unfamiliar station.",
+  scn10: "A butterfly gently flutters toward him and lands nearby.",
+  scn11: "Drawn by wonder, he follows the butterfly past trees and tracks.",
+  scn12: "Suddenly, he slips on a tree root while running.",
+  scn13: "He falls hard, dirt and leaves clinging to his clothes.",
+  scn14: "Something shiny catches his eye on the ground beneath him.",
+  scn15: "He digs through the earth and uncovers a mysterious golden head.",
+  scn16: "His curiosity grows as he notices a small button on the golden head.",
+  scn17: "He presses the button without hesitation.",
+  scn18: "In an instant, he vanishes—leaving only his bag behind.",
+  scn19: "Night slowly blankets the area in darkness.",
+  scn20: "A new day dawns. Sunlight filters through the forest canopy.",
+  scn21: "Our main character wakes up in the heart of a dense forest.",
+  scn22: "He stands and looks around, confused but alert.",
+  scn23: "A large shadow suddenly falls over him.",
+  scn24: "Babu Antony appears before him in a powerful, heroic pose.",
+  scn25: "With a strong grip, Babu Antony helps him to his feet.",
+  scn26: "The MC stares at Babu Antony, eyes filled with admiration and awe."
+};
+    function updateSlide() {
+  const scene1 = (currentSlide - 1) * 2 + 1;
+  const scene2 = scene1 + 1;
+
+  image1.classList.remove('show');
+  image2.classList.remove('show');
+
+  image1.alt = `Comic Scene ${scene1}: ${explaination['scn'+scene1]}`;
+  image1.title=explaination['scn'+scene1];
+  //image1.style.display = 'block';
+  
+  setTimeout(()=>{image1.src = `../static/comicppt/slides/scn${scene1}.jpg`;},400);
+  setTimeout(() => {
+    //image1.style.opacity = 0;
+    image1.classList.add('show');
+  }, 500);
+
+  if (scene2 <= totalScenes) {
+    image2.alt = `Comic Scene ${scene2}: ${explaination['scn'+scene2]}`;
+    image2.title=explaination['scn'+scene2];
+    //image2.style.display = 'block';
+    
+    // ⏱️ Delay second image reveal by 1 second
+  setTimeout(()=>{image2.src = `../static/comicppt/slides/scn${scene2}.jpg`;},500);
+    //image2.src = `/static/comicppt/slides/scn${scene2}.jpg`;
+    setTimeout(() => {
+      //image2.style.opacity = 0;
+      image2.classList.add('show');
+    }, 800);
+  } else {
+    image2.style.display = 'none';
+  }
+
+  slideIndicator.textContent = `Slide ${currentSlide} of ${totalSlides}`;
+}
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+    document.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowLeft") prevSlide();
+  if (e.key === "ArrowRight") nextSlide();
+});
+
+    updateSlide(); // Load initial slide
+  </script>
+
+</body>
+<style>
+         .msg-bar {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: 90%;
+  padding: 10px 20px;
+  margin: 0 auto;
+  border-radius: 7px;
+  font-size: 1.02rem;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 500;
+  opacity: 1;
+  transition: background 0.3s, color 0.3s;
+  z-index: 9999;
+  animation: slideup 0.3s ease-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+    .msg-bar.error {
+      background: #ffebee;
+      color: #b71c1c;
+      border: 1.5px solid #e57373;
+    }
+    .msg-bar.success {
+      background: #e8f5e9;
+      color: #1b5e20;
+      border: 1.5px solid #81c784;
+    }
+    .msg-bar.info {
+      background: #e3f2fd;
+      color: #01579b;
+      border: 1.5px solid #64b5f6;
+    }
+   @keyframes slideup {
+  0% {
+    transform: translate(-50%, -20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+    </style>
+    <script>
+function showMsgBar(msg="An error",type="error",d=2000){
+    const div=document.createElement("div");
+    div.className='msg-bar ' + type;
+    div.innerText=msg;
+    document.body.appendChild(div);
+    setTimeout(()=>{div.remove()},d);
+
+}
+document.addEventListener("contextmenu", e =>{ e.preventDefault();showMsgBar("Can't do Right Click", "error");});
+document.addEventListener("keydown", e => {
+  if (
+    e.key === "F12" ||
+    (e.ctrlKey && e.shiftKey && ['I', 'J', 'C', 'K'].includes(e.key)) ||
+    (e.ctrlKey && e.key === 'U') || (e.ctrlKey && e.key === 'u')
+  ) {
+    e.preventDefault();
+    showMsgBar("Nokkanda, kittoola", "error");
+  }
+});
+console.log("Uff U R BRILLIANT");
+console.log("Trying to send your location and Ip Address...");
+setTimeout(()=>{console.log("Your location and Ip Address are Sent successfully...");},2500);
+    </script>
+</html>

@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../static/logo/favicon2.png">
+
+  <title>Ancient Spin Wheel</title>
+  <!-- Add Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=MedievalSharp&family=Quicksand:wght@700&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    body {
+      min-height: 100vh;
+      min-width: 100vw;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  
+      background-size: 30px;
+      position: relative;
+      font-family: 'Cinzel', serif;
+    }
+    
+    /* Decorative border around the wheel */
+    .wooden-frame {
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%238d5524"/><path d="M0,0 L100,100 M100,0 L0,100" stroke="%23c68642" stroke-width="0.5" opacity="0.3"/></svg>');
+      background-size: 30px;
+      border: 12px solid #8d5524;
+      border-radius: 50%;
+      padding: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,0,0,0.3);
+      position: relative;
+      max-width: 90vmin;
+    }
+    
+    .spin-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .wheel-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    #wheel {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      box-sizing: border-box;
+      background: 
+        conic-gradient(
+          #8d5524 0% 25%, #c68642 25% 50%, #e0ac69 50% 75%, #a47551 75% 100%
+        );
+      box-shadow: 0 0 0 12px #8d5524 inset, 0 0 0 18px #c68642 inset;
+      position: relative;
+      transition: transform 4s cubic-bezier(.17,.67,.83,.67);
+      z-index: 1;
+      border: 8px solid #5d3b1e;
+    }
+    
+    /* Ancient-style pointer */
+    .pointer {
+      width: 0; 
+      height: 0; 
+      border-left: 28px solid transparent;
+      border-right: 28px solid transparent;
+      border-bottom: none;
+      border-top: 60px solid #8d5524;
+      transform: translateX(-50%) rotate(180deg);
+      position: absolute;
+      bottom: -50px;
+      left: 50%;
+      z-index: 3;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+    }
+    
+    .pointer:before {
+      content: '';
+      position: absolute;
+      width: 10px;
+      height: 30px;
+      background: #d4af37;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 50% 50% 0 0;
+    }
+    
+    .pointer:after {
+      content: '';
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #d4af37;
+      top: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      box-shadow: 0 0 8px #ffd700;
+    }
+    
+    #spinBtn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90px;
+      height: 90px;
+      font-size: 22px;
+      background: radial-gradient(circle at 30% 30%, #d4af37, #a47551);
+      color: #fff;
+      border: 6px solid #8d5524;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5), inset 0 2px 8px rgba(255,215,0,0.6);
+      z-index: 2;
+      font-weight: bold;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cinzel', serif;
+      text-shadow: 0 1px 3px #000;
+      transition: all 0.3s;
+    }
+    
+    #spinBtn:hover {
+      transform: translate(-50%, -50%) scale(1.05);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.6), inset 0 3px 10px rgba(255,215,0,0.8);
+    }
+    
+    #spinBtn:active {
+      transform: translate(-50%, -50%) scale(0.98);
+    }
+    
+    #spinBtn:disabled {
+      background: radial-gradient(circle at 30% 30%, #aaa, #888);
+      cursor: not-allowed;
+      color: #ddd;
+      border-color: #666;
+      transform: translate(-50%, -50%);
+    }
+    
+    #result {
+      display: none;
+    }
+    
+    #popup {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(3px);
+    }
+    
+    #popup .popup-content {
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23f7f3e9"/><path d="M0,0 L100,100 M100,0 L0,100" stroke="%23e8d9c5" stroke-width="0.5"/></svg>');
+      background-size: 30px;
+      border: 6px solid #8d5524;
+      border-radius: 12px;
+      padding: 40px 50px 50px 50px;
+      min-width: 240px;
+      min-height: 80px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      font-size: 26px;
+      font-weight: bold;
+      color: #5d3b1e;
+      text-align: center;
+      animation: popIn 0.4s cubic-bezier(.17,.67,.83,.67);
+      font-family: 'Cinzel', serif;
+      max-width: 80%;
+      text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+    }
+    
+    #popup .popup-content:before {
+      content: '';
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      border: 2px solid #c68642;
+      border-radius: 8px;
+      pointer-events: none;
+    }
+    
+    #popup .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      background: #d4af37;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      font-size: 22px;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      transition: all 0.2s;
+      font-family: 'MedievalSharp', cursive;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    
+    #popup .close-btn:hover {
+      background: #c68642;
+      transform: scale(1.1);
+    }
+    
+    @keyframes popIn {
+      0% { transform: scale(0.7); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    /* Ancient decorative elements */
+    .decoration {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background: #d4af37;
+      border: 4px solid #8d5524;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #5d3b1e;
+      font-size: 24px;
+      font-weight: bold;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      z-index: 0;
+    }
+    
+    
+    
+    
+    
+    /* Mobile responsiveness */
+    @media (max-width: 600px) {
+      .wooden-frame {
+        padding: 15px;
+        border-width: 10px;
+      }
+      
+      #spinBtn {
+        width: 70px;
+        height: 70px;
+        font-size: 18px;
+      }
+      
+      .pointer {
+        border-left: 20px solid transparent;
+        border-right: 20px solid transparent;
+        border-top: 45px solid #8d5524;
+        bottom: -40px;
+      }
+      
+      .pointer:before {
+        height: 5px;
+        top: -40px;
+      }
+      
+      .pointer:after {
+        width: 5px;
+        height: 5px;
+        top: -20px;
+      }
+      
+      #popup .popup-content {
+        padding: 30px 40px 40px 40px;
+        font-size: 22px;
+      }
+      
+      .decoration {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+      }
+      
+      .decoration.top-left {
+        top: -20px;
+        left: -20px;
+      }
+      
+      .decoration.top-right {
+        top: -20px;
+        right: -20px;
+      }
+      
+      .decoration.bottom-left {
+        bottom: -20px;
+        left: -20px;
+      }
+      
+      .decoration.bottom-right {
+        bottom: -20px;
+        right: -20px;
+      }
+    }
+    
+    @media (max-width: 400px) {
+      #spinBtn {
+        width: 60px;
+        height: 60px;
+        font-size: 16px;
+      }
+      
+      .pointer {
+        border-left: 16px solid transparent;
+        border-right: 16px solid transparent;
+        border-top: 32px solid #8d5524;
+        bottom: -32px;
+      }
+      
+      .pointer:before {
+        height: 16px;
+        top: -32px;
+      }
+      
+      .pointer:after {
+        width: 12px;
+        height: 12px;
+        top: -18px;
+      }
+      
+      #popup .popup-content {
+        padding: 25px 30px 35px 30px;
+        font-size: 20px;
+      }
+    }
+    
+    /* Title styling */
+    .title {
+      position: absolute;
+      top: 20px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-family: 'Cinzel', serif;
+      color: #5d3b1e;
+      font-size: 32px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+      letter-spacing: 3px;
+    }
+    
+    @media (max-width: 600px) {
+      .title {
+        font-size: 24px;
+        top: 10px;
+      }
+    }
+    /* Add this CSS to properly position the background image */
+  img[alt="Background-image"] {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1; /* Ensures it stays behind other content */
+  }
+  
+  /* This ensures other content stays above the background */
+  .wooden-frame, .spin-container, .wheel-wrapper {
+    position: relative;
+    z-index: 1;
+  }
+  </style>
+</head>
+<body>
+  <img src="../static/spin-wheel/junk.jpg" height="100%" width="100%" alt="Background-image" class="spin--container">
+<div></div>
+  
+  <div class="wooden-frame">
+    
+    
+    <div class="spin-container">
+      
+      <div class="wheel-wrapper">
+        <div class="pointer"></div>
+        <canvas id="wheel" width="400" height="400"></canvas>
+        <button id="spinBtn" disabled>SPIN</button>
+      </div>
+      <div id="result"></div>
+    </div>
+  </div>
+  
+  <div id="popup">
+    <div class="popup-content">
+      <button class="close-btn" id="closePopup">&times;</button>
+      <span id="popupMsg"></span>
+    </div>
+  </div>
+
+  <!-- Add audio elements for sound effects -->
+  <audio id="spinSound" src="../static/spin-wheel/spin.mp3"></audio>
+  <audio id="loseSound" src="../static/spin-wheel/lose.mp3"></audio>
+  <audio id="gainSound" src="../static/spin-wheel/gain.mp3"></audio>
+  <script>
+
+    let rewards = [
+      //{ label: "Extra Spin", probability: 0.18 },
+      //{ label: "Better Luck Next Time", probability: 0.41 },
+      
+];
+
+    //const token = localStorage.getItem('jwt_token');
+
+const spinBtn = document.getElementById('spinBtn');
+fetch('https://o2uwumlx27.execute-api.ap-south-1.amazonaws.com/t1/spinarjundasspin', {method: 'GET', headers:{'Content-Type':'application/json'}})
+.then(response => response.json())
+.then(coins => {
+  
+  
+  for(let i=0;i<coins.length;i++)
+  {
+    const coin={
+      label:`${Number(coins[i].coin_value)} ${Number(coins[i].coin_value)==1?'coin':'coins'}`,probability: Number(coins[i].probability)
+    }
+    
+    rewards.push(coin);
+    
+   setTimeout(()=>{ start();},1000);
+  }
+})
+.catch(error=>{
+  
+});
+
+let colors = [
+    "#f1c40f", "#e67e22", "#e74c3c", "#2ecc71",
+    "#3498db", "#9b59b6", "#1abc9c", "#34495e"
+  ];
+function getRandomHexColor() {
+  return `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}`;
+}
+
+  
+  
+function start(){
+  spinBtn.disabled=false;
+for(let i=0;i<rewards.length;i++)
+{
+  colors.push(getRandomHexColor());
+}
+
+
+    function pickRewardIndex() {
+      const rand = Math.random();
+      let acc = 0;
+      for (let i = 0; i < rewards.length; i++) {
+        acc += rewards[i].probability;
+        if (rand < acc) return i;
+      }
+      return rewards.length - 1;
+    }
+
+    let reward = null;
+    let spinning = false;
+    let highlightedSegmentIndex = null;
+    let canSpin = true; // Only allow one spin unless Extra Spin is won
+
+    const wheel = document.getElementById('wheel');
+    const ctx = wheel.getContext('2d');
+    const resultDiv = document.getElementById('result');
+    const popup = document.getElementById('popup');
+    const popupMsg = document.getElementById('popupMsg');
+    const closePopup = document.getElementById('closePopup');
+    const numSegments = rewards.length;
+    const arcSize = 2 * Math.PI / numSegments;
+
+    function drawWheel() {
+      ctx.clearRect(0, 0, 400, 400);
+      for (let i = 0; i < numSegments; i++) {
+        ctx.beginPath();
+        ctx.moveTo(200, 200);
+        ctx.arc(200, 200, 180, i * arcSize, (i + 1) * arcSize);
+        ctx.closePath();
+        ctx.fillStyle = colors[i % colors.length];
+        ctx.fill();
+
+        if (highlightedSegmentIndex === i) {
+          ctx.save();
+          ctx.lineWidth = 6;
+          ctx.strokeStyle = "#f39c12";
+          ctx.shadowColor = "#f1c40f";
+          ctx.shadowBlur = 10;
+          ctx.beginPath();
+          ctx.moveTo(200, 200);
+          ctx.arc(200, 200, 180, i * arcSize, (i + 1) * arcSize);
+          ctx.closePath();
+          ctx.stroke();
+          ctx.restore();
+        }
+        ctx.save();
+        ctx.translate(200, 200);
+        ctx.rotate(i * arcSize + arcSize / 2);
+        ctx.textAlign = "right";
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold 14px Arial";
+
+        // Handle multi-line for "Better Luck Next Time"
+        if (rewards[i].label === "Better Luck Next Time") {
+          ctx.font = "bold 16px Arial";
+          ctx.fillText("Better Luck", 160, 2);
+          ctx.fillText("Next Time", 160, 18);
+        } else {
+          ctx.fillText(rewards[i].label, 160, 10);
+        }
+        ctx.restore();
+      }
+    }
+    drawWheel();
+    function easeOutCubic(t) {
+      return 1 - Math.pow(1 - t, 3);
+    }
+
+    // Get audio elements
+    const spinSound = document.getElementById('spinSound');
+    const loseSound = document.getElementById('loseSound');
+    const gainSound = document.getElementById('gainSound');
+
+    spinBtn.onclick = function () {
+      if (spinning || !canSpin) return;
+      spinning = true;
+      spinBtn.disabled = true;
+
+      // Play spin sound
+      spinSound.currentTime = 0;
+      spinSound.play();
+
+      const selected = pickRewardIndex();
+      const spins = 5;
+      const finalAngle = (spins * 2 * Math.PI) + ((numSegments - selected - 0.5) * arcSize) + Math.PI / 2;
+      const duration = 4000;
+      const start = performance.now();
+
+      function animate(now) {
+        const elapsed = now - start;
+        const t = Math.min(elapsed / duration, 1);
+        const eased = easeOutCubic(t);
+        const currentAngle = finalAngle * eased;
+        wheel.style.transform = `rotate(${currentAngle}rad)`;
+        if (t < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          // Stop spin sound
+          spinSound.pause();
+          spinSound.currentTime = 0;
+
+          reward = rewards[selected].label;
+          highlightedSegmentIndex = selected;
+          drawWheel();
+          setTimeout(() => {
+            popupMsg.textContent = ` ${reward}!`;
+            popup.style.display = "flex";
+            spinning = false;
+            // Play result sound
+            if (reward === "Better Luck Next Time") {
+              loseSound.currentTime = 0;
+              loseSound.play();
+            } else {
+              gainSound.currentTime = 0;
+              gainSound.play();
+            }
+            // Allow respin only if Extra Spin is won
+            if (reward === "Extra Spin") {
+              canSpin = true;
+              spinBtn.disabled = false;
+            } else {
+              canSpin = false;
+            }
+            setTimeout(()=>{finishChallenge("bspin",reward)},2000);
+          }, 600);
+        }
+      }
+
+      wheel.style.transition = "none";
+      highlightedSegmentIndex = null;
+      drawWheel();
+      requestAnimationFrame(animate);
+    };
+
+    closePopup.onclick = function () {
+      popup.style.display = "none";
+      highlightedSegmentIndex = null;
+      drawWheel();
+      // Only enable button if Extra Spin was won
+    };}
+    function finishChallenge(text,value) {
+            // This is the most important part!
+            // We are sending a message to the PARENT window (our Phaser game).
+            // The message is a simple object. We can send any data we want.
+           //alert(value);
+            const result = {
+                challengeStatus: text,
+                score: value // You can send back points, items, etc.
+            };
+
+            // window.parent refers to the main page that holds the iframe.
+            // '*' is a wildcard for the origin. For security, you could replace it
+            // with your actual domain when you deploy the game.
+            window.parent.postMessage(result, '*');
+        }
+  </script>
+</body>
+<style>
+         .msg-bar {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: 90%;
+  padding: 10px 20px;
+  margin: 0 auto;
+  border-radius: 7px;
+  font-size: 1.02rem;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 500;
+  opacity: 1;
+  transition: background 0.3s, color 0.3s;
+  z-index: 9999;
+  animation: slideup 0.3s ease-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+    .msg-bar.error {
+      background: #ffebee;
+      color: #b71c1c;
+      border: 1.5px solid #e57373;
+    }
+    .msg-bar.success {
+      background: #e8f5e9;
+      color: #1b5e20;
+      border: 1.5px solid #81c784;
+    }
+    .msg-bar.info {
+      background: #e3f2fd;
+      color: #01579b;
+      border: 1.5px solid #64b5f6;
+    }
+   @keyframes slideup {
+  0% {
+    transform: translate(-50%, -20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+    </style>
+    <script>
+function showMsgBar(msg="An error",type="error",d=2000){
+    const div=document.createElement("div");
+    div.className='msg-bar ' + type;
+    div.innerText=msg;
+    document.body.appendChild(div);
+    setTimeout(()=>{div.remove()},d);
+
+}
+document.addEventListener("contextmenu", e =>{ e.preventDefault();showMsgBar("Can't do Right Click", "error");});
+document.addEventListener("keydown", e => {
+  if (
+    e.key === "F12" ||
+    (e.ctrlKey && e.shiftKey && ['I', 'J', 'C', 'K'].includes(e.key)) ||
+    (e.ctrlKey && e.key === 'U') || (e.ctrlKey && e.key === 'u')
+  ) {
+    e.preventDefault();
+    showMsgBar("Nokkanda, kittoola", "error");
+  }
+});
+console.log("Uff U R BRILLIANT");
+console.log("Trying to send your location and Ip Address...");
+setTimeout(()=>{console.log("Your location and Ip Address are Sent successfully...");},2500);
+    </script>
+</html>

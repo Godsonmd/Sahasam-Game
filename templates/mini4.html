@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta  charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../static/logo/favicon2.png">
+  <title>Sahasam Treasure Game</title>
+  <style> 
+   * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+  font-family: 'Segoe UI', sans-serif;
+  height: 100vh;           
+  overflow: hidden;       
+  display: flex;          
+  flex-direction: column; 
+  align-items: center;     
+  justify-content: center; 
+  position: relative;     
+}
+    .background-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('../static/Mini Games/liya/poster.jpg') no-repeat center center;
+  background-size: cover;
+  filter: brightness(0.2); 
+  z-index: -1;
+}
+
+    .landing-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 800px;
+      height: 100%;
+      text-align: center;
+    }
+
+    .movie-poster {
+      width: min(60vw, 300px);
+      height: auto;
+      margin-bottom: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .landing-title {
+      color: #e5b014;
+      font-size: clamp(28px, 8vw, 36px);
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    }
+
+    .landing-subtitle {
+      color: #ffffff;
+      font-size: clamp(16px, 4vw, 18px);
+      margin-bottom: 40px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    }
+
+    .start-game-btn {
+      padding: 15px 30px;
+      font-size: clamp(18px, 5vw, 20px);
+      font-weight: bold;
+      background: linear-gradient(45deg, #e5b014, #f0c419);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(229, 176, 20, 0.4);
+      text-transform: uppercase;
+      min-width: 150px;
+    }
+
+    .start-game-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(229, 176, 20, 0.6);
+    }
+
+   
+    .game-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 100vw;
+      height: 100vh;
+      padding: 10px;
+    }
+
+    .sahasam-logo {
+      width: min(50vw, 300px);
+      height: auto;
+      margin-bottom: clamp(10px, 3vh, 20px);
+    }
+
+    h1 {
+      margin-bottom: clamp(15px, 4vh, 30px);
+      color: #e5b014;
+      font-size: clamp(18px, 5vw, 24px);
+      text-align: center;
+    }
+
+    #timer {
+      font-size: clamp(16px, 4.5vw, 18px);
+      color: #e3342f;
+      font-weight: bold;
+      margin-bottom: clamp(15px, 4vh, 25px);
+      text-align: center;
+    }
+
+    #game-board {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: min(3vw, 15px);
+      justify-content: center;
+      margin-bottom: clamp(20px, 5vh, 30px);
+      width: min(90vw, 400px);
+      max-width: 400px;
+    }
+
+    .card {
+      width: 100%;
+      aspect-ratio: 1;
+      min-width: 60px;
+      max-width: 100px;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    .inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+
+    .card.flipped .inner {
+      transform: rotateY(180deg);
+    }
+
+    .front, .back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border: 2px solid #f0f0f0;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(18px, 5vw, 24px);
+      font-weight: bold;
+    }
+
+    .front {
+      background: #f59e0b;
+      color: transparent;
+    }
+
+    .back {
+      background: #1a1a1a;
+      color: white;
+      transform: rotateY(180deg);
+    }
+
+    #message {
+      font-size: clamp(16px, 4.5vw, 18px);
+      text-align: center;
+      font-weight: bold;
+      min-height: 25px;
+      color: #ffffff;
+    }
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .popup-content {
+      background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+      padding: clamp(20px, 6vh, 40px);
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+      border: 2px solid #e5b014;
+      max-width: 90vw;
+      width: min(400px, 90vw);
+    }
+
+    .popup-icon {
+      font-size: clamp(40px, 12vw, 60px);
+      margin-bottom: 20px;
+    }
+
+    .popup-title {
+      font-size: clamp(20px, 6vw, 28px);
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: #e5b014;
+    }
+
+    .popup-message {
+      font-size: clamp(14px, 4vw, 18px);
+      margin-bottom: 30px;
+      color: #ffffff;
+    }
+
+    .popup-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .popup-btn {
+      padding: 12px 20px;
+      font-size: clamp(14px, 4vw, 16px);
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 100px;
+    }
+
+    .play-again-btn {
+      background: linear-gradient(45deg, #10b981, #059669);
+      color: white;
+    }
+
+    .play-again-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+    }
+
+    .back-home-btn {
+      background: linear-gradient(45deg, #6b7280, #4b5563);
+      color: white;
+    }
+
+    .back-home-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(107, 114, 128, 0.4);
+    }
+
+    /* Win popup specific styles */
+    .popup-content.win {
+      border-color: #10b981;
+      background: linear-gradient(135deg, #064e3b, #065f46);
+    }
+
+    .popup-content.win .popup-icon {
+      color: #10b981;
+    }
+
+    .popup-content.win .popup-title {
+      color: #10b981;
+    }
+
+    /* Lose popup specific styles */
+    .popup-content.lose {
+      border-color: #ef4444;
+      background: linear-gradient(135deg, #7f1d1d, #991b1b);
+    }
+
+    .popup-content.lose .popup-icon {
+      color: #ef4444;
+    }
+
+    .popup-content.lose .popup-title {
+      color: #ef4444;
+    }
+
+   
+    
+    .progress-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: clamp(15px, 4vh, 20px);
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .progress-text {
+      color: #e5b014;
+      font-size: clamp(14px, 4vw, 18px);
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    .letter-progress {
+      display: flex;
+      gap: min(2vw, 8px);
+    }
+
+    .letter-slot {
+      width: min(8vw, 35px);
+      height: min(8vw, 35px);
+      min-width: 25px;
+      min-height: 25px;
+      border: 2px solid #e5b014;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(12px, 3.5vw, 16px);
+      font-weight: bold;
+      color: #666;
+      background: rgba(229, 176, 20, 0.1);
+      transition: all 0.5s ease;
+    }
+
+    .letter-slot.found {
+      background: linear-gradient(45deg, #10b981, #059669);
+      color: white;
+      border-color: #10b981;
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+    }
+
+    /* Animation Classes */
+    .shake {
+      animation: shake 0.6s ease-in-out;
+    }
+
+    .pulse-correct {
+      animation: pulseCorrect 0.8s ease-in-out;
+    }
+
+    .bounce-in {
+      animation: bounceIn 0.6s ease-out;
+    }
+
+    .glow-effect {
+      animation: glow 1s ease-in-out;
+    }
+
+    .celebration {
+      animation: celebration 1.5s ease-in-out;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+      20%, 40%, 60%, 80% { transform: translateX(8px); }
+    }
+
+    @keyframes pulseCorrect {
+      0% { transform: scale(1); box-shadow: 0 0 0 rgba(16, 185, 129, 0.7); }
+      50% { transform: scale(1.1); box-shadow: 0 0 20px rgba(16, 185, 129, 0.7); }
+      100% { transform: scale(1); box-shadow: 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    @keyframes bounceIn {
+      0% { transform: scale(0.3); opacity: 0; }
+      50% { transform: scale(1.05); }
+      70% { transform: scale(0.9); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 5px rgba(229, 176, 20, 0.5); }
+      50% { box-shadow: 0 0 25px rgba(229, 176, 20, 0.8), 0 0 35px rgba(229, 176, 20, 0.6); }
+    }
+
+    @keyframes celebration {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(-5deg) scale(1.05); }
+      50% { transform: rotate(5deg) scale(1.1); }
+      75% { transform: rotate(-3deg) scale(1.05); }
+    }
+
+    /* Particle Effects */
+    .particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: #e5b014;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: particle-float 1s ease-out forwards;
+    }
+
+    @keyframes particle-float {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-60px) scale(0);
+        opacity: 0;
+      }
+    }
+
+    /* Enhanced card states */
+    .card.correct {
+      animation: pulseCorrect 0.8s ease-in-out;
+    }
+
+    .card.wrong {
+      animation: shake 0.6s ease-in-out;
+    }
+
+    .card.found {
+      border: 2px solid #10b981;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+    }
+
+    /* Mobile-specific optimizations */
+    @media (max-width: 480px) {
+      body {
+        padding: 5px;
+      }
+
+      #game-board {
+        width: 95vw;
+        gap: 2vw;
+      }
+
+      .card {
+        min-width: 70px;
+      }
+
+      .popup-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .popup-btn {
+        width: 100%;
+        max-width: 200px;
+      }
+    }
+
+    /* Landscape orientation adjustments */
+    @media (orientation: landscape) and (max-height: 600px) {
+      .sahasam-logo {
+        width: min(25vh, 150px);
+        margin-bottom: 1vh;
+      }
+      
+      h1 {
+        font-size: clamp(16px, 3vh, 20px);
+        margin-bottom: 2vh;
+      }
+      
+      #timer {
+        margin-bottom: 2vh;
+        font-size: clamp(14px, 3vh, 16px);
+      }
+
+      .progress-container {
+        margin-bottom: 2vh;
+      }
+      
+      #game-board {
+        margin-bottom: 3vh;
+        width: min(60vh, 350px);
+      }
+
+      .movie-poster {
+        width: min(40vh, 200px);
+        margin-bottom: 3vh;
+      }
+
+      .landing-title {
+        font-size: clamp(20px, 5vh, 28px);
+        margin-bottom: 2vh;
+      }
+
+      .landing-subtitle {
+        font-size: clamp(14px, 3vh, 16px);
+        margin-bottom: 4vh;
+      }
+    }
+   body{
+    user-select: none;
+    -webkit-user-drag: none;
+   }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+<body>
+  <div class="background-overlay"></div>
+  
+  <!-- Landing Page -->
+  <div class="landing-page" id="landing-page">
+    <img src="../static/Mini Games/liya/sahasam.png" class="movie-poster" alt="Sahasam Movie Poster">
+    <h1 class="landing-title">LETTER GAME</h1>
+    <p class="landing-subtitle">Are you ready ?</p>
+    <button class="start-game-btn" onclick="startGameFromLanding()">Start </button>
+  </div>
+  
+  <!-- Game Container -->
+  <div class="game-container" id="game-container">
+    <img src="../static/Mini Games/liya/sahasam.png" class="sahasam-logo" alt="Sahasam Logo">
+    <h1>Find "SAHASAM"</h1>
+    <div id="timer">Time left: <span id="time">30</span>s</div>
+    
+    <!-- Progress Display -->
+    <div class="progress-container">
+      <div class="progress-text">Progress:</div>
+      <div class="letter-progress" id="letter-progress"></div>
+    </div>
+    
+    <div id="game-board"></div>
+    <div id="message"></div>
+  </div>
+
+  <!-- Popup Modal -->
+  <div class="popup-overlay" id="popup-overlay">
+    <div class="popup-content" id="popup-content">
+      <div class="popup-icon" id="popup-icon"></div>
+      <div class="popup-title" id="popup-title"></div>
+      <div class="popup-message" id="popup-message"></div>
+      <div class="popup-buttons" id="homebtndiv">
+        <button class="popup-btn play-again-btn" onclick="playAgain()">Play Again</button>
+        <button class="popup-btn back-home-btn"  onclick="backToHome()">Back to Home</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const TARGET = "SAHASAM";
+    let currentIndex = 0;
+    let timeLeft = 24;
+    let timer;
+    let clickable = true;
+
+    // Audio context for sound effects
+    let audioContext;
+    let clickSound, correctSound, wrongSound, winSound, loseSound;
+
+    // Initialize audio
+    function initAudio() {
+      try {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Create different sounds
+        clickSound = createBeepSound(800, 0.1, 0.3);
+        correctSound = createBeepSound(1200, 0.3, 0.5); // Higher pitch for correct
+        wrongSound = createBeepSound(300, 0.4, 0.4); // Lower pitch for wrong
+        winSound = createMelody([600, 800, 1000, 1200], 0.15, 0.6); // Victory melody
+        loseSound = createBeepSound(200, 0.8, 0.5);
+      } catch (e) {
+        console.log('Audio not supported');
+      }
+    }
+
+    function createBeepSound(frequency, duration, volume) {
+      return () => {
+        if (!audioContext) return;
+        
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.value = frequency;
+        oscillator.type = 'sine';
+        
+        gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+        gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + 0.01);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + duration);
+      };
+    }
+
+    function createMelody(frequencies, noteDuration, volume) {
+      return () => {
+        if (!audioContext) return;
+        
+        frequencies.forEach((freq, index) => {
+          setTimeout(() => {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = freq;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + 0.01);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + noteDuration);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + noteDuration);
+          }, index * noteDuration * 1000);
+        });
+      };
+    }
+
+    function playSound(sound) {
+      if (sound && audioContext && audioContext.state === 'running') {
+        sound();
+      }
+    }
+
+    // Create particle effect
+    function createParticles(element) {
+      const rect = element.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      for (let i = 0; i < 8; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = centerX + 'px';
+        particle.style.top = centerY + 'px';
+        particle.style.transform = `translate(-50%, -50%) rotate(${i * 45}deg) translateY(-20px)`;
+        
+        document.body.appendChild(particle);
+        
+        setTimeout(() => {
+          particle.remove();
+        }, 1000);
+      }
+    }
+
+    // Initialize progress display
+    function initProgressDisplay() {
+      const progressContainer = document.getElementById('letter-progress');
+      progressContainer.innerHTML = '';
+      
+      TARGET.split('').forEach((letter, index) => {
+        const slot = document.createElement('div');
+        slot.className = 'letter-slot';
+        slot.textContent = letter;
+        slot.id = `slot-${index}`;
+        progressContainer.appendChild(slot);
+      });
+    }
+
+    // Update progress display
+    function updateProgress(index) {
+      const slot = document.getElementById(`slot-${index}`);
+      if (slot) {
+        slot.classList.add('found', 'bounce-in');
+        createParticles(slot);
+      }
+    }
+
+    function startGameFromLanding() {
+      initAudio();
+      document.getElementById('landing-page').style.display = 'none';
+      document.getElementById('game-container').style.display = 'flex';
+      setTimeout(() => {
+        startGame();
+      }, 500);
+    }
+
+    function startGame() {
+      const board = document.getElementById("game-board");
+      const message = document.getElementById("message");
+      const timeDisplay = document.getElementById("time");
+
+      currentIndex = 0;
+      clickable = true;
+      timeLeft = 24;
+      clearInterval(timer);
+      timeDisplay.textContent = timeLeft;
+      message.textContent = "";
+      board.innerHTML = "";
+
+      // Initialize progress display
+      initProgressDisplay();
+
+      // Generate letters
+      const targetLetters = TARGET.split("");
+      const distractors = "BCDEFGIJKLMNOPQRTUVWXYZ".split("");
+      let allLetters = [...targetLetters];
+
+      while (allLetters.length < 12) {
+        let rand = distractors[Math.floor(Math.random() * distractors.length)];
+        allLetters.push(rand);
+      }
+
+      // Shuffle
+      allLetters = allLetters.sort(() => Math.random() - 0.5);
+
+      allLetters.forEach(letter => {
+        const card = document.createElement("div");
+        card.classList.add("card");
+
+        const inner = document.createElement("div");
+        inner.classList.add("inner");
+
+        const front = document.createElement("div");
+        front.classList.add("front");
+
+        const back = document.createElement("div");
+        back.classList.add("back");
+        back.textContent = letter;
+
+        inner.appendChild(front);
+        inner.appendChild(back);
+        card.appendChild(inner);
+
+        card.dataset.letter = letter;
+
+        card.addEventListener("click", () => {
+          if (!clickable || card.classList.contains("flipped")) return;
+
+          // Play click sound
+          playSound(clickSound);
+          
+          card.classList.add("flipped");
+
+          if (letter === TARGET[currentIndex]) {
+            // Correct letter found
+            setTimeout(() => {
+              playSound(correctSound);
+              card.classList.add("correct", "found", "glow-effect");
+              updateProgress(currentIndex);
+              currentIndex++;
+              
+              if (currentIndex === TARGET.length) {
+                // Add celebration animation to the game board
+                document.getElementById('game-board').classList.add('celebration');
+                setTimeout(() => {
+                  endGame(true);
+                }, 800);
+              }
+            }, 300);
+          } else {
+            // Wrong letter
+            setTimeout(() => {
+              playSound(wrongSound);
+              card.classList.add("wrong");
+              clickable = false;
+              
+              setTimeout(() => {
+                card.classList.remove("flipped", "wrong");
+                clickable = true;
+              }, 300);
+            }, 300);
+          }
+        });
+
+        board.appendChild(card);
+      });
+
+      timer = setInterval(() => {
+        timeLeft--;
+        timeDisplay.textContent = timeLeft;
+        
+        // Add warning color when time is running low
+        const timerElement = document.getElementById('timer');
+        if (timeLeft <= 5) {
+          timerElement.style.color = '#ef4444';
+          timerElement.classList.add('glow-effect');
+        } else if (timeLeft <= 10) {
+          timerElement.style.color = '#f59e0b';
+        }
+        
+        if (timeLeft <= 0) {
+          endGame(false);
+        }
+      }, 1000);
+    }
+
+    function endGame(win) {
+      clearInterval(timer);
+      clickable = false;
+      
+      // Play win or lose sound
+      setTimeout(() => {
+        if (win) {
+          playSound(winSound);
+        } else {
+          playSound(loseSound);
+        }
+      }, 500);
+      
+      // Show popup after a brief delay
+      setTimeout(() => {
+        showPopup(win);
+      }, 1000);
+    }
+
+    function showPopup(win) {
+      const overlay = document.getElementById('popup-overlay');
+      const content = document.getElementById('popup-content');
+      const icon = document.getElementById('popup-icon');
+      const title = document.getElementById('popup-title');
+      const message = document.getElementById('popup-message');
+
+      if (win) {
+        content.className = 'popup-content win';
+        icon.innerHTML = '<i class="fas fa-trophy"></i>'; 
+
+        title.textContent = 'VAULT UNLOCKED!';
+        message.textContent = 'Congratulations! You have successfully found all the letters and unlocked the treasure vault!';
+        document.getElementById("homebtndiv").style.display="none";
+        setTimeout(()=>{finishChallenge("completed",100)},2000);
+      } else {
+        content.className = 'popup-content lose';
+        icon.innerHTML = '<i class="fas fa-hourglass-end"></i>';
+        title.textContent = 'TIME\'S UP!';
+        message.textContent = 'The treasure remains locked! Your time has run out, but don\'t give up - try again!';
+      }
+
+      overlay.style.display = 'flex';
+    }
+
+    function playAgain() {
+      document.getElementById('popup-overlay').style.display = 'none';
+      
+      // Reset timer styling
+      const timerElement = document.getElementById('timer');
+      timerElement.style.color = '#e3342f';
+      timerElement.classList.remove('glow-effect');
+      
+      // Reset game board animation
+      document.getElementById('game-board').classList.remove('celebration');
+      
+      setTimeout(() => {
+        startGame();
+      }, 300);
+    }
+
+    function backToHome() {
+      document.getElementById('popup-overlay').style.display = 'none';
+      document.getElementById('game-container').style.display = 'none';
+      document.getElementById('landing-page').style.display = 'flex';
+      finishChallenge("failed",0);
+    }
+
+    // Initialize audio context on first user interaction
+    document.addEventListener('click', function initAudioOnFirstClick() {
+      if (!audioContext) {
+        initAudio();
+      }
+      document.removeEventListener('click', initAudioOnFirstClick);
+    }, { once: true });
+
+    // Start with landing page
+    window.onload = function() {
+      document.getElementById('landing-page').style.display = 'flex';
+    };
+    function finishChallenge(text,value) {
+            // This is the most important part!
+            // We are sending a message to the PARENT window (our Phaser game).
+            // The message is a simple object. We can send any data we want.
+            const result = {
+                challengeStatus: text,
+                score: value // You can send back points, items, etc.
+            };
+
+            // window.parent refers to the main page that holds the iframe.
+            // '*' is a wildcard for the origin. For security, you could replace it
+            // with your actual domain when you deploy the game.
+            window.parent.postMessage(result, '*');
+        }
+  </script>
+</body>
+<style>
+         .msg-bar {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: 90%;
+  padding: 10px 20px;
+  margin: 0 auto;
+  border-radius: 7px;
+  font-size: 1.02rem;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 500;
+  opacity: 1;
+  transition: background 0.3s, color 0.3s;
+  z-index: 9999;
+  animation: slideup 0.3s ease-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+    .msg-bar.error {
+      background: #ffebee;
+      color: #b71c1c;
+      border: 1.5px solid #e57373;
+    }
+    .msg-bar.success {
+      background: #e8f5e9;
+      color: #1b5e20;
+      border: 1.5px solid #81c784;
+    }
+    .msg-bar.info {
+      background: #e3f2fd;
+      color: #01579b;
+      border: 1.5px solid #64b5f6;
+    }
+   @keyframes slideup {
+  0% {
+    transform: translate(-50%, -20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+    </style>
+    <script>
+function showMsgBar(msg="An error",type="error",d=2000){
+    const div=document.createElement("div");
+    div.className='msg-bar ' + type;
+    div.innerText=msg;
+    document.body.appendChild(div);
+    setTimeout(()=>{div.remove()},d);
+
+}
+document.addEventListener("contextmenu", e =>{ e.preventDefault();showMsgBar("Can't do Right Click", "error");});
+document.addEventListener("keydown", e => {
+  if (
+    e.key === "F12" ||
+    (e.ctrlKey && e.shiftKey && ['I', 'J', 'C', 'K'].includes(e.key)) ||
+    (e.ctrlKey && e.key === 'U') || (e.ctrlKey && e.key === 'u')
+  ) {
+    e.preventDefault();
+    showMsgBar("Nokkanda, kittoola", "error");
+  }
+});
+console.log("Uff U R BRILLIANT");
+console.log("Trying to send your location and Ip Address...");
+setTimeout(()=>{console.log("Your location and Ip Address are Sent successfully...");},2500);
+    </script>
+</html>

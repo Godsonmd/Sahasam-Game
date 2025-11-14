@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Stone Paper Scissors</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Roboto:wght@400;500&display=swap');
+        
+        :root {
+            --deep-blue: #1A1B3A;
+            --deep-blue-2: #202249;
+            --bright-orange: #FF9C4A;
+            --bright-orange-2: #FFA94F;
+            --teal-blue: #3AC4FF;
+            --warm-beige: #F7C9A2;
+            --light-pink: #F5B8A4;
+            --soft-yellow: #FFD27D;
+            --dark-purple: #2E264D;
+            --white: #FFFFFF;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, var(--deep-blue), var(--deep-blue-2), var(--dark-purple), var(--teal-blue));
+            color: var(--white);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            zoom: 75%;
+            
+        }
+        body::-webkit-scrollbar{
+            display: none;
+        }
+        
+        h1, h2, h3 {
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 800px;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .title {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(58, 196, 255, 0.5);
+            animation: pulse 2s infinite;
+            background: linear-gradient(45deg, var(--teal-blue), var(--bright-orange), var(--soft-yellow));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            color: var(--light-pink);
+        }
+        
+        .game-area {
+            background: rgba(30, 31, 72, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(58, 196, 255, 0.2);
+        }
+        
+        .choices {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .choice {
+            background: rgba(58, 196, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(255, 156, 74, 0.3);
+        }
+        
+        .choice:hover {
+            transform: translateY(-10px) scale(1.1);
+            box-shadow: 0 10px 20px rgba(255, 156, 74, 0.3);
+            background: rgba(255, 156, 74, 0.2);
+        }
+        
+        .choice i {
+            font-size: 4rem;
+            color: var(--warm-beige);
+        }
+        
+        .choice::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 156, 74, 0.4) 0%, transparent 70%);
+            transform: scale(0);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+        
+        .choice:hover::before {
+            transform: scale(1);
+            opacity: 1;
+        }
+        
+        .vs {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 2rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            color: var(--bright-orange);
+        }
+        
+        .vs::before, .vs::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--teal-blue), transparent);
+            margin: 0 1rem;
+        }
+        
+        .result-area {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .player-box, .computer-box {
+            text-align: center;
+        }
+        
+        .player-name, .computer-name {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--light-pink);
+        }
+        
+        .player-choice, .computer-choice {
+            width: 150px;
+            height: 150px;
+            background: rgba(46, 38, 77, 0.5);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border: 2px solid var(--teal-blue);
+            margin: 0 auto;
+        }
+        
+        .player-choice i, .computer-choice i {
+            font-size: 5rem;
+            color: var(--warm-beige);
+        }
+        
+        .result-text {
+            font-size: 1.5rem;
+            margin: 1rem 0;
+            min-height: 2rem;
+            font-weight: 500;
+        }
+        
+        .score-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .score-card {
+            background: rgba(46, 38, 77, 0.7);
+            border-radius: 10px;
+            padding: 1rem;
+            min-width: 120px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            border: 1px solid var(--teal-blue);
+        }
+        
+        .score-card h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--light-pink);
+        }
+        
+        .score-value {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        
+        #player-score {
+            color: var(--teal-blue);
+        }
+        
+        #computer-score {
+            color: var(--bright-orange);
+        }
+        
+        .start-btn, .reset-btn ,.home-btn{
+            background: linear-gradient(45deg, var(--bright-orange), var(--bright-orange-2));
+            color: var(--deep-blue);
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(255, 156, 74, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .start-btn:hover, .reset-btn:hover,.home-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 156, 74, 0.4);
+        }
+        
+        .start-btn:active, .reset-btn:active,.home-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .start-btn::after, .reset-btn::after,.home-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 210, 125, 0.4) 0%, transparent 70%);
+            transform: scale(0);
+            opacity: 0;
+            transition: transform 0.5s, opacity 0.5s;
+        }
+        
+        .start-btn:hover::after, .reset-btn:hover::after,.home-btn:hover::after {
+            transform: scale(1);
+            opacity: 1;
+        }
+        
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: var(--bright-orange);
+            opacity: 0;
+            z-index: 10;
+            transform-origin: center bottom;
+        }
+        
+        .floating-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .shape {
+            position: absolute;
+            opacity: 0.5;
+            animation: float 15s infinite linear;
+            filter: drop-shadow(0 0 5px rgba(255, 156, 74, 0.5));
+        }
+        
+        .countdown {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 27, 58, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10rem;
+            color: var(--bright-orange);
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        
+        .countdown.show {
+            opacity: 1;
+        }
+        
+        .countdown i {
+            font-size: 15rem;
+            animation: pulse 1s infinite;
+            color: var(--warm-beige);
+        }
+        
+        .game-over {
+            position: absolute;
+            top: 300px;
+            left: 0;
+            width: 100%;
+            height: 60%;
+            background: rgba(26, 27, 58, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.5s ease;
+            backdrop-filter: blur(5px);
+            border: 1px solid var(--teal-blue);
+        }
+        
+        .game-over.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .game-over h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--bright-orange);
+            text-shadow: 0 0 10px rgba(255, 156, 74, 0.5);
+        }
+        
+        .game-over p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            max-width: 80%;
+            text-align: center;
+            color: var(--warm-beige);
+        }
+        
+        .victory-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-10px);
+            }
+            75% {
+                transform: translateX(10px);
+            }
+        }
+        
+        @keyframes zoomIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        @keyframes pulse-glow {
+            0% {
+                box-shadow: 0 0 5px var(--teal-blue);
+            }
+            50% {
+                box-shadow: 0 0 20px var(--teal-blue);
+            }
+            100% {
+                box-shadow: 0 0 5px var(--teal-blue);
+            }
+        }
+        
+        @keyframes confetti-pop {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(0);
+                opacity: 1;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg) scale(1);
+                opacity: 0;
+            }
+        }
+        
+        .bounce {
+            animation: bounce 0.5s ease;
+        }
+        
+        .shake {
+            animation: shake 0.5s ease;
+        }
+        
+        .highlight {
+            animation: pulse 1s infinite;
+        }
+        
+        .zoom-in {
+            animation: zoomIn 1s ease-out;
+        }
+        
+        .glow {
+            animation: pulse-glow 2s infinite;
+        }
+        
+        @media (max-width: 600px) {
+            .title {
+                font-size: 2rem;
+            }
+            
+            .choices {
+                flex-direction: row;
+                align-items: center;
+            }
+            
+            .choice {
+                margin-bottom: 1rem;
+                width: 80px;
+                height: 80px;
+            }
+            
+            .choice i {
+                font-size: 3rem;
+            }
+            
+            .result-area {
+                flex-direction: row;
+                gap: 1rem;
+            }
+            
+            .player-choice, .computer-choice {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .countdown {
+                font-size: 6rem;
+            }
+            
+            .countdown i {
+                font-size: 10rem;
+            }
+            
+            .score-container {
+                flex-direction: row;
+                align-items: center;
+                gap: 0.5rem;
+            }
+        }
+        
+        .player-choice img, .computer-choice img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 20px;
+        }
+        
+        .choice img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            display: none;
+        }
+        
+        .choice i {
+            display: block;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        /* New cosmic background elements */
+        .cosmic-particle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--teal-blue), transparent 70%);
+            filter: blur(1px);
+            animation: float 20s infinite linear;
+        }
+        
+        .cosmic-ray {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--bright-orange), transparent);
+            transform-origin: left center;
+            animation: ray-glow 3s infinite alternate;
+        }
+        
+        @keyframes ray-glow {
+            0% {
+                opacity: 0.3;
+                transform: scaleX(0.5);
+            }
+            100% {
+                opacity: 0.8;
+                transform: scaleX(1);
+            }
+        }
+        
+        .cosmic-orb {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--bright-orange), transparent 70%);
+            filter: blur(5px);
+            animation: pulse 4s infinite ease-in-out;
+        }
+        .mute-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: transparent;
+    border: none;
+    color: var(--warm-beige);
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 100;
+    transition: all 0.3s ease;
+}
+
+.mute-btn:hover {
+    transform: scale(1.1);
+    color: var(--bright-orange);
+}
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="floating-shapes" id="floating-shapes"></div>
+    <div class="victory-animation" id="victory-animation"></div>
+    
+    <div class="container">
+        <h1 class="title">Stone Paper Scissors</h1>
+        <p class="subtitle">First to score 10 points wins the match!</p>
+        
+        <div class="game-area">
+            <div class="score-container">
+                <div class="score-card">
+                    <h3>You</h3>
+                    <div class="score-value" id="player-score">0</div>
+                </div>
+                <div class="score-card">
+                    <h3>Ai</h3>
+                    <div class="score-value" id="computer-score">0</div>
+                </div>
+            </div>
+            <div class="result-area">
+                <div class="player-box">
+                    <div class="player-name">You</div>
+                    <div class="player-choice">
+                        <i class="fas fa-question"></i>
+                    </div>
+                </div>
+                
+                <div class="computer-box">
+                    <div class="computer-name">Computer</div>
+                    <div class="computer-choice">
+                        <i class="fas fa-question"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="vs">VS</div>
+            
+            <div class="choices">
+                <div class="choice" data-choice="stone">
+                    <i class="fas fa-hand-rock"></i>
+                    <img class="hidden" src="../static/Mini Games/stone/left-stone.gif">
+                </div>
+                <div class="choice" data-choice="paper">
+                    <i class="fas fa-hand-paper"></i>
+                    <img class="hidden" src="../static/Mini Games/stone/left-papper.gif">
+                </div>
+                <div class="choice" data-choice="scissors">
+                    <i class="fas fa-hand-scissors"></i>
+                    <img class="hidden" src="../static/Mini Games/stone/left kathrika.gif">
+                </div>
+            </div>
+            
+            <div class="result-text"></div>
+            
+            <button class="start-btn">Start Game</button>
+            <button class="reset-btn">Reset</button>
+            <button class="home-btn" onclick="finishChallenge('failed',0)">Back to Game</button>
+        </div>
+        
+        <div class="game-over">
+            <h2>Game Over!</h2>
+            <p id="final-result">You won the game! </p>
+            <button class="reset-btn">Play Again</button>
+            <button class="home-btn" onclick="finishChallenge('failed',0)">Back to Game</button>
+        </div>
+        
+        <div class="countdown" id="countdown"></div>
+    </div>
+    <button id="mute-btn" class="mute-btn">
+    <i class="fas fa-volume-up"></i>
+</button>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // DOM Elements
+            const choices = document.querySelectorAll('.choice');
+            const playerChoiceDisplay = document.querySelector('.player-choice');
+            const computerChoiceDisplay = document.querySelector('.computer-choice');
+            const resultText = document.querySelector('.result-text');
+            const playerScoreDisplay = document.getElementById('player-score');
+            const computerScoreDisplay = document.getElementById('computer-score');
+            const startBtn = document.querySelector('.start-btn');
+            const resetBtns = document.querySelectorAll('.reset-btn');
+            const gameOverScreen = document.querySelector('.game-over');
+            const finalResultText = document.getElementById('final-result');
+            const floatingShapes = document.getElementById('floating-shapes');
+            const countdownElement = document.getElementById('countdown');
+            const victoryAnimation = document.getElementById('victory-animation');
+            const playerHistory = document.getElementById('player-history');
+            const computerHistory = document.getElementById('computer-history');
+            const floatingHands = document.getElementById('floating-hands');
+                        
+            // Game variables
+            let playerScore = 0;
+            let computerScore = 0;
+            let gameActive = false;
+            let gameEnded = false;
+            let countdownInterval;
+            
+                  // Add this near the top where other variables are defined
+const playerImages = {
+    stone: '../static/Mini Games/stone/left-stone.gif',
+    paper: '../static/Mini Games/stone/left-papper.gif',
+    scissors: '../static/Mini Games/stone/left kathrika.gif'
+};  
+
+            // Create cosmic background
+            createCosmicBackground();
+
+             
+            
+            // Start game
+            startBtn.addEventListener('click', startCountdown);
+        
+            
+            // Reset game
+            resetBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    resetGame();
+                    if (countdownInterval) {
+                        clearInterval(countdownInterval);
+                        countdownElement.classList.remove('show');
+                    }
+                });
+            });
+            
+            // Player choice
+            choices.forEach(choice => {
+                choice.addEventListener('click', () => {
+                    if (!gameActive || gameEnded) return;
+                    
+                    const playerChoice = choice.getAttribute('data-choice');
+                    const playerImageSource = playerImages[playerChoice];
+                    playRound(playerChoice,playerImageSource);
+                });
+            });
+             // Create image elements for player and computer displays
+            const playerImage = document.createElement('img');
+            playerImage.style.width = '100%';
+            playerImage.style.height = '100%';
+            playerImage.style.objectFit = 'contain';
+            
+            const computerImage = document.createElement('img');
+            computerImage.style.width = '100%';
+            computerImage.style.height = '100%';
+            computerImage.style.objectFit = 'contain';
+
+            // Replace the icon displays with image elements
+            playerChoiceDisplay.innerHTML = '';
+            playerChoiceDisplay.appendChild(playerImage);
+            
+            computerChoiceDisplay.innerHTML = '';
+            computerChoiceDisplay.appendChild(computerImage);
+            
+            // Image sources for computer choices
+            const computerImages = {
+                stone: '../static/Mini Games/stone/right stone.gif',
+                paper: '../static/Mini Games/stone/right papper.gif',
+                scissors: '../static/Mini Games/stone/right kathrika.gif'
+            };
+
+            function createCosmicBackground() {
+                // Create cosmic particles
+                for (let i = 0; i < 50; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('cosmic-particle');
+                    
+                    const size = Math.random() * 5 + 1;
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    particle.style.left = `${Math.random() * 100}%`;
+                    particle.style.top = `${Math.random() * 100}%`;
+                    particle.style.opacity = Math.random() * 0.5 + 0.1;
+                    particle.style.animationDuration = `${Math.random() * 30 + 20}s`;
+                    particle.style.animationDelay = `${Math.random() * 5}s`;
+                    
+                    // Random color
+                    const colors = [
+                        'rgba(58, 196, 255, 0.7)', // teal
+                        'rgba(255, 156, 74, 0.7)', // orange
+                        'rgba(255, 210, 125, 0.7)', // yellow
+                        'rgba(247, 201, 162, 0.7)' // beige
+                    ];
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    particle.style.background = `radial-gradient(circle, ${color}, transparent 70%)`;
+                    
+                    floatingShapes.appendChild(particle);
+                }
+                
+                // Create cosmic rays
+                for (let i = 0; i < 10; i++) {
+                    const ray = document.createElement('div');
+                    ray.classList.add('cosmic-ray');
+                    
+                    const length = Math.random() * 200 + 100;
+                    ray.style.width = `${length}px`;
+                    ray.style.left = `${Math.random() * 100}%`;
+                    ray.style.top = `${Math.random() * 100}%`;
+                    ray.style.transform = `rotate(${Math.random() * 360}deg)`;
+                    ray.style.opacity = Math.random() * 0.3 + 0.1;
+                    ray.style.animationDelay = `${Math.random() * 3}s`;
+                    
+                    floatingShapes.appendChild(ray);
+                }
+                
+                // Create cosmic orbs
+                for (let i = 0; i < 5; i++) {
+                    const orb = document.createElement('div');
+                    orb.classList.add('cosmic-orb');
+                    
+                    const size = Math.random() * 100 + 50;
+                    orb.style.width = `${size}px`;
+                    orb.style.height = `${size}px`;
+                    orb.style.left = `${Math.random() * 100}%`;
+                    orb.style.top = `${Math.random() * 100}%`;
+                    orb.style.opacity = Math.random() * 0.2 + 0.1;
+                    orb.style.animationDuration = `${Math.random() * 5 + 3}s`;
+                    
+                    floatingShapes.appendChild(orb);
+                }
+            }
+            
+            function startCountdown() {
+    if (gameActive) return;
+    
+    startBtn.disabled = true;
+    let count = 3; // Start directly at 3 instead of 4
+    
+    const handIcon = document.createElement('i');
+    handIcon.classList.add('fas');
+    countdownElement.innerHTML = '';
+    countdownElement.appendChild(handIcon);
+    
+    // Show the first count immediately
+    handIcon.textContent = '👌🏻'; // 3 fingers (OK sign emoji)
+    countdownElement.classList.add('show', 'zoom-in');
+    
+    countdownInterval = setInterval(() => {
+        count--;
+        
+        if (count > 0) {
+             sounds.countdown.currentTime = 0;
+            sounds.countdown.play();
+            switch(count) {
+                case 2:
+                    handIcon.textContent = '';
+                    handIcon.className = 'fas fa-hand-peace';
+                    break;
+                case 1:
+                    handIcon.textContent = '';
+                    handIcon.className = 'fas fa-hand-point-up';
+                    break;
+            }
+            
+            countdownElement.classList.remove('zoom-in');
+            void countdownElement.offsetWidth;
+            countdownElement.classList.add('zoom-in');
+        } else {
+            clearInterval(countdownInterval);
+            handIcon.className = 'fas fa-hand-rock';
+            countdownElement.classList.remove('zoom-in');
+            void countdownElement.offsetWidth;
+            countdownElement.classList.add('zoom-in');
+            sounds.countdown.currentTime = 0;
+            sounds.countdown.play();
+            setTimeout(() => {
+                countdownElement.classList.remove('show');
+                startGame();
+            }, 1000);
+        }
+    }, 700);
+}
+    
+            function startGame() {
+                gameActive = true;
+                gameEnded = false;
+                startBtn.textContent = 'Game Running...';
+                startBtn.style.background = 'linear-gradient(45deg, var(--teal-blue), var(--bright-orange))';
+                startBtn.disabled = false;
+                
+                victoryAnimation.classList.remove('show');
+            }
+            
+            function playRound(playerChoice,playerImageSource) {
+                if (!gameActive || gameEnded) return;
+                switch(playerChoice) {
+        case 'stone':
+            sounds.stone.currentTime = 0;
+            sounds.stone.play();
+            break;
+        case 'paper':
+            sounds.paper.currentTime = 0;
+            sounds.paper.play();
+            break;
+        case 'scissors':
+            sounds.scissors.currentTime = 0;
+            sounds.scissors.play();
+            break;
+    }
+               
+
+
+    
+                // Computer choice
+                const choices = ['stone', 'paper', 'scissors'];
+                const computerChoice = choices[Math.floor(Math.random() * 3)];
+                const computerImageSource = computerImages[computerChoice];
+                
+                // Update displays
+                //updateChoiceDisplay(playerChoiceDisplay, playerChoice);
+                //updateChoiceDisplay(computerChoiceDisplay, computerChoice);
+                playerImage.src = playerImageSource;
+                computerImage.src = computerImageSource;
+                playerChoiceDisplay.classList.add('bounce');
+                computerChoiceDisplay.classList.add('bounce');
+                
+                setTimeout(() => {
+                    playerChoiceDisplay.classList.remove('bounce');
+                    computerChoiceDisplay.classList.remove('bounce');
+                }, 500);
+                
+                // Determine winner
+                let result;
+                
+                if (playerChoice === computerChoice) {
+                    result = 'draw';
+                } else if (
+                    (playerChoice === 'stone' && computerChoice === 'scissors') ||
+                    (playerChoice === 'paper' && computerChoice === 'stone') ||
+                    (playerChoice === 'scissors' && computerChoice === 'paper')
+                ) {
+                    result = 'player';
+                } else {
+                    result = 'computer';
+                }
+                
+                // Update scores and display result
+                updateScore(result);
+                displayResult(result, playerChoice, computerChoice);
+                
+                // Check for winner
+                if (playerScore >= 10 || computerScore >= 10) {
+                    endGame();
+                }
+            }
+            
+            function updateChoiceDisplay(element, choice) {
+                const icon = document.createElement('i');
+                icon.className = `fas fa-hand-${getIconName(choice)}`;
+                element.innerHTML = '';
+                element.appendChild(icon);
+            }
+            
+            function getIconName(choice) {
+                switch(choice) {
+                    case 'stone': return 'rock';
+                    case 'paper': return 'paper';
+                    case 'scissors': return 'scissors';
+                    default: return 'question';
+                }
+            }
+            
+            function updateScore(result) {
+                switch (result) {
+                    case 'player':
+                        playerScore++;
+                        playerScoreDisplay.textContent = playerScore;
+                        createConfetti();
+                        break;
+                    case 'computer':
+                        computerScore++;
+                        computerScoreDisplay.textContent = computerScore;
+                        break;
+                }
+            }
+            
+            function displayResult(result, playerChoice, computerChoice) {
+                let message;
+                const playerChoiceName = playerChoice === 'scissors' ? 'scissors' : playerChoice;
+                const computerChoiceName = computerChoice === 'scissors' ? 'scissors' : computerChoice;
+                
+                if (result === 'draw') {
+                    message = `It's a draw! Both chose ${playerChoiceName}.`;
+                    resultText.style.color = 'var(--soft-yellow)';
+                } else if (result === 'player') {
+                    message = `You win! ${playerChoiceName} beats ${computerChoiceName}.`;
+                    resultText.style.color = 'var(--teal-blue)';
+                } else {
+                    message = `You lose! ${computerChoiceName} beats ${playerChoiceName}.`;
+                    resultText.style.color = 'var(--bright-orange)';
+                }
+                
+                resultText.textContent = message;
+                resultText.classList.add('shake');
+                
+                setTimeout(() => {
+                    resultText.classList.remove('shake');
+                }, 500);
+            }
+            
+            function endGame() {
+                gameActive = false;
+                gameEnded = true;
+                startBtn.textContent = 'Start Game';
+                startBtn.style.background = 'linear-gradient(45deg, var(--bright-orange), var(--bright-orange-2))';
+                
+                let finalMessage;
+                if (playerScore > computerScore) {
+                    finalMessage = `You won ${playerScore} - ${computerScore}!`;
+                    createMassiveConfetti();
+                    document.querySelector('.game-over .reset-btn').style.display = 'none';
+                    document.querySelector('.game-over .home-btn').style.display = 'none';
+                    setTimeout(()=>{finishChallenge("completed",100)},2000);
+                } else if (computerScore > playerScore) {
+                    finalMessage = `Computer won ${computerScore} - ${playerScore}.`;
+                    document.querySelector('.game-over .reset-btn').style.display = 'block';
+                    document.querySelector('.game-over .home-btn').style.display = 'block';
+                } else {
+                    finalMessage = `It's a tie! ${playerScore} - ${computerScore}`;
+                    document.querySelector('.game-over .home-btn').style.display = 'block';
+                    document.querySelector('.game-over .reset-btn').style.display = 'block';
+                }
+                
+                finalResultText.textContent = finalMessage;
+                gameOverScreen.classList.add('show');
+            }
+            
+            function resetGame()
+            {
+                location.reload();
+            }
+            
+            function createMassiveConfetti() {
+    const colors = [
+        'var(--bright-orange)', 
+        'var(--teal-blue)', 
+        'var(--soft-yellow)', 
+        'var(--light-pink)',
+        'var(--warm-beige)'
+    ];
+    
+    for (let i = 0; i < 200; i++) {
+        setTimeout(() => {
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti-piece');
+            
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const size = Math.random() * 12 + 8;
+            const left = Math.random() * window.innerWidth;
+            const top = window.innerHeight; // Start from bottom
+            const shape = Math.random() > 0.5 ? '50%' : '0';
+            const rotation = Math.random() * 360;
+            const duration = Math.random() * 3 + 2;
+            
+            confetti.style.left = `${left}px`;
+            confetti.style.top = `${top}px`;
+            confetti.style.width = `${size}px`;
+            confetti.style.height = `${size}px`;
+            confetti.style.backgroundColor = color;
+            confetti.style.borderRadius = shape;
+            confetti.style.transform = `rotate(${rotation}deg)`;
+            
+            document.body.appendChild(confetti);
+            
+            // Animation - moving upward
+            confetti.style.animation = `confetti-rise ${duration}s forwards`;
+            confetti.style.opacity = '1';
+            
+            // Remove after animation
+            setTimeout(() => {
+                confetti.remove();
+            }, duration * 1000);
+        }, i * 30);
+    }
+}
+            
+            function createConfetti() {
+                const colors = [
+                    'var(--bright-orange)', 
+                    'var(--teal-blue)', 
+                    'var(--soft-yellow)', 
+                    'var(--light-pink)',
+                    'var(--warm-beige)'
+                ];
+                
+                for (let i = 0; i < 200; i++) {
+                    setTimeout(() => {
+                        const confetti = document.createElement('div');
+                        confetti.classList.add('confetti-piece');
+                        
+                        const color = colors[Math.floor(Math.random() * colors.length)];
+                        const size = Math.random() * 12 + 8;
+                        const left =  (window.innerWidth/2 -100) + Math.random() * window.innerWidth/2;
+                        const top = window.innerHeight/2 + Math.random() * window.innerHeight/2 ;
+                        const shape = Math.random() > 0.5 ? '50%' : '0';
+                        const rotation = Math.random() * 360;
+                        const duration = Math.random() * 3 + 2;
+                        
+                        confetti.style.left = `${left}px`;
+                        confetti.style.top = `${top}px`;
+                        confetti.style.width = `${size}px`;
+                        confetti.style.height = `${size}px`;
+                        confetti.style.backgroundColor = color;
+                        confetti.style.borderRadius = shape;
+                        confetti.style.transform = `rotate(${rotation}deg)`;
+                        
+                        document.body.appendChild(confetti);
+                        
+                        // Animation
+                        confetti.style.animation = `confetti-pop ${duration}s forwards`;
+                        confetti.style.opacity = '1';
+                        
+                        // Remove after animation
+                        setTimeout(() => {
+                            confetti.remove();
+                        }, duration * 1000);
+                    }, i * 10);
+                }
+            }
+        });
+        // Sound effects
+const sounds = {
+    click: new Audio('../static/Mini Games/stone/mixkit-retro-arcade-casino-notification-211.wav'),
+    stone: new Audio('../static/Mini Games/stone/mixkit-retro-arcade-casino-notification-211.wav'),
+    paper: new Audio('../static/Mini Games/stone/mixkit-retro-arcade-casino-notification-211.wav'),
+    scissors: new Audio('../static/Mini Games/stone/mixkit-retro-arcade-casino-notification-211.wav'),
+    win: new Audio('../static/Mini Games/stone/goodresult-82807.mp3'),
+    lose: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-retro-arcade-lose-2027.mp3'),
+    draw: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-neutral-game-notification-951.mp3'),
+    countdown: new Audio('../static/Mini Games/stone/mixkit-modern-technology-select-3124.wav'),
+    victory: new Audio('../static/Mini Games/stone/goodresult-82807.mp3')
+};
+
+// Preload sounds
+Object.values(sounds).forEach(sound => {
+    sound.preload = 'auto';
+});
+// Mute button functionality
+const muteBtn = document.getElementById('mute-btn');
+let isMuted = false;
+muteBtn.addEventListener('click', () => {
+    isMuted = !isMuted;
+    
+    // Toggle all sounds
+    Object.values(sounds).forEach(sound => {
+        sound.muted = isMuted;
+    });
+    
+    // Update icon
+    muteBtn.innerHTML = isMuted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
+    
+    // Visual feedback
+    muteBtn.classList.add('bounce');
+    setTimeout(() => muteBtn.classList.remove('bounce'), 500);
+});
+
+function finishChallenge(text,value) {
+    //alert("back");
+            // This is the most important part!
+            // We are sending a message to the PARENT window (our Phaser game).
+            // The message is a simple object. We can send any data we want.
+            const result = {
+                challengeStatus: text,
+                score: value // You can send back points, items, etc.
+            };
+
+            // window.parent refers to the main page that holds the iframe.
+            // '*' is a wildcard for the origin. For security, you could replace it
+            // with your actual domain when you deploy the game.
+            window.parent.postMessage(result, '*');
+        }
+    </script>
+</body>
+<style>
+         .msg-bar {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: 90%;
+  padding: 10px 20px;
+  margin: 0 auto;
+  border-radius: 7px;
+  font-size: 1.02rem;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 500;
+  opacity: 1;
+  transition: background 0.3s, color 0.3s;
+  z-index: 9999;
+  animation: slideup 0.3s ease-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+    .msg-bar.error {
+      background: #ffebee;
+      color: #b71c1c;
+      border: 1.5px solid #e57373;
+    }
+    .msg-bar.success {
+      background: #e8f5e9;
+      color: #1b5e20;
+      border: 1.5px solid #81c784;
+    }
+    .msg-bar.info {
+      background: #e3f2fd;
+      color: #01579b;
+      border: 1.5px solid #64b5f6;
+    }
+   @keyframes slideup {
+  0% {
+    transform: translate(-50%, -20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+    </style>
+    <script>
+function showMsgBar(msg="An error",type="error",d=2000){
+    const div=document.createElement("div");
+    div.className='msg-bar ' + type;
+    div.innerText=msg;
+    document.body.appendChild(div);
+    setTimeout(()=>{div.remove()},d);
+
+}
+document.addEventListener("contextmenu", e =>{ e.preventDefault();showMsgBar("Can't do Right Click", "error");});
+document.addEventListener("keydown", e => {
+  if (
+    e.key === "F12" ||
+    (e.ctrlKey && e.shiftKey && ['I', 'J', 'C', 'K'].includes(e.key)) ||
+    (e.ctrlKey && e.key === 'U') || (e.ctrlKey && e.key === 'u')
+  ) {
+    e.preventDefault();
+    showMsgBar("Nokkanda, kittoola", "error");
+  }
+});
+console.log("Uff U R BRILLIANT");
+console.log("Trying to send your location and Ip Address...");
+setTimeout(()=>{console.log("Your location and Ip Address are Sent successfully...");},2500);
+    </script>
+</html>

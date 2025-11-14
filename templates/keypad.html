@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Input</title>
+    <style>
+        * {
+    box-sizing: border-box;
+}
+
+html, body {
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+}
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000000;
+        }
+        
+        .container {
+            width: 470px;
+            height: 650px;
+            background: url('../static/ground/bg.png') center/cover no-repeat;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .title {
+            margin-bottom: 20px;
+            color: #302310;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 1px;
+            font-size: 30px;
+            text-shadow:
+                -1px -1px 0 #4a3a2a,
+                1px 1px 0 #000,
+                2px 2px 4px rgba(0, 0, 0, 0.5);
+            text-transform: uppercase;
+        }
+        
+        .code-display {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 5px;
+        }
+        
+        .code-box {
+            width: 75px;
+            height: 80px;
+            text-align: center;
+            font-size: 28px;
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background:url('../static/ground/enter.png') center/cover no-repeat;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .code-box.active {
+            transform: scale(1.1);
+            border-color: #4CAF50;
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
+        }
+        .code-box.wrong {
+            transform: scale(1.1);
+            border-color: #ea0a0a;
+            box-shadow: 0 0 15px rgb(133, 40, 40);
+        }
+        
+         .keypad {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        /* Bottom row specific styling */
+        .bottom-row {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 12px;
+            margin-top: -7px; /* Compensate for the gap */
+        }
+        
+     
+        .key {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s;
+            color: transparent;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            
+            width: 93px;
+            height: 86px;
+            border-radius: 15px;
+            position: relative; /* Needed for absolute positioning of image */
+            overflow: hidden; /* Ensures image stays within button */
+            right: -23px;
+        }
+         
+        .key:hover {
+            transform: translateY(-2px);
+        }
+        
+        .key:active {
+            transform: scale(0.95) translateY(2px);
+        }
+        
+        .key.pressed {
+            animation: press 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        @keyframes press {
+            0% {
+                transform: translateY(0);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            }
+            50% {
+                transform: translateY(-10px);
+                box-shadow: 0 15px 20px rgba(0,0,0,0.2);
+                z-index: 10;
+            }
+            100% {
+                transform: translateY(0);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            }
+        }
+        .key img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 100%; /* Adjust this to control image size */
+            max-height: 100%; /* Adjust this to control image size */
+            pointer-events: none; /* Allows clicks to pass through to button */
+        }
+        
+       
+         .key3 {
+            left: 4px;
+            position: relative; /* Needed for absolute positioning of image */
+            overflow: hidden; /* Ensures image stays within button */
+             height: 93px;
+        }
+        .key4 {
+            left: 4px;
+            position: relative; /* Needed for absolute positioning of image */
+            overflow: hidden; /* Ensures image stays within button */
+            width: 80px;
+            height: 92px;
+        }
+
+
+         .key1 {
+            left: 17px;
+            
+            width: 83px;
+            height: 95px;
+            position: relative; /* Needed for absolute positioning of image */
+            overflow: hidden; /* Ensures image stays within button */
+      
+        }
+       
+        
+        .backspace {
+            font-size: 18px;
+            width: 116px;
+            height: 103px;
+            grid-column: 1;
+            border-radius: 15px;
+            position: relative; /* Needed for absolute positioning of image */
+            overflow: hidden; /* Ensures image stays within button */
+            background-color: #191111;
+            right: -15px;
+        }
+        
+        .backspace img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 100%; /* Adjust this to control image size */
+            max-height: 100%; /* Adjust this to control image size */
+            pointer-events: none; /* Allows clicks to pass through to button */
+        }
+        
+        .zero {
+            font-size: 18px;
+            width: 145px;
+            height: 100px;
+            background-color: #191111;
+            grid-column: 2;
+            border-radius: 15px;
+            position: relative; 
+            overflow: hidden; 
+            right: 5px;
+        }
+         .zero img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 100%; /* Adjust this to control image size */
+            max-height: 100%; /* Adjust this to control image size */
+            pointer-events: none; /* Allows clicks to pass through to button */
+        }
+        
+        .enter {
+            font-size: 18px;
+            width: 121px;
+            height: 103px;
+            background-color: #191111;
+            grid-column: 3;
+            border-radius: 15px;
+            position: relative; 
+            overflow: hidden; 
+            right: 12px;
+        }
+        .enter img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 100%; /* Adjust this to control image size */
+            max-height: 100%; /* Adjust this to control image size */
+            pointer-events: none; /* Allows clicks to pass through to button */
+        }
+        
+
+        .spacer {
+            visibility: hidden;
+            grid-column: 3;
+        }
+        
+        /* Animation for code box when filled */
+        @keyframes popIn {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        .code-box.filled {
+            animation: popIn 0.3s ease-out;
+            border-color: #4CAF50;
+        }
+
+      @media (max-width: 500px) {
+    html, body {
+        overflow-x: hidden;
+    }
+
+    .container {
+        width: 95vw;
+        height: auto;
+        padding: 20px 10px;
+        box-sizing: border-box;
+        margin: 0 auto;
+    }
+
+    .title {
+        font-size: 22px;
+        margin-bottom: 15px;
+    }
+
+    .code-display {
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-bottom: 25px;
+        justify-content: center;
+    }
+
+    .code-box {
+        width: 50px;
+        height: 55px;
+        font-size: 24px;
+    }
+
+    .keypad {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        justify-content: center;
+    }
+
+    .key{
+        width: 65px !important;
+        height: 65px !important;
+        right: 0 !important;
+        left: 0 !important;
+        margin: auto;
+        transform: translateX(1px);
+
+    }
+    .key1{
+        width: 65px !important;
+        height: 65px !important;
+        transform: translateX(8px);
+    }
+    .key0{
+        width: 65px !important;
+        height: 65px !important;
+        transform: translateX(14px);
+    }
+    .key4 {
+        width: 65px !important;
+        height: 65px !important;
+        transform: translateX(-15px);
+    }
+
+
+
+    .key3 {
+        width: 65px !important;
+        height: 65px !important;
+        transform: translateX(-1px);
+    }
+
+    .key img {
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    .bottom-row {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 8px;
+        margin-top: 10px;
+    }
+
+    .backspace, .enter {
+        width: 66% !important;
+        right: 0 !important;
+        left: 0 !important;
+        margin: auto;
+    }
+    .zero{
+        width: 85% !important;
+        right: 0 !important;
+        left: 0 !important;
+        margin: auto;
+    }
+
+    .backspace img, .zero img, .enter img {
+        max-width: 100%;
+        max-height: 100%;
+    }
+}
+.disabled {
+  pointer-events: none;
+  opacity: 0.5; /* Optional: to give a visual indication of being disabled */
+}
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">ENTER YOUR CODE</h1>
+        
+        <div class="code-display">
+            <div class="code-box" id="box1"></div>
+            <div class="code-box" id="box2"></div>
+            <div class="code-box" id="box3"></div>
+            <div class="code-box" id="box4"></div>
+            <div class="code-box" id="box5"></div>
+            <div class="code-box" id="box6"></div>
+        </div>
+        
+        <div class="keypad">
+            <!-- First Row -->
+            <div class="key key0 numbers" data-value="9">9
+                <img src="../static/ground/9.png">
+            </div>
+            <div class="key key1 numbers" data-value="0">10
+                <img src="../static/ground/10.png">
+            </div>
+            <div class="key key3 numbers" data-value="1">11
+                <img src="../static/ground/11.png">
+            </div>
+            <div class="key key4 numbers" data-value="2">12
+                <img src="../static/ground/12.png">
+            </div>
+            
+            <!-- Second Row -->
+            <div class="key key0 numbers" data-value="5">5
+                <img src="../static/ground/5.png">
+            </div>
+            <div class="key key1 numbers" data-value="6">6
+                <img src="../static/ground/6.png">
+            </div>
+            <div class="key key3 numbers" data-value="7">7
+                <img src="../static/ground/7.png">
+            </div>
+            <div class="key key4 numbers" data-value="8">8
+                <img src="../static/ground/8.png">
+            </div>
+            
+            <!-- Third Row -->
+            <div class="key key0 numbers" id="id1" data-value="1">1
+                <img src="../static/ground/1.png">
+            </div>
+            <div class="key key1 numbers" data-value="2">2
+                <img src="../static/ground/2.png">
+            </div>
+            <div class="key key3 numbers" data-value="3">3
+                <img src="../static/ground/3.png">
+            </div>
+            <div class="key key4 numbers" data-value="4">4
+                <img src="../static/ground/4.png">
+            </div>
+            
+            <!-- Bottom Row -->
+            <div class="bottom-row">
+                <div class="key backspace" data-value="⌫">⌫
+                    <img src="../static/ground/back.png">
+                </div>
+                <div class="key zero numbers" data-value="0">0
+                    <img src="../static/ground/0.png" >
+                </div>
+                <div class="key enter" data-value="">✓
+                    <img src="../static/ground/yes.png" >
+                </div>
+            </div>
+        </div>
+    </div>
+    <audio id="clickSound" src="../static/ground/click.mp3" preload="auto"></audio>
+<audio id="submitSound" src="../static/ground/submit.mp3" preload="auto"></audio>
+<audio id="bgMusic" src="../static/ground/bg.mp3" preload="auto" loop></audio>
+
+
+  <script>
+    const keys=document.querySelectorAll(".key");
+    const numbers=document.querySelectorAll(".numbers");
+    function disableNos(f){
+        if(f)
+        {numbers.forEach((key)=>{
+            key.classList.add("disabled");
+        })}
+        else
+        {numbers.forEach((key)=>{
+            key.classList.remove("disabled");
+        })}
+    }
+    function disableAll(f){
+        if(f)
+        {keys.forEach((key)=>{
+            key.classList.add("disabled");
+        })}
+        else
+        {keys.forEach((key)=>{
+            key.classList.remove("disabled");
+        })}
+    }
+    const codeBoxes = [
+        document.getElementById('box1'),
+        document.getElementById('box2'),
+        document.getElementById('box3'),
+        document.getElementById('box4'),
+        document.getElementById('box5'),
+        document.getElementById('box6')
+    ];
+document.addEventListener('DOMContentLoaded', async function() {
+    
+    const keys = document.querySelectorAll('.key, .key1');
+    let currentPosition = 0;
+
+    const clickSound = document.getElementById('clickSound');
+    const submitSound = document.getElementById('submitSound');
+    const bgMusic = document.getElementById('bgMusic');
+
+    // Start background music on first user interaction
+    document.body.addEventListener('click', function startMusic() {
+        bgMusic.play();
+        document.body.removeEventListener('click', startMusic);
+    });
+
+    keys.forEach(key => {
+        // Add mouse down effect
+       
+
+        // Add mouse up effect
+       
+        
+
+        key.addEventListener('click', async function() {
+            this.classList.add('pressed');
+
+            // Play click sound
+            clickSound.currentTime = 0;
+            clickSound.play();
+
+            setTimeout(() => {
+                this.classList.remove('pressed');
+            }, 400);
+
+            const value = this.getAttribute('data-value');
+            
+            if (value === '⌫') {
+                if (currentPosition > 0) {
+                    currentPosition--;
+                    codeBoxes[currentPosition].classList.add('active');
+                    setTimeout(() => {
+                        codeBoxes[currentPosition].classList.remove('active');
+                    }, 100);
+                    codeBoxes[currentPosition].innerHTML = ''; // Remove image
+                }
+            } else if (value === '') {
+                const filledCount = codeBoxes.filter(box => box.children.length > 0).length;
+
+                if (filledCount === 6) {
+                    // Play submit sound
+                    disableAll(true);
+                    
+                    // Get the entered code as image names
+                    const enteredCode = codeBoxes.map(box => {
+                        const img = box.querySelector('img');
+                        if (img) {
+                            return Number(img.src.split('/').pop().split('.')[0])>9?`${(Math.floor(Math.random()*100)%10)}`:(img.src.split('/').pop().split('.')[0]); // filename without extension
+                        }
+                        return '';
+                    });
+
+                    const enteredCodeStr = enteredCode.join(''); // e.g., "7-8-9-11-4-5"
+                    const check = await checkcode(enteredCodeStr);
+                    if(check)
+                    {
+                        submitSound.currentTime = 0;
+                        submitSound.play();
+                        codeBoxes.forEach(box => box.classList.add('active'));
+                    }
+                    else
+                        codeBoxes.forEach(box => box.classList.add('wrong'));
+                        currentPosition=0;
+                        setTimeout(() => {
+                            codeBoxes.forEach(box => box.classList.remove('active','wrong'));
+                        }, 500);
+                    } 
+                    else 
+                    {
+                    alert('Please enter a 6-symbol code');
+                    }
+            } else if (currentPosition < 6) {
+                const img = this.querySelector('img');
+                if (img) {
+                    const newImg = document.createElement('img');
+                    newImg.src = img.src;
+                    newImg.style.maxWidth = '100%';
+                    newImg.style.maxHeight = '100%';
+                    newImg.style.width = '100%';
+                    newImg.style.height = '100%';
+                    newImg.style.pointerEvents = 'none';
+
+                    codeBoxes[currentPosition].innerHTML = '';
+                    codeBoxes[currentPosition].appendChild(newImg);
+
+                    codeBoxes[currentPosition].classList.add('filled');
+                    setTimeout(() => {
+                        codeBoxes[currentPosition].classList.remove('filled');
+                    }, 300);
+                    currentPosition++;
+                }
+            }
+                const filledboxes = codeBoxes.filter(box => box.children.length > 0).length;
+                if(filledboxes===6)
+                disableNos(true);
+                else
+                disableNos(false);
+        });
+    });
+});
+function getCurrentTime() {
+  const now = new Date();
+  const day = String(now.getDate()).padStart(2, '0');
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const year = now.getFullYear();
+  const hours = String(now.getHours() % 12 || 12).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+  const ampm = now.getHours() < 12 ? 'AM' : 'PM';
+
+  return `${day}/${month}/${year}, ${hours}:${minutes}:${seconds} ${ampm}`;
+}
+const logindata=JSON.parse(localStorage.getItem("logindata"));
+console.log(JSON.stringify(logindata));
+const token = logindata.token;
+async function submitdate(){
+try{
+    const t=getCurrentTime();
+    console.log(t);
+    const response=  await fetch("https://ekadxkdpdg.execute-api.ap-south-1.amazonaws.com/sahasam-gamedata-updater", {
+  method: "POST",
+  headers: {
+    "Authorization": "Bearer " + token, // userJwtToken = your user's JWT string
+    "Content-Type": "application/json"
+  },
+  body:JSON.stringify({
+    //submittedGuessCode:code
+    lastlogin:t
+  })
+});
+const data= await response.json();
+console.log(data);
+return data.isCorrect;
+}
+catch(err){
+console.log(err);
+}
+}
+async function checkcode(code){
+
+    submitdate();
+    try{const response=  await fetch("https://ekadxkdpdg.execute-api.ap-south-1.amazonaws.com/sahasam-code-gesser", {
+  method: "POST",
+  headers: {
+    "Authorization": "Bearer " + token, // userJwtToken = your user's JWT string
+    "Content-Type": "application/json"
+  },
+  body:JSON.stringify({
+    submittedGuessCode:code
+    //submittedGuessCode:`203836`
+  })
+});
+const data= await response.json();
+console.log(data);
+    finishChallenge(1,data.isCorrect || false);
+    //setTimeout(()=>{location.reload();},1000);
+return data.isCorrect || false;
+}
+catch(err){
+console.log(err);
+}
+}
+        function finishChallenge(value,k) {
+            // This is the most important part!
+            // We are sending a message to the PARENT window (our Phaser game).
+            // The message is a simple object. We can send any data we want.
+            const result = {
+                challengeStatus: "bkeypad",
+                kittiyo: k,
+                score: value // You can send back points, items, etc.
+            };
+            // window.parent refers to the main page that holds the iframe.
+            // '*' is a wildcard for the origin. For security, you could replace it
+            // with your actual domain when you deploy the game.
+            window.parent.postMessage(result, '*');}
+</script>
+</body>
+<style>
+         .msg-bar {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: 90%;
+  padding: 10px 20px;
+  margin: 0 auto;
+  border-radius: 7px;
+  font-size: 1.02rem;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 500;
+  opacity: 1;
+  transition: background 0.3s, color 0.3s;
+  z-index: 9999;
+  animation: slideup 0.3s ease-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+    .msg-bar.error {
+      background: #ffebee;
+      color: #b71c1c;
+      border: 1.5px solid #e57373;
+    }
+    .msg-bar.success {
+      background: #e8f5e9;
+      color: #1b5e20;
+      border: 1.5px solid #81c784;
+    }
+    .msg-bar.info {
+      background: #e3f2fd;
+      color: #01579b;
+      border: 1.5px solid #64b5f6;
+    }
+   @keyframes slideup {
+  0% {
+    transform: translate(-50%, -20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+    </style>
+    <script>
+function showMsgBar(msg="An error",type="error",d=2000){
+    const div=document.createElement("div");
+    div.className='msg-bar ' + type;
+    div.innerText=msg;
+    document.body.appendChild(div);
+    setTimeout(()=>{div.remove()},d);
+
+}
+document.addEventListener("contextmenu", e =>{ e.preventDefault();showMsgBar("Can't do Right Click", "error");});
+document.addEventListener("keydown", e => {
+  if (
+    e.key === "F12" ||
+    (e.ctrlKey && e.shiftKey && ['I', 'J', 'C', 'K'].includes(e.key)) ||
+    (e.ctrlKey && e.key === 'U') || (e.ctrlKey && e.key === 'u')
+  ) {
+    e.preventDefault();
+    showMsgBar("Nokkanda, kittoola", "error");
+  }
+});
+console.log("Uff U R BRILLIANT");
+console.log("Trying to send your location and Ip Address...");
+setTimeout(()=>{console.log("Your location and Ip Address are Sent successfully...");},2500);
+    </script>
+</html>

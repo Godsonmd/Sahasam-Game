@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../static/logo/favicon2.png">
+    <title>Sahasam | Login</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pirata+One&family=Roboto:wght@300;400;700&display=swap');
+        
+        :root {
+            --primary: #FFD700;
+            --secondary: #8B4513;
+            --dark: #1A1A1A;
+            --light: #F5F5F5;
+            --accent: #C80815;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: var(--light);
+            overflow: hidden;
+            height: 100vh;
+            user-select: none;
+        }
+        
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            filter: brightness(0.4);
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .login-box {
+            background-color: transparent;
+            border: 3px solid var(--primary);
+            border-radius: 10px;
+            padding: 2rem;
+            width: 350px;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        
+        .login-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.4);
+        }
+        
+        .title {
+            font-family: 'Inter', sans-serif;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            text-shadow: 3px 3px 0 var(--accent);
+            letter-spacing: 2px;
+            position: relative;
+        }
+        
+        .title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(to right, transparent, var(--primary), transparent);
+        }
+        
+        .msg-bar {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 1.1rem;
+            border-radius: 7px;
+            font-size: 1.02rem;
+            text-align: center;
+            display: none;
+            font-family: inherit;
+            font-weight: 500;
+            transition: background 0.3s, color 0.3s;
+        }
+        .msg-bar.error {
+            background: #ffebee;
+            color: #b71c1c;
+            border: 1.5px solid #e57373;
+        }
+        .msg-bar.success {
+            background: #e8f5e9;
+            color: #1b5e20;
+            border: 1.5px solid #81c784;
+        }
+        .msg-bar.info {
+            background: #e3f2fd;
+            color: #01579b;
+            border: 1.5px solid #64b5f6;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            font-weight: 300;
+        }
+
+        .phone-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .phone-row select {
+            max-width: 90px;
+            min-width: 70px;
+            padding-right: 0.2rem;
+            font-size: 1rem;
+            background-color: rgba(245, 245, 245, 0.09);
+            color: var(--light);
+            border: 1px solid var(--secondary);
+            border-radius: 5px;
+            height: 2.7em;
+        }
+        .phone-row input[type="tel"] {
+            flex: 1 1 auto;
+            width: 100%;
+        }
+        
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: rgba(245, 245, 245, 0.1);
+            border: 1px solid var(--secondary);
+            border-radius: 5px;
+            color: var(--primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            appearance: none;
+        }
+        #country-code::-webkit-scrollbar{display: none;}
+        .input-group select option{
+            background: #1A1A1A;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+            background-color: rgba(245, 245, 245, 0.2);
+        }
+        
+        .input-group input::placeholder {
+            color: rgba(245, 245, 245, 0.5);
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: var(--accent);
+            color: var(--light);
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn:hover {
+            background-color: #a50611;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(200, 8, 21, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .link {
+            display: block;
+            text-align: center;
+            margin-top: 1rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .link:hover {
+            color: var(--light);
+            text-decoration: underline;
+        }
+        
+        /* Audio controls styling */
+        .audio-controls {
+            position: fixed;
+            bottom: 32px;
+            right: 36px;
+            z-index: 1300;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(40, 40, 10, 0.95), rgba(60, 60, 16, 0.9));
+            padding: 14px 24px;
+            border-radius: 50px;
+            box-shadow: 
+                0 8px 32px rgba(255, 215, 0, 0.15),
+                0 2px 8px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 215, 0, 0.7);
+            gap: 100px;
+            font-family: 'Poppins', Arial, sans-serif;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .audio-controls:hover {
+            background: linear-gradient(135deg, rgba(60, 60, 16, 0.98), rgba(80, 80, 20, 0.95));
+            box-shadow: 
+                0 12px 40px rgba(255, 215, 0, 0.25),
+                0 4px 12px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .audio-controls button {
+            user-select: none;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            color: #FFD700;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 50%;
+            padding: 10px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .audio-controls button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .audio-controls button:hover ,.audio-controls button:focus{
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+            border-color: rgba(255, 215, 0, 0.6);
+            color: #fff;
+            transform: scale(1.05);
+            box-shadow: 
+                0 4px 16px rgba(255, 215, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .audio-controls button:hover::before {
+            opacity: 1;
+        }
+
+        .audio-controls button:active {
+            transform: scale(0.95);
+            box-shadow: 
+                0 2px 8px rgba(255, 215, 0, 0.2),
+                inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .audio-controls button[disabled] {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .audio-controls button[disabled]:hover {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border-color: rgba(255, 215, 0, 0.3);
+            color: #FFD700;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Volume Range Wrapper */
+        .vol-range-wrapper {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 50px;
+            min-width: 60px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .vol-range-wrapper.show {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translateX(-50%) translateY(-50px);
+        }
+
+        .vol-range-wrapper input[type="range"] {
+            width: 140px;
+            height: 6px;
+            transform: rotate(-90deg);
+            margin: 24px 0;
+            background: linear-gradient(to right, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+            border-radius: 3px;
+            outline: none;
+            transition: all 0.2s ease;
+            appearance: none;
+        }
+
+        .vol-range-wrapper input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            cursor: pointer;
+            box-shadow: 
+                0 2px 8px rgba(255, 215, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .vol-range-wrapper input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 
+                0 4px 12px rgba(255, 215, 0, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .vol-range-wrapper input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            cursor: pointer;
+            border: none;
+            box-shadow: 
+                0 2px 8px rgba(255, 215, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .vol-display {
+            color: #FFD700;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+            min-width: 50px;
+            padding: 6px 12px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 700px) {
+            
+            .counters-wrapper {
+                top: 12px;
+                right: 12px;
+                gap: 8px;
+            }
+            .key-counter-container,
+            .cash-counter-container {
+                font-size: 1.1rem;
+                padding: 8px 16px 8px 12px;
+            }
+            .key-counter-icon,
+            .cash-counter-icon {
+                font-size: 1.4rem;
+            }
+            .key-counter-count,
+            .cash-counter-count {
+                font-size: 1.3rem;
+            }
+            
+            .audio-controls {
+                bottom: 16px;
+                right: 16px;
+                padding: 10px 16px;
+                gap: 12px;
+            }
+            
+            .audio-controls button {
+                font-size: 1rem;
+                width: 40px;
+                height: 40px;
+                padding: 8px;
+            }
+            
+            .vol-range-wrapper {
+                bottom: 70px;
+                padding: 16px 12px;
+                gap: 40px;
+                transform: translateX(-50%) translateY(-50px);
+            }
+            .vol-range-wrapper.show{
+                transform: translate(-50%,-10px);
+            }
+            .vol-range-wrapper input[type="range"] {
+                width: 100px;
+                margin: 20px 0;
+            }
+            
+            .vol-display {
+                font-size: 0.95rem;
+                min-width: 25px;
+            }
+            
+        }
+        
+        /* Responsive design */
+        @media (max-width: 480px) {
+            .login-box {
+                width: 90%;
+                padding: 1.5rem;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            
+            .phone-row select { min-width: 55px; }
+            .msg-bar { font-size: 0.94rem; padding: 7px; }
+        }
+    </style>
+</head>
+<body>
+    <video autoplay muted loop class="video-background">
+        <source src="../static/front/saha.mp4" type="video/mp4">
+    </video>
+    
+    <!-- Audio Element (hidden) -->
+    <audio id="backgroundAudio" loop>
+        <source src="../static/front/the-last-piano.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    
+    <div class="container">
+        <div class="login-box">
+            <h1 class="title">Forgot Password</h1>
+            <!-- Message bar for feedback -->
+            <div id="msgBar" class="msg-bar"></div>
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="phone">Phone Number</label>
+                    <div class="phone-row">
+                        <select id="country-code" name="country-code" required>
+                            <option value="+93">🇦🇫  +93</option>
+    <option value="+358">🇦🇽  +358</option>
+    <option value="+355">🇦🇱  +355</option>
+    <option value="+213">🇩🇿  +213</option>
+    <option value="+1684">🇦🇸  +1684</option>
+    <option value="+376">🇦🇩  +376</option>
+    <option value="+244">🇦🇴  +244</option>
+    <option value="+1264">🇦🇮  +1264</option>
+    <option value="+672">🇦🇶  +672</option>
+    <option value="+1268">🇦🇬  +1268</option>
+    <option value="+54">🇦🇷 +54</option>
+    <option value="+374">🇦🇲 +374</option>
+    <option value="+297">🇦🇼 +297</option>
+    <option value="+61">🇦🇺 +61</option>
+    <option value="+43">🇦🇹 +43</option>
+    <option value="+994">🇦🇿 +994</option>
+    <option value="+1242">🇧🇸 +1242</option>
+    <option value="+973">🇧🇭 +973</option>
+    <option value="+880">🇧🇩 +880</option>
+    <option value="+1246">🇧🇧 +1246</option>
+    <option value="+375">🇧🇾 +375</option>
+    <option value="+32">🇧🇪 +32</option>
+    <option value="+501">🇧🇿 +501</option>
+    <option value="+229">🇧🇯 +229</option>
+    <option value="+1441">🇧🇲 +1441</option>
+    <option value="+975">🇧🇹 +975</option>
+    <option value="+591">🇧🇴 +591</option>
+    <option value="+599">🇧🇶 +599</option>
+    <option value="+387">🇧🇦 +387</option>
+    <option value="+267">🇧🇼 +267</option>
+    <option value="+55">🇧🇷 +55</option>
+    <option value="+246">🇮🇴 +246</option>
+    <option value="+1284">🇻🇬 +1284</option>
+    <option value="+673">🇧🇳 +673</option>
+    <option value="+359">🇧🇬 +359</option>
+    <option value="+226">🇧🇫 +226</option>
+    <option value="+257">🇧🇮 +257</option>
+    <option value="+855">🇰🇭 +855</option>
+    <option value="+237">🇨🇲 +237</option>
+    <option value="+1">🇨🇦 +1</option>
+    <option value="+238">🇨🇻 +238</option>
+    <option value="+1345">🇰🇾 +1345</option>
+    <option value="+236">🇨🇫 +236</option>
+    <option value="+235">🇹🇩 +235</option>
+    <option value="+56">🇨🇱 +56</option>
+    <option value="+86">🇨🇳 +86</option>
+    <option value="+61">🇨🇽 +61</option>
+    <option value="+61">🇨🇨 +61</option>
+    <option value="+57">🇨🇴 +57</option>
+    <option value="+269">🇰🇲 +269</option>
+    <option value="+242">🇨🇬 +242</option>
+    <option value="+243">🇨🇩 +243</option>
+    <option value="+682">🇨🇰 +682</option>
+    <option value="+506">🇨🇷 +506</option>
+    <option value="+225">🇨🇮 +225</option>
+    <option value="+385">🇭🇷 +385</option>
+    <option value="+53">🇨🇺 +53</option>
+    <option value="+599">🇨🇼 +599</option>
+    <option value="+357">🇨🇾 +357</option>
+    <option value="+420">🇨🇿 +420</option>
+    <option value="+45">🇩🇰 +45</option>
+    <option value="+253">🇩🇯 +253</option>
+    <option value="+1767">🇩🇲 +1767</option>
+    <option value="+1809">🇩🇴 +1809</option>
+    <option value="+593">🇪🇨 +593</option>
+    <option value="+20">🇪🇬 +20</option>
+    <option value="+503">🇸🇻 +503</option>
+    <option value="+240">🇬🇶 +240</option>
+    <option value="+291">🇪🇷 +291</option>
+    <option value="+372">🇪🇪 +372</option>
+    <option value="+268">🇸🇿 +268</option>
+    <option value="+251">🇪🇹 +251</option>
+    <option value="+500">🇫🇰 +500</option>
+    <option value="+298">🇫🇴 +298</option>
+    <option value="+679">🇫🇯 +679</option>
+    <option value="+358">🇫🇮 +358</option>
+    <option value="+33">🇫🇷 +33</option>
+    <option value="+594">🇬🇫 +594</option>
+    <option value="+689">🇵🇫 +689</option>
+    <option value="+241">🇬🇦 +241</option>
+    <option value="+220">🇬🇲 +220</option>
+    <option value="+995">🇬🇪 +995</option>
+    <option value="+49">🇩🇪 +49</option>
+    <option value="+233">🇬🇭 +233</option>
+    <option value="+350">🇬🇮 +350</option>
+    <option value="+30">🇬🇷 +30</option>
+    <option value="+299">🇬🇱 +299</option>
+    <option value="+1473">🇬🇩 +1473</option>
+    <option value="+590">🇬🇵 +590</option>
+    <option value="+1671">🇬🇺 +1671</option>
+    <option value="+502">🇬🇹 +502</option>
+    <option value="+44">🇬🇬 +44</option>
+    <option value="+224">🇬🇳 +224</option>
+    <option value="+245">🇬🇼 +245</option>
+    <option value="+592">🇬🇾 +592</option>
+    <option value="+509">🇭🇹 +509</option>
+    <option value="+379">🇻🇦 +379</option>
+    <option value="+504">🇭🇳 +504</option>
+    <option value="+852">🇭🇰 +852</option>
+    <option value="+36">🇭🇺 +36</option>
+    <option value="+354">🇮🇸 +354</option>
+    <option value="+91" selected>🇮🇳 +91</option>
+    <option value="+62">🇮🇩 +62</option>
+    <option value="+98">🇮🇷 +98</option>
+    <option value="+964">🇮🇶 +964</option>
+    <option value="+353">🇮🇪 +353</option>
+    <option value="+44">🇮🇲 +44</option>
+    <option value="+972">🇮🇱 +972</option>
+    <option value="+39">🇮🇹 +39</option>
+    <option value="+1876">🇯🇲 +1876</option>
+    <option value="+81">🇯🇵 +81</option>
+    <option value="+44">🇯🇪 +44</option>
+    <option value="+962">🇯🇴 +962</option>
+    <option value="+7">🇰🇿 +7</option>
+    <option value="+254">🇰🇪 +254</option>
+    <option value="+686">🇰🇮 +686</option>
+    <option value="+383">🇽🇰 +383</option>
+    <option value="+965">🇰🇼 +965</option>
+    <option value="+996">🇰🇬 +996</option>
+    <option value="+856">🇱🇦 +856</option>
+    <option value="+371">🇱🇻 +371</option>
+    <option value="+961">🇱🇧 +961</option>
+    <option value="+266">🇱🇸 +266</option>
+    <option value="+231">🇱🇷 +231</option>
+    <option value="+218">🇱🇾 +218</option>
+    <option value="+423">🇱🇮 +423</option>
+    <option value="+370">🇱🇹 +370</option>
+    <option value="+352">🇱🇺 +352</option>
+    <option value="+853">🇲🇴 +853</option>
+    <option value="+261">🇲🇬 +261</option>
+    <option value="+265">🇲🇼 +265</option>
+    <option value="+60">🇲🇾 +60</option>
+    <option value="+960">🇲🇻 +960</option>
+    <option value="+223">🇲🇱 +223</option>
+    <option value="+356">🇲🇹 +356</option>
+    <option value="+692">🇲🇭 +692</option>
+    <option value="+596">🇲🇶 +596</option>
+    <option value="+222">🇲🇷 +222</option>
+    <option value="+230">🇲🇺 +230</option>
+    <option value="+262">🇾🇹 +262</option>
+    <option value="+52">🇲🇽 +52</option>
+    <option value="+691">🇫🇲 +691</option>
+    <option value="+373">🇲🇩 +373</option>
+    <option value="+377">🇲🇨 +377</option>
+    <option value="+976">🇲🇳 +976</option>
+    <option value="+382">🇲🇪 +382</option>
+    <option value="+1664">🇲🇸 +1664</option>
+    <option value="+212">🇲🇦 +212</option>
+    <option value="+258">🇲🇿 +258</option>
+    <option value="+95">🇲🇲 +95</option>
+    <option value="+264">🇳🇦 +264</option>
+    <option value="+674">🇳🇷 +674</option>
+    <option value="+977">🇳🇵 +977</option>
+    <option value="+31">🇳🇱 +31</option>
+    <option value="+687">🇳🇨 +687</option>
+    <option value="+64">🇳🇿 +64</option>
+    <option value="+505">🇳🇮 +505</option>
+    <option value="+227">🇳🇪 +227</option>
+    <option value="+234">🇳🇬 +234</option>
+    <option value="+683">🇳🇺 +683</option>
+    <option value="+672">🇳🇫 +672</option>
+    <option value="+850">🇰🇵 +850</option>
+    <option value="+389">🇲🇰 +389</option>
+    <option value="+1670">🇲🇵 +1670</option>
+    <option value="+47">🇳🇴 +47</option>
+    <option value="+968">🇴🇲 +968</option>
+    <option value="+92">🇵🇰 +92</option>
+    <option value="+680">🇵🇼 +680</option>
+    <option value="+970">🇵🇸 +970</option>
+    <option value="+507">🇵🇦 +507</option>
+    <option value="+675">🇵🇬 +675</option>
+    <option value="+595">🇵🇾 +595</option>
+    <option value="+51">🇵🇪 +51</option>
+    <option value="+63">🇵🇭 +63</option>
+    <option value="+64">🇵🇳 +64</option>
+    <option value="+48">🇵🇱 +48</option>
+    <option value="+351">🇵🇹 +351</option>
+    <option value="+1787">🇵🇷 +1787</option>
+    <option value="+974">🇶🇦 +974</option>
+    <option value="+262">🇷🇪 +262</option>
+    <option value="+40">🇷🇴 +40</option>
+    <option value="+7">🇷🇺 +7</option>
+    <option value="+250">🇷🇼 +250</option>
+    <option value="+590">🇧🇱 +590</option>
+    <option value="+290">🇸🇭 +290</option>
+    <option value="+1869">🇰🇳 +1869</option>
+    <option value="+1758">🇱🇨 +1758</option>
+    <option value="+590">🇲🇫 +590</option>
+    <option value="+508">🇵🇲 +508</option>
+    <option value="+1784">🇻🇨 +1784</option>
+    <option value="+685">🇼🇸 +685</option>
+    <option value="+378">🇸🇲 +378</option>
+    <option value="+239">🇸🇹 +239</option>
+    <option value="+966">🇸🇦 +966</option>
+    <option value="+221">🇸🇳 +221</option>
+    <option value="+381">🇷🇸 +381</option>
+    <option value="+248">🇸🇨 +248</option>
+    <option value="+232">🇸🇱 +232</option>
+    <option value="+65">🇸🇬 +65</option>
+    <option value="+1721">🇸🇽 +1721</option>
+    <option value="+421">🇸🇰 +421</option>
+    <option value="+386">🇸🇮 +386</option>
+    <option value="+677">🇸🇧 +677</option>
+    <option value="+252">🇸🇴 +252</option>
+    <option value="+27">🇿🇦 +27</option>
+    <option value="+500">🇬🇸 +500</option>
+    <option value="+82">🇰🇷 +82</option>
+    <option value="+211">🇸🇸 +211</option>
+    <option value="+34">🇪🇸 +34</option>
+    <option value="+94">🇱🇰 +94</option>
+    <option value="+249">🇸🇩 +249</option>
+    <option value="+597">🇸🇷 +597</option>
+    <option value="+47">🇸🇯 +47</option>
+    <option value="+46">🇸🇪 +46</option>
+    <option value="+41">🇨🇭 +41</option>
+    <option value="+963">🇸🇾 +963</option>
+    <option value="+886">🇹🇼 +886</option>
+    <option value="+992">🇹🇯 +992</option>
+    <option value="+255">🇹🇿 +255</option>
+    <option value="+66">🇹🇭 +66</option>
+    <option value="+670">🇹🇱 +670</option>
+    <option value="+228">🇹🇬 +228</option>
+    <option value="+690">🇹🇰 +690</option>
+    <option value="+676">🇹🇴 +676</option>
+    <option value="+1868">🇹🇹 +1868</option>
+    <option value="+216">🇹🇳 +216</option>
+    <option value="+90">🇹🇷 +90</option>
+    <option value="+993">🇹🇲 +993</option>
+    <option value="+1649">🇹🇨 +1649</option>
+    <option value="+688">🇹🇻 +688</option>
+    <option value="+256">🇺🇬 +256</option>
+    <option value="+380">🇺🇦 +380</option>
+    <option value="+971">🇦🇪 +971</option>
+    <option value="+44">🇬🇧 +44</option>
+    <option value="+1">🇺🇸 +1</option>
+    <option value="+598">🇺🇾 +598</option>
+    <option value="+1340">🇻🇮 +1340</option>
+    <option value="+998">🇺🇿 +998</option>
+    <option value="+678">🇻🇺 +678</option>
+    <option value="+58">🇻🇪 +58</option>
+    <option value="+84">🇻🇳 +84</option>
+    <option value="+681">🇼🇫 +681</option>
+    <option value="+212">🇪🇭 +212</option>
+    <option value="+967">🇾🇪 +967</option>
+    <option value="+260">🇿🇲 +260</option>
+    <option value="+263">🇿🇼 +263</option>
+                        </select>
+                        <input type="tel" id="phone" placeholder="Enter PhoneNo" required>
+                    </div>
+                </div>
+                
+                
+                <button type="submit" class="btn">CONTINUE</button>
+                
+            </form>
+        </div>
+    </div>
+    
+    <div class="audio-controls" id="sbox">
+            <button id="volBtn" title="Volume Control">🔊</button>
+            <div id="volRangeWrapper" class="vol-range-wrapper">
+                <span id="volDisplay" class="vol-display">100%</span>
+                <input type="range" id="volRange" min="0" max="100" value="100" step="1">
+            </div>
+        </div>
+
+  <script>
+    function showMsgBar(message, type = "info", duration = 4000) {
+        const bar = document.getElementById('msgBar');
+        const icons = {
+            success: "✅ ",
+            error: "❌ ",
+            info: "ℹ️ "
+        };
+        bar.className = 'msg-bar ' + type;
+        bar.textContent = (icons[type] || "") + message;
+        bar.style.opacity = '1';
+        bar.style.display = 'block';
+        
+        if (duration > 0) {
+            setTimeout(() => {
+                bar.style.opacity = '0';
+                setTimeout(() => {
+                    bar.style.display = 'none';
+                }, 300);
+            }, duration);
+        }
+    }
+
+    const audio = document.getElementById('backgroundAudio');
+    const LSvol = localStorage.getItem("gamesound");
+        if (LSvol==="M")
+        audio.muted = true;
+        else if(LSvol)
+          audio.volume = LSvol;
+        else
+          audio.volume = 1.0;
+          audio.play();
+          audio.loop=true;
+        const volBtn = document.getElementById('volBtn');
+        const volDisplay = document.getElementById('volDisplay');
+        const volRange = document.getElementById('volRange');
+        const volRangeWrapper = document.getElementById('volRangeWrapper');
+
+        let volumeTimeout;
+
+        updateVolDisplay();
+        function updateVolDisplay() {
+            const volume = audio.muted ? 0 : Math.round(audio.volume * 100);
+            volDisplay.textContent = audio.muted ? "Muted" : `${volume}%`;
+            
+            // Update button icon based on volume/mute state
+            if (audio.muted || audio.volume === 0) {
+                volBtn.textContent = "🔇";
+                volRange.value = 0;
+            } else if (audio.volume < 0.5) {
+                volBtn.textContent = "🔉";
+                volRange.value = Math.round(audio.volume * 100);
+            } else {
+                volBtn.textContent = "🔊";
+                volRange.value = Math.round(audio.volume * 100);
+            }
+            
+            volBtn.title=audio.muted?"unmuute":"mute";
+            // grab the live scene
+            //game.sound.volume = audio.muted ? 0 : audio.volume;
+            localStorage.setItem("gamesound",audio.muted ? "M" : audio.volume);
+
+            
+        }
+
+        function showVolumeSlider() {
+            clearTimeout(volumeTimeout);
+            volRangeWrapper.classList.add('show');
+        }
+
+        function hideVolumeSlider() {
+            volumeTimeout = setTimeout(() => {
+                volRangeWrapper.classList.remove('show');
+            }, 900);
+        }
+
+        // Volume button events - now handles both volume control and mute
+        volBtn.addEventListener('mouseenter', showVolumeSlider);
+        volBtn.addEventListener('mouseleave', hideVolumeSlider);
+        volBtn.addEventListener('click', () => {
+            // Toggle mute on click
+            audio.muted = !audio.muted;
+            //audio.volume=!audio.volume;
+            updateVolDisplay();
+        });
+
+        // Volume slider events
+        volRangeWrapper.addEventListener('mouseenter', () => {
+            clearTimeout(volumeTimeout);
+        });
+        volRangeWrapper.addEventListener('mouseleave', hideVolumeSlider);
+
+        volRange.addEventListener('input', function() {
+            const newVolume = parseInt(this.value) / 100;
+            audio.volume = newVolume;
+            audio.muted = newVolume === 0;
+            updateVolDisplay();
+        });
+
+        // Keyboard controls
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowUp' || e.key === '+') {
+                e.preventDefault();
+                const newVolume = Math.min(100, parseInt(volRange.value) + 5);
+                volRange.value = newVolume;
+                audio.volume = newVolume / 100;
+                audio.muted = false;
+                updateVolDisplay();
+                showVolumeSlider();
+                hideVolumeSlider();
+            }
+            if (e.key === 'ArrowDown' || e.key === '-') {
+                e.preventDefault();
+                const newVolume = Math.max(0, parseInt(volRange.value) - 5);
+                volRange.value = newVolume;
+                audio.volume = newVolume / 100;
+                audio.muted = newVolume === 0;
+                updateVolDisplay();
+                showVolumeSlider();
+                hideVolumeSlider();
+            }
+            if (e.key === 'm' || e.key === 'M') {
+                e.preventDefault();
+                volBtn.click();
+            }
+        });
+    document.addEventListener('DOMContentLoaded', function () {
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const muteBtn = document.getElementById('muteBtn');
+
+        
+        // Form logic
+        const loginForm = document.getElementById('loginForm');
+        const loginBox = document.querySelector('.login-box');
+        const submitBtn = loginForm.querySelector('button[type="submit"]');
+
+        loginForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const phone = document.getElementById('phone').value.trim();
+            const countryCode = document.getElementById('country-code').value;
+            const fullPhone = countryCode + phone.replace(/^0+/, '');
+
+            if (!phone.match(/^\d{6,15}$/)) {
+                showMsgBar("Please enter a valid phone number", "error");
+                return;
+            }
+
+            const forgotData = { phone_number: fullPhone };
+
+            // Animate button and box
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = "⏳ Sending...";
+            loginBox.style.transform = 'scale(0.97)';
+            loginBox.style.boxShadow = '0 0 60px rgba(255, 215, 0, 0.6)';
+
+            try {
+                const response = await fetch('https://ekadxkdpdg.execute-api.ap-south-1.amazonaws.com/sahasam-reset-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(forgotData)
+                });
+                const result = await response.json();
+                if(!response.ok)
+                {showMsgBar(result.error||result.message || "Something went wrong", "error");return;}
+                showMsgBar(result.message||"OTP sent successfully!", "success");
+                submitBtn.innerHTML = "✅ Sent!";
+                localStorage.setItem("resenddata",JSON.stringify(forgotData));
+                setTimeout(() => {
+                    window.location.href = "../templates/otp2.html"; // your OTP verification page
+                }, 2500);
+            } catch (err) {
+                showMsgBar(err.message || "Something went wrong", "error");
+            } finally {
+                submitBtn.innerHTML = "CONTINUE";
+                submitBtn.disabled = false;
+                loginBox.style.transform = 'scale(1)';
+                loginBox.style.boxShadow = '0 0 30px rgba(255, 215, 0, 0.3)';
+            }
+        });
+    });
+    document.addEventListener("contextmenu", e =>{ e.preventDefault();showMsgBar("Can't do Right Click", "error");});
+
+document.addEventListener("keydown", e => {
+  if (
+    e.key === "F12" ||
+    (e.ctrlKey && e.shiftKey && ['I', 'J', 'C', 'K'].includes(e.key)) ||
+    (e.ctrlKey && e.key === 'U') || (e.ctrlKey && e.key === 'u')
+  ) {
+    e.preventDefault();
+    showMsgBar("Nokkanda, kittoola", "error");
+  }
+});
+console.log("Uff U R BRILLIANT");
+console.log("Trying to send your location and Ip Address...");
+setTimeout(()=>{console.log("Your location and Ip Address are Sent successfully...");},2500);
+</script>
+
+
+</body>
+</html>

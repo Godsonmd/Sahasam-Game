@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="../static/logo/favicon2.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sahasam - Comic Push From Right</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      background-image: url("../static/assets/comics/mainbg.jpg");
+      background-size: 110%;
+      background-position: center;
+    }
+    body::-webkit-scrollbar{
+      display: none;
+    }
+    .comic-page {
+      position: relative;
+      width: 820px;
+      height: 80vh;
+      background: #fff;
+      border: 5px solid #000;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      padding-top: 50px;
+      padding-right: 30px;
+    }
+    .img-strip {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      transition: transform 0.7s ease;
+      height: 100%;
+      overflow-y: auto;
+      padding: 5%;
+      box-sizing: border-box;
+    }
+    .img-strip::-webkit-scrollbar {
+      display: none;
+    }
+    .comic-img {
+        width: 100%;
+        height: auto;
+        max-width: 40vw;
+        max-height: 35vh;
+        border: #000 solid 4px;
+        margin: 0 1vw;
+        opacity: 1;
+        transition: opacity 0.5s ease, transform 0.5s ease;
+        box-sizing: border-box;
+        display: block;
+        position: relative;
+        filter: brightness(0.5) blur(5px);
+    }
+    .comic-img.current {
+      opacity: 1;
+      filter: brightness(1);
+      transform: scale(1);
+    }
+    /* Responsive */
+    @media (max-width: 600px) {
+      .comic-page {
+        background-image: url("../static/assets/comics/mainbg.jpg");
+        background-size: cover;
+        background-position: center;
+        width: 100%;
+        height: 100vh;
+      }
+      .img-strip {
+        grid-template-columns: 1fr;
+        padding: 10px;
+      }
+      .comic-img {
+        max-width: 90vw;
+        max-height: 80vh;
+      }
+    }
+
+    /* Skip Button Styles */
+    .skip-btn {
+      position: fixed;
+      top: 32px;
+      right: 38px;
+      z-index: 2000;
+      padding: 14px 38px 14px 26px;
+      font-size: 1.15rem;
+      font-weight: bold;
+      letter-spacing: 2px;
+      color: #fff;
+      background: linear-gradient(90deg, #e8302f 30%, #f9be3d 100%);
+      border: none;
+      border-radius: 32px;
+      box-shadow: 0 6px 24px #e8302f44, 0 2px 12px #0008;
+      cursor: pointer;
+      outline: none;
+      transition: background 0.2s, transform 0.18s, box-shadow 0.18s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Poppins', Arial, sans-serif;
+    }
+    .skip-btn:active {
+      transform: scale(0.97) translateY(2px);
+      background: linear-gradient(90deg, #ba210e 0%, #ffb321 100%);
+    }
+    .skip-btn:hover {
+      background: linear-gradient(90deg, #f9be3d 0%, #e8302f 100%);
+      color: #222;
+      box-shadow: 0 14px 32px #e8302f77, 0 2px 16px #000b;
+    }
+    .skip-btn .skip-icon {
+      font-size: 1.3em;
+      margin-right: 3px;
+      filter: drop-shadow(0 2px 5px #ffd700cc);
+      animation: skipShine 2.1s infinite;
+    }
+    .skip-icon{
+      transform: translate(0px,-5px);
+    }
+    @keyframes skipShine {
+      0%,100% { filter: drop-shadow(0 2px 5px #ffd700cc);}
+      50% { filter: drop-shadow(0 2px 11px #ffd700ff) brightness(1.4);}
+    }
+    @media (max-width: 700px) {
+      .skip-btn {
+        top: 13px;
+        right: 10px;
+        padding: 9px 22px 9px 16px;
+        font-size: 0.99rem;
+        border-radius: 22px;
+        gap: 7px;
+      }
+      .skip-btn .skip-icon {
+        font-size: 1.1em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="comic-page">
+    <div class="img-strip" id="imgStrip">
+    </div>
+  </div>
+  <button class="skip-btn" onclick="finishChallenge('bcomic',0)">
+    <span class="skip-icon">&#x23ED;</span> Skip
+  </button>
+  <script>
+    const STATIC_BASE = "../static/";
+    const IMG_COUNT = 27;
+    const IMG_PATH = i => `${STATIC_BASE}assets/comics/scn${i}.jpg`;
+    const FOCUS_TIME = 2500;
+    const ZOOM_TIME = 800;
+
+    const strip = document.getElementById('imgStrip');
+    const images = [];
+    let idx = 0; 
+    // preload images into strip
+    for (let i = 1; i <= IMG_COUNT; i++) {
+      const img = document.createElement('img');
+      img.src = IMG_PATH(i);
+      img.id=`img${i}`;
+      img.classList.add('comic-img');
+      if (!img.src.includes('17')){
+        strip.appendChild(img);
+        images.push(img);
+      }
+      strip.scrollTop =0;
+    }
+
+    function centerOn(index, scale) {
+      const img = images[index];
+      img.scrollIntoView({ behavior: 'smooth' });
+      if (index >= images.length-1)
+        setTimeout(()=>{finishChallenge("bcomic",0);},FOCUS_TIME);
+    }
+
+    function animate() {
+      images.forEach(img => img.classList.remove('current', 'zoomed'));
+      images[idx].classList.add('current');
+      centerOn(idx, 1);
+      setTimeout(() => {
+        images[idx].classList.remove('current');
+        images[idx].classList.add('zoomed');
+        setTimeout(() => {
+          idx = (idx + 1) % (images.length+1);
+          animate();
+        }, 100);
+      }, FOCUS_TIME);
+    }
+    function finishChallenge(text,value) {
+      idx=26;
+      const result = {
+        challengeStatus: text,
+        score: value
+      };
+      window.parent.postMessage(result, '*');
+    }
+    window.addEventListener('load', animate);
+  </script>
+</body>
+<style>
+         .msg-bar {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: 90%;
+  padding: 10px 20px;
+  margin: 0 auto;
+  border-radius: 7px;
+  font-size: 1.02rem;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 500;
+  opacity: 1;
+  transition: background 0.3s, color 0.3s;
+  z-index: 9999;
+  animation: slideup 0.3s ease-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+    .msg-bar.error {
+      background: #ffebee;
+      color: #b71c1c;
+      border: 1.5px solid #e57373;
+    }
+    .msg-bar.success {
+      background: #e8f5e9;
+      color: #1b5e20;
+      border: 1.5px solid #81c784;
+    }
+    .msg-bar.info {
+      background: #e3f2fd;
+      color: #01579b;
+      border: 1.5px solid #64b5f6;
+    }
+   @keyframes slideup {
+  0% {
+    transform: translate(-50%, -20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+    </style>
+    <script>
+function showMsgBar(msg="An error",type="error",d=2000){
+    const div=document.createElement("div");
+    div.className='msg-bar ' + type;
+    div.innerText=msg;
+    document.body.appendChild(div);
+    setTimeout(()=>{div.remove()},d);
+
+}
+document.addEventListener("contextmenu", e =>{ e.preventDefault();showMsgBar("Can't do Right Click", "error");});
+document.addEventListener("keydown", e => {
+  if (
+    e.key === "F12" ||
+    (e.ctrlKey && e.shiftKey && ['I', 'J', 'C', 'K'].includes(e.key)) ||
+    (e.ctrlKey && e.key === 'U') || (e.ctrlKey && e.key === 'u')
+  ) {
+    e.preventDefault();
+    showMsgBar("Nokkanda, kittoola", "error");
+  }
+});
+console.log("Uff U R BRILLIANT");
+console.log("Trying to send your location and Ip Address...");
+setTimeout(()=>{console.log("Your location and Ip Address are Sent successfully...");},2500);
+    </script>
+</html>

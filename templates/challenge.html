@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="/static/logo/favicon2.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Mouse Pointer Design</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            cursor: none;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Hide default cursor */
+        * {
+            cursor: none !important;
+        }
+
+        /* Custom cursor */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, 
+                rgba(0, 255, 255, 1) 0%,
+                rgba(0, 200, 255, 0.8) 30%,
+                rgba(0, 150, 255, 0.6) 60%,
+                transparent 100%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.03s ease-out, background 0.05s ease;
+            filter: drop-shadow(0 0 15px rgba(0, 200, 255, 0.8));
+            will-change: transform;
+        }
+
+        .cursor::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: cursorPulse 2s infinite ease-in-out;
+        }
+
+        .cursor::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+
+        @keyframes cursorPulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 0.2;
+            }
+        }
+
+        /* Cursor hover effects */
+        .cursor.hover {
+            transform: translate(-50%, -50%) scale(1.5);
+            background: radial-gradient(circle, 
+                rgba(255, 100, 0, 1) 0%,
+                rgba(255, 150, 0, 0.8) 30%,
+                rgba(255, 200, 0, 0.6) 60%,
+                transparent 100%);
+            filter: drop-shadow(0 0 20px rgba(255, 150, 0, 0.9));
+            transition: transform 0.02s ease-out, background 0.03s ease, filter 0.03s ease;
+        }
+
+        .cursor.click {
+            transform: translate(-50%, -50%) scale(0.8);
+            background: radial-gradient(circle, 
+                rgba(255, 0, 100, 1) 0%,
+                rgba(255, 50, 150, 0.8) 30%,
+                rgba(255, 100, 200, 0.6) 60%,
+                transparent 100%);
+            filter: drop-shadow(0 0 25px rgba(255, 50, 150, 1));
+            transition: transform 0.01s ease-out, background 0.02s ease, filter 0.02s ease;
+        }
+
+        /* Trail effect */
+        .cursor-trail {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            background: rgba(0, 200, 255, 0.4);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            will-change: transform, opacity;
+        }
+
+        /* Interactive elements */
+        .demo-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+        }
+
+        .demo-button {
+            background: linear-gradient(45deg, rgba(0, 150, 255, 0.2), rgba(0, 200, 255, 0.4));
+            border: 2px solid rgba(0, 200, 255, 0.6);
+            color: white;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: 25px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-button:hover {
+            background: linear-gradient(45deg, rgba(255, 100, 0, 0.3), rgba(255, 150, 0, 0.5));
+            border-color: rgba(255, 150, 0, 0.8);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 200, 255, 0.3);
+        }
+
+        .demo-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .demo-button:hover::before {
+            left: 100%;
+        }
+
+        .title {
+            font-size: 3em;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #00ccff, #0099ff, #00ffcc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleGlow 3s infinite ease-in-out;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(0, 200, 255, 0.5)); }
+            50% { filter: drop-shadow(0 0 20px rgba(0, 200, 255, 0.8)); }
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+
+        /* Particle background */
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(0, 200, 255, 0.6), transparent);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 6s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 0.8; }
+        }
+
+        /* Click ripple effect */
+        .click-ripple {
+            position: fixed;
+            border: 2px solid rgba(0, 255, 255, 0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9997;
+            transform: translate(-50%, -50%);
+            animation: ripple 0.6s ease-out forwards;
+        }
+
+        @keyframes ripple {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 1;
+            }
+            100% {
+                width: 100px;
+                height: 100px;
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor" id="cursor"></div>
+    
+    <!-- Background particles -->
+    <div class="particles" id="particles"></div>
+    
+    <div class="demo-content">
+        <h1 class="title">Custom Cursor</h1>
+        <p class="subtitle">Move your mouse around and interact with elements</p>
+        
+        <button class="demo-button" id="btn1">Hover Me</button>
+        <button class="demo-button" id="btn2">Click Me</button>
+        <button class="demo-button" id="btn3">Try Me</button>
+    </div>
+
+    <script>
+        const cursor = document.getElementById('cursor');
+        const buttons = document.querySelectorAll('.demo-button');
+        let mouseX = 0, mouseY = 0;
+        let trailCount = 0;
+        const maxTrails = 15; // Limit trails for better performance
+
+        // Create background particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 15; i++) { // Reduced from 20 to 15
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.width = Math.random() * 3 + 1 + 'px'; // Smaller particles
+                particle.style.height = particle.style.width;
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Optimized cursor position update
+        let ticking = false;
+        function updateCursor() {
+            cursor.style.transform = `translate3d(${mouseX - 10}px, ${mouseY - 10}px, 0)`;
+            ticking = false;
+        }
+
+        // Update cursor position with RAF for smooth performance
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            if (!ticking) {
+                requestAnimationFrame(updateCursor);
+                ticking = true;
+            }
+
+            // Create trail effect less frequently
+            if (trailCount < maxTrails) {
+                createTrail(mouseX, mouseY);
+            }
+        });
+
+        // Optimized trail creation
+        function createTrail(x, y) {
+            if (Math.random() > 0.7) return; // Only create trail 30% of the time
+            
+            trailCount++;
+            const trail = document.createElement('div');
+            trail.className = 'cursor-trail';
+            trail.style.left = x + 'px';
+            trail.style.top = y + 'px';
+            document.body.appendChild(trail);
+
+            // Faster, more efficient animation
+            let opacity = 0.4;
+            let scale = 1;
+            
+            const animate = () => {
+                opacity -= 0.04; // Faster fade
+                scale -= 0.04;
+                
+                if (opacity <= 0) {
+                    trail.remove();
+                    trailCount--;
+                    return;
+                }
+                
+                trail.style.opacity = opacity;
+                trail.style.transform = `translate3d(-50%, -50%, 0) scale(${scale})`;
+                requestAnimationFrame(animate);
+            };
+            
+            requestAnimationFrame(animate);
+        }
+
+        // Optimized button hover effects
+        buttons.forEach(button => {
+            button.addEventListener('mouseenter', () => {
+                cursor.classList.add('hover');
+            });
+            
+            button.addEventListener('mouseleave', () => {
+                cursor.classList.remove('hover');
+            });
+        });
+
+        // Instant click effects
+        document.addEventListener('mousedown', (e) => {
+            cursor.classList.add('click');
+            createClickRipple(e.clientX, e.clientY);
+        });
+
+        document.addEventListener('mouseup', () => {
+            cursor.classList.remove('click');
+        });
+
+        // Optimized click ripple effect
+        function createClickRipple(x, y) {
+            const ripple = document.createElement('div');
+            ripple.className = 'click-ripple';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            document.body.appendChild(ripple);
+
+            // Remove after animation
+            setTimeout(() => {
+                if (ripple.parentNode) {
+                    ripple.remove();
+                }
+            }, 600);
+        }
+
+        // Optimized button click handlers
+        document.getElementById('btn1').addEventListener('click', () => {
+            // Fast visual feedback
+            cursor.style.transform = 'translate(-50%, -50%) scale(1.2)';
+            setTimeout(() => {
+                cursor.style.transform = '';
+            }, 100);
+        });
+
+        document.getElementById('btn2').addEventListener('click', () => {
+            // Quick pulse effect
+            cursor.style.filter = 'drop-shadow(0 0 30px rgba(0, 200, 255, 1))';
+            setTimeout(() => {
+                cursor.style.filter = '';
+            }, 150);
+        });
+
+        document.getElementById('btn3').addEventListener('click', () => {
+            // Optimized burst effect
+            for (let i = 0; i < 6; i++) { // Reduced from 8 to 6
+                setTimeout(() => {
+                    if (trailCount < maxTrails) {
+                        createTrail(
+                            mouseX + Math.cos(i * Math.PI / 3) * 25,
+                            mouseY + Math.sin(i * Math.PI / 3) * 25
+                        );
+                    }
+                }, i * 30); // Faster timing
+            }
+        });
+
+        // Initialize
+        createParticles();
+
+        // Handle cursor leaving/entering window
+        document.addEventListener('mouseleave', () => {
+            cursor.style.opacity = '0';
+        });
+
+        document.addEventListener('mouseenter', () => {
+            cursor.style.opacity = '1';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../static/logo/favicon2.png">
+
+    <title>Movie Trailer</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            min-height: 100vh;
+            min-width: 100vw;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            font-family: 'Inter', sans-serif;
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 0, 150, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 60%, rgba(255, 255, 0, 0.05) 0%, transparent 50%);
+            animation: backgroundPulse 8s ease-in-out infinite alternate;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes backgroundPulse {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.8; }
+        }
+        
+        .container {
+            width: 96vw;
+            max-width: 880px;
+            min-width: 0;
+            height: 96vh;
+            margin: 0 auto;
+            padding: 1.5rem 0.7rem;
+            position: relative;
+            z-index: 1;
+            background: rgba(24, 24, 40, 0.82);
+            border-radius: 18px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.47);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            
+
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            width: 100%;
+            
+        }
+        
+        .movie-title {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(1.75rem, 7vw, 3rem);
+            font-weight: 900;
+            background: linear-gradient(45deg, #ff6b6b, #ffa500, #ff6b6b);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(255, 107, 107, 0.5);
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: #a0a0a0;
+            font-weight: 300;
+            margin-bottom: 1.2rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.5s forwards;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .video-wrapper {
+            position: relative;
+            margin-bottom: 1.2rem;
+            width: 100%;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 1s forwards;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            min-height: 0; 
+        }
+        
+        .video-container {
+            position: relative;
+            width: 96%;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 15px;
+            display: flex; /*  Make video-container a flex container for centering */
+            justify-content: center;
+            align-items: center;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 60px rgba(255, 107, 107, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .video-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.4),
+                0 0 80px rgba(255, 107, 107, 0.3);
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.3rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 1.5s forwards;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #ff6b6b, #ffa500);
+            border: none;
+            color: white;
+            padding: 11px 22px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            min-width: 120px;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+        }
+        
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #ffa500);
+            z-index: 1000;
+            transition: width 0.1s ease;
+        }
+        
+        .loading-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-size: 1.2rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2;
+        }
+        
+        .loading-indicator.show {
+            opacity: 1;
+        }
+        
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid #ff6b6b;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .status-display {
+            text-align: center;
+            margin-top: 1.4rem;
+            padding: 1rem 0.3rem;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 2s forwards;
+            width: 100%;
+        }
+        
+        .countdown {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #ffa500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .status-text {
+            color: #a0a0a0;
+            font-size: 0.93rem;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .container {
+                width: 100vw;
+                min-width: 0;
+                max-width: 99vw;
+                padding: 0.75rem 0.1rem;
+                border-radius: 0;
+            }
+            .header {
+                margin-bottom: 1.3rem;
+            }
+            .video-wrapper {
+                margin-bottom: 0.7rem;
+            }
+            .video-container{
+                min-width: 90vw;
+                max-width: 95vw;
+            }
+            .controls {
+                margin-top: 0.4rem;
+                gap: 0.7rem;
+            }
+            .btn {
+                font-size: 0.95rem;
+                padding: 10px 8px;
+                min-width: 95px;
+            }
+            .status-display {
+                margin-top: 0.6rem;
+                font-size: 0.93rem;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .movie-title {
+                font-size: 5vw;
+            }
+            .btn {
+                font-size: 0.87rem;
+            }
+        }
+
+        /* Glowing effects */
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(255, 107, 107, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(255, 107, 107, 0.8); }
+        }
+        
+        .glow-effect {
+            animation: glow 2s ease-in-out infinite;
+        }
+     
+    </style>
+</head>
+<!-- ... (your head and styles remain unchanged) ... -->
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="container">
+        <div class="header">
+            <h1 class="movie-title">SAHASAM - Official Teaser</h1>
+            <p class="subtitle">Experience Cinema Like Never Before</p>
+        </div>
+        <div class="video-wrapper">
+            <div class="video-container" id="videoContainer">
+                <div class="loading-indicator" id="loadingIndicator">
+                    <div class="spinner"></div>
+                    Loading trailer...
+                </div>
+                <!-- Replace iframe with this div: -->
+                <div id="trailerVideo"></div>
+            </div>
+        </div>
+        <div class="controls">
+            <button class="btn" onclick="restartVideo()">🔄 Restart</button>
+            <button class="btn" onclick="toggleFullscreen()">🔍 Fullscreen</button>
+        </div>
+        <div class="status-display">
+            <div class="countdown" id="countdown">--:--</div>
+            <div class="status-text">Challenge will complete automatically</div>
+        </div>
+    </div>
+    <!-- YouTube IFrame API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        let player;
+        let ytEnded = false;
+        let duration = 0;
+        let startTime = Date.now();
+
+        // This function gets called by the YouTube API after it loads
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('trailerVideo', {
+                height: '315',
+                width: '560',
+                videoId: 'LKtguwOcFsA', // Your YT video ID
+                playerVars: {
+                    'controls': 0,
+                    'rel': 0,
+                    'showinfo': 0,
+                    'modestbranding': 1,
+                    'autoplay': 1
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            // Get video duration for progress bar
+            duration = player.getDuration() * 1000;
+            startTime = Date.now();
+            updateProgress();
+            event.target.playVideo();
+            setTimeout(() => {
+                document.getElementById('loadingIndicator').style.opacity = '0';
+            }, 2000);
+        }
+
+        function onPlayerStateChange(event) {
+            // YT.PlayerState.ENDED === 0
+            if (event.data === YT.PlayerState.ENDED && !ytEnded) {
+                ytEnded = true;
+                finishChallenge("btrailer", 100);
+            } else if (event.data === YT.PlayerState.PLAYING && ytEnded) {
+                // Reset if replayed
+                ytEnded = false;
+            }
+        }
+
+        function updateProgress() {
+            if (!player || ytEnded) return;
+            const elapsed = player.getCurrentTime() * 1000;
+            const total = duration || 65000;
+            const progress = Math.min((elapsed / total) * 100, 100);
+            document.getElementById('progressBar').style.width = progress + '%';
+
+            const remaining = Math.max(0, total - elapsed);
+            const minutes = Math.floor(remaining / 60000);
+            const seconds = Math.floor((remaining % 60000) / 1000);
+            document.getElementById('countdown').textContent =
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            if (!ytEnded) {
+                requestAnimationFrame(updateProgress);
+            }
+        }
+
+        function finishChallenge(text, value) {
+            const result = {
+                challengeStatus: text,
+                score: value
+            };
+            document.getElementById('countdown').textContent = 'COMPLETED!';
+            document.getElementById('countdown').style.color = '#00ff00';
+            document.querySelector('.video-container').classList.add('glow-effect');
+        
+            window.parent.postMessage(result, '*');
+        }
+
+        function restartVideo() {
+            if (player) {
+                player.seekTo(0);
+                player.playVideo();
+                ytEnded = false;
+                startTime = Date.now();
+                updateProgress();
+            }
+        }
+
+        function toggleFullscreen() {
+            const container = document.getElementById('videoContainer');
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            } else {
+                container.requestFullscreen();
+            }
+        }
+
+        // Interactive background effect (unchanged)
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            document.body.style.background = `
+                linear-gradient(135deg, 
+                    hsl(${230 + x * 20}, 70%, ${10 + y * 5}%) 0%, 
+                    hsl(${240 + x * 15}, 60%, ${15 + y * 8}%) 50%, 
+                    hsl(${220 + x * 25}, 80%, ${20 + y * 10}%) 100%)
+            `;
+        });
+
+        
+
+    </script>
+    <style>
+         .msg-bar {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: 90%;
+  padding: 10px 20px;
+  margin: 0 auto;
+  border-radius: 7px;
+  font-size: 1.02rem;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 500;
+  opacity: 1;
+  transition: background 0.3s, color 0.3s;
+  z-index: 9999;
+  animation: slideup 0.3s ease-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+    .msg-bar.error {
+      background: #ffebee;
+      color: #b71c1c;
+      border: 1.5px solid #e57373;
+    }
+    .msg-bar.success {
+      background: #e8f5e9;
+      color: #1b5e20;
+      border: 1.5px solid #81c784;
+    }
+    .msg-bar.info {
+      background: #e3f2fd;
+      color: #01579b;
+      border: 1.5px solid #64b5f6;
+    }
+   @keyframes slideup {
+  0% {
+    transform: translate(-50%, -20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+    </style>
+    <script>
+function showMsgBar(msg="An error",type="error",d=2000){
+    const div=document.createElement("div");
+    div.className='msg-bar ' + type;
+    div.innerText=msg;
+    document.body.appendChild(div);
+    setTimeout(()=>{div.remove()},d);
+
+}
+document.addEventListener("contextmenu", e =>{ e.preventDefault();showMsgBar("Can't do Right Click", "error");});
+document.addEventListener("keydown", e => {
+  if (
+    e.key === "F12" ||
+    (e.ctrlKey && e.shiftKey && ['I', 'J', 'C', 'K'].includes(e.key)) ||
+    (e.ctrlKey && e.key === 'U') || (e.ctrlKey && e.key === 'u')
+  ) {
+    e.preventDefault();
+    showMsgBar("Nokkanda, kittoola", "error");
+  }
+});
+console.log("Uff U R BRILLIANT");
+console.log("Trying to send your location and Ip Address...");
+setTimeout(()=>{console.log("Your location and Ip Address are Sent successfully...");},2500);
+    </script>
+</body>
+</html>

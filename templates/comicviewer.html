@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Comic Layout Presentation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      background: #07171e;
+      font-family: 'Inter', sans-serif;
+      scroll-behavior: smooth;
+    }
+    body::-webkit-scrollbar{
+      display: none;
+    }
+
+    .comic-layout {
+      column-count: 4;
+      column-gap: 16px;
+      padding: 20px;
+    }
+
+    .scene {
+      width: 100%;
+      margin-bottom: 16px;
+      border-radius: 10px;
+      opacity: 0.3;
+      filter: blur(5px);
+      transition: all 0.7s ease-in-out;
+      break-inside: avoid;
+      box-shadow: none;
+    }
+
+    .scene.active {
+      opacity: 1;
+      filter: blur(0);
+      transform: scale(1.04);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+      z-index: 1;
+    }
+
+    .skip-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      background: #FFD7002a;
+      color: #ffffff;
+      border: none;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 1000;
+      box-shadow: 0 4px 24px #ffd70055, 0 1px 4px #0007;
+      transition: background 0.3s ease;
+      height: 60px;
+      width: 50px;
+      clip-path: polygon(0% 0%,25% 25%,25% 0%,100% 50%, 25% 100%,25% 75%, 0% 100%);
+    }
+
+    .skip-btn:hover {
+      background: #FFD700;
+      box-shadow: 0 8px 32px #ffd70099, 0 2px 8px #0009;
+    }
+
+    @media (max-width: 1024px) {
+      .comic-layout {
+        column-count: 3;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .comic-layout {
+        column-count: 2;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .comic-layout {
+        column-count: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <button class="skip-btn" onclick="finishChallenge('bcomic',0)"></button>
+
+  <div class="comic-layout" id="comicLayout">
+    <!-- JS will insert all scenes -->
+  </div>
+
+  <script>
+    const totalScenes = 27;
+    const layout = document.getElementById('comicLayout');
+    let scenes = [];
+    let current = 0;
+    let intervalId;
+
+    for (let i = 1; i <= totalScenes; i++) {
+      const img = document.createElement('img');
+      img.src = `../static/assets/comics/scn${i}.jpg`;
+      img.classList.add('scene');
+      layout.appendChild(img);
+      scenes.push(img);
+    }
+
+    function highlightScene(index) {
+      scenes.forEach((img) => img.classList.remove('active'));
+      const activeImg = scenes[index];
+      activeImg.classList.add('active');
+      activeImg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (index >= scenes.length-1)
+        setTimeout(()=>{finishChallenge("bcomic",0);},1000);
+    }
+
+    intervalId = setInterval(() => {
+      highlightScene(current);
+      current = (current + 1) % totalScenes;
+    }, 1500);
+
+    function finishChallenge(text,value) {
+      //alert("back");
+      const result = {
+        challengeStatus: text,
+        score: value
+      };
+      window.parent.postMessage(result, '*');
+    }
+  </script>
+<style>
+         .msg-bar {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: 90%;
+  padding: 10px 20px;
+  margin: 0 auto;
+  border-radius: 7px;
+  font-size: 1.02rem;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 500;
+  opacity: 1;
+  transition: background 0.3s, color 0.3s;
+  z-index: 9999;
+  animation: slideup 0.3s ease-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+    .msg-bar.error {
+      background: #ffebee;
+      color: #b71c1c;
+      border: 1.5px solid #e57373;
+    }
+    .msg-bar.success {
+      background: #e8f5e9;
+      color: #1b5e20;
+      border: 1.5px solid #81c784;
+    }
+    .msg-bar.info {
+      background: #e3f2fd;
+      color: #01579b;
+      border: 1.5px solid #64b5f6;
+    }
+   @keyframes slideup {
+  0% {
+    transform: translate(-50%, -20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+    </style>
+    <script>
+function showMsgBar(msg="An error",type="error",d=2000){
+    const div=document.createElement("div");
+    div.className='msg-bar ' + type;
+    div.innerText=msg;
+    document.body.appendChild(div);
+    setTimeout(()=>{div.remove()},d);
+
+}
+document.addEventListener("contextmenu", e =>{ e.preventDefault();showMsgBar("Can't do Right Click", "error");});
+document.addEventListener("keydown", e => {
+  if (
+    e.key === "F12" ||
+    (e.ctrlKey && e.shiftKey && ['I', 'J', 'C', 'K'].includes(e.key)) ||
+    (e.ctrlKey && e.key === 'U') || (e.ctrlKey && e.key === 'u')
+  ) {
+    e.preventDefault();
+    showMsgBar("Nokkanda, kittoola", "error");
+  }
+});
+console.log("Uff U R BRILLIANT");
+console.log("Trying to send your location and Ip Address...");
+setTimeout(()=>{console.log("Your location and Ip Address are Sent successfully...");},2500);
+    </script>
+</body>
+</html>

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="../static/logo/favicon2.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sahasam - Frequently Asked Questions</title>
+  <!-- Animate.css CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #003d46;
+      --secondary: #F49B1C;
+      --dark: #003d46;
+      --light: #F5F5F5;
+      --accent: #035561;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--light);
+      color: #333;
+      margin: 0;
+      padding: 0;
+      background-image: radial-gradient(circle at 10% 20%, rgba(248, 219, 219, 0.2) 0%, rgba(229, 248, 250, 0.2) 90%);
+    }
+    
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      color: white;
+      text-align: center;
+      padding: 60px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover;
+      opacity: 0.2;
+      z-index: 0;
+    }
+    
+    header h1 {
+      margin: 0;
+      font-size: 3em;
+      font-weight: 700;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 1;
+    }
+    
+    .container {
+      max-width: 900px;
+      margin: -40px auto 30px;
+      padding: 0 20px;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .faq-item {
+      margin-bottom: 25px;
+      padding: 25px;
+      border-left: 5px solid var(--secondary);
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      transition: all 0.4s ease;
+      cursor: pointer;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .faq-item::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(232, 48, 47, 0.1) 0%, rgba(244, 155, 28, 0.1) 100%);
+      z-index: 0;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .faq-item:hover::before {
+      opacity: 1;
+    }
+    
+    .faq-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+    
+    .faq-item h2 {
+      color: var(--primary);
+      margin-top: 0;
+      font-weight: 600;
+      font-size: 1.3em;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+    }
+    
+    .faq-item p {
+      margin: 15px 0 0;
+      color: #555;
+      line-height: 1.6;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .star-accent {
+      color: var(--secondary);
+      margin-right: 12px;
+      font-size: 1.2em;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(5deg); }
+    }
+    
+    .faq-item .icon {
+      margin-right: 15px;
+      font-size: 1.2em;
+      color: var(--secondary);
+    }
+    
+    .expand-btn {
+      position: absolute;
+      right: 20px;
+      top: 25px;
+      color: var(--primary);
+      font-size: 1.2em;
+      transition: transform 0.3s ease;
+    }
+    
+    .faq-item.active .expand-btn {
+      transform: rotate(180deg);
+    }
+    
+    .faq-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, opacity 0.3s ease;
+      opacity: 0;
+    }
+    
+    .faq-item.active .faq-content {
+      max-height: 500px;
+      opacity: 1;
+    }
+    
+    .floating-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5em;
+      box-shadow: 0 5px 20px rgba(232, 48, 47, 0.4);
+      cursor: pointer;
+      z-index: 100;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2em;
+      }
+      
+      .faq-item {
+        padding: 20px;
+      }
+      
+      .faq-item h2 {
+        font-size: 1.1em;
+      }
+    }
+
+    .msg-bar {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: auto;
+        max-width: 90%;
+        padding: 10px 20px;
+        margin: 0 auto;
+        border-radius: 7px;
+        font-size: 1.02rem;
+        text-align: center;
+        font-family: inherit;
+        font-weight: 500;
+        opacity: 1;
+        transition: background 0.3s, color 0.3s;
+        z-index: 9999;
+        animation: slideup 0.3s ease-out;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .msg-bar.error {
+      background: #ffebee;
+      color: #b71c1c;
+      border: 1.5px solid #e57373;
+    }
+    .msg-bar.success {
+      background: #e8f5e9;
+      color: #1b5e20;
+      border: 1.5px solid #81c784;
+    }
+    .msg-bar.info {
+      background: #e3f2fd;
+      color: #01579b;
+      border: 1.5px solid #64b5f6;
+    }
+   @keyframes slideup {
+    0% {
+        transform: translate(-50%, -20px);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(-50%, 0);
+        opacity: 1;
+    }
+    }
+    body::-webkit-scrollbar{
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <header class="animate__animated animate__fadeIn">
+    <h1>Sahasam FAQs</h1>
+  </header>
+
+  <div class="container">
+    <div class="faq-item animate__animated animate__fadeInUp animate__delay-1s" onclick="toggleFAQ(this)">
+      <h2><i class="fas fa-user-plus icon"></i>How do I register for Sahasam?</h2>
+      <div class="expand-btn"><i class="fas fa-chevron-down"></i></div>
+      <div class="faq-content">
+        <p>Click the "Are You Ready" button on the homepage. Enter your full name, phone number, optional referral ID, and create your Secret Code password. An OTP will be sent via SMS to verify your account.</p>
+      </div>
+    </div>
+
+    <div class="faq-item animate__animated animate__fadeInUp animate__delay-1s" onclick="toggleFAQ(this)">
+      <h2><i class="fas fa-trophy icon"></i>What rewards can I win?</h2>
+      <div class="expand-btn"><i class="fas fa-chevron-down"></i></div>
+      <div class="faq-content">
+        <p>You can earn coins which can be converted into real cash. The amount will be sent to your bank account via UPI ID or bank account details within 30 days after the event ends. If you win the main prize, after August 8 it will be sent to you accordingly.</p>
+      </div>
+    </div>
+
+    <div class="faq-item animate__animated animate__fadeInUp animate__delay-1s" onclick="toggleFAQ(this)">
+      <h2><i class="fas fa-gamepad icon"></i>How many times can I play the maze?</h2>
+      <div class="expand-btn"><i class="fas fa-chevron-down"></i></div>
+      <div class="faq-content">
+        <p>Each player gets <strong>one chance daily</strong> to play the underground maze. Plan your moves carefully! Your progress is saved automatically, so you can continue your adventure the next day.</p>
+      </div>
+    </div>
+
+    <div class="faq-item animate__animated animate__fadeInUp animate__delay-1s" onclick="toggleFAQ(this)">
+      <h2><i class="fas fa-shield-alt icon"></i>Can I share my solutions?</h2>
+      <div class="expand-btn"><i class="fas fa-chevron-down"></i></div>
+      <div class="faq-content">
+        <p>No. Sharing solutions or cheat codes publicly is strictly prohibited and may result in disqualification. We want to keep the adventure fair and exciting for all treasure hunters!</p>
+      </div>
+    </div>
+
+    <div class="faq-item animate__animated animate__fadeInUp animate__delay-1s" onclick="toggleFAQ(this)">
+      <h2><i class="fas fa-users icon"></i>Who are the NPC characters?</h2>
+      <div class="expand-btn"><i class="fas fa-chevron-down"></i></div>
+      <div class="faq-content">
+        <p>They are inspired by the Sahasam movie cast: Aju Varghese, Althaf Salim, Jayasree Sivadas, Narain, Baiju Santhosh, Gouri G. Kishan, and Babu Antony. Each guides you through unique challenges to collect 6 keys that unlock the final treasure chamber.</p>
+      </div>
+    </div>
+
+    <div class="faq-item animate__animated animate__fadeInUp animate__delay-1s" onclick="toggleFAQ(this)">
+      <h2><i class="fas fa-user-friends icon"></i>How do referrals work?</h2>
+      <div class="expand-btn"><i class="fas fa-chevron-down"></i></div>
+      <div class="faq-content">
+        <p>Share your referral ID with friends. For every friend who joins using your code, you get extra chances to guess and win the final award.</p>
+      </div>
+    </div>
+
+    <div class="faq-item animate__animated animate__fadeInUp animate__delay-1s" onclick="toggleFAQ(this)">
+      <h2><i class="fas fa-key icon"></i>What should I do if I forget my Secret Code?</h2>
+      <div class="expand-btn"><i class="fas fa-chevron-down"></i></div>
+      <div class="faq-content">
+        <p>Use the "Forgot Secret Code" option on the login page. You will receive an OTP to reset your password securely. For additional security, we recommend choosing a memorable but unique Secret Code.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="floating-btn animate__animated animate__bounceIn animate__delay-1s" onclick="scrollToTop()">
+    <i class="fas fa-arrow-up"></i>
+  </div>
+
+  <script>
+    // Toggle FAQ items
+    function toggleFAQ(element) {
+      element.classList.toggle('active');
+      
+      // Close other open FAQs
+      const allFAQs = document.querySelectorAll('.faq-item');
+      allFAQs.forEach(faq => {
+        if (faq !== element && faq.classList.contains('active')) {
+          faq.classList.remove('active');
+        }
+      });
+    }
+    
+    // Scroll to top function
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+    
+    // Show/hide floating button based on scroll position
+    window.addEventListener('scroll', function() {
+      const floatingBtn = document.querySelector('.floating-btn');
+      if (window.scrollY > 300) {
+        floatingBtn.style.display = 'flex';
+      } else {
+        floatingBtn.style.display = 'none';
+      }
+    });
+    
+    // Initialize page functions
+    document.addEventListener('DOMContentLoaded', function() {
+      const floatingBtn = document.querySelector('.floating-btn');
+      
+      // Set initial state of the scroll-to-top button
+      if (window.scrollY > 300) {
+        floatingBtn.style.display = 'flex';
+      } else {
+        floatingBtn.style.display = 'none';
+      }
+
+      // Add animation to FAQ items when they come into view
+      const faqItems = document.querySelectorAll('.faq-item');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate__fadeInUp');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      
+      faqItems.forEach(item => {
+        observer.observe(item);
+      });
+    });
+
+    // Anti-cheat and message bar functions
+    function showMsgBar(msg="An error",type="error",d=2000){
+        const div=document.createElement("div");
+        div.className='msg-bar ' + type;
+        div.innerText=msg;
+        document.body.appendChild(div);
+        setTimeout(()=>{div.remove()},d);
+    }
+
+    document.addEventListener("contextmenu", e =>{ e.preventDefault();showMsgBar("Can't do Right Click", "error");});
+    document.addEventListener("keydown", e => {
+    if (
+        e.key === "F12" ||
+        (e.ctrlKey && e.shiftKey && ['I', 'J', 'C', 'K'].includes(e.key)) ||
+        (e.ctrlKey && e.key === 'U') || (e.ctrlKey && e.key === 'u')
+    ) {
+        e.preventDefault();
+        showMsgBar("Nokkanda, kittoola", "error");
+    }
+    });
+    console.log("Uff U R BRILLIANT");
+    console.log("Trying to send your location and Ip Address...");
+    setTimeout(()=>{console.log("Your location and Ip Address are Sent successfully...");},2500);
+  </script>
+</body>
+</html>

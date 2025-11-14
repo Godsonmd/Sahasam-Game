@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../static/logo/favicon2.png">
+    <title>OTP Verification</title>
+<style>
+    html, body {
+      min-height: 100vh;
+      min-width: 100vw;
+      margin: 0;
+      padding: 0;
+      background: #121212;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    body {
+      width: 100vw;
+      height: 100vh;
+      
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .otp-container {
+      background: linear-gradient(135deg, #222222 0%, #000000 100%);
+      border: 2px solid #E8302F;
+      border-radius: 12px;
+      padding: 2.2rem 2.2rem 1.3rem 2.2rem;
+      max-width: 420px;
+      width: 90vw;
+      margin: 0 auto;
+      box-shadow: 0 10px 25px rgba(232, 48, 47, 0.3);
+      font-family: 'Rajdhani', 'Arial Narrow', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .game-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.1rem;
+    }
+    .game-logo img {
+      width: 54px;
+      height: 54px;
+      object-fit: contain;
+      display: block;
+    }
+    .otp-title {
+      color: #F5F5F5;
+      text-align: center;
+      font-size: 1.7rem;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 10px rgba(232, 48, 47, 0.7);
+      letter-spacing: 1px;
+      font-weight: bold;
+    }
+    .otp-subtitle {
+      color: #CCCCCC;
+      text-align: center;
+      margin-bottom: 1.8rem;
+      font-size: 1.03rem;
+    }
+    .otp-inputs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 2rem 0 1.4rem 0;
+      align-items: center;
+      width: 100%;
+    }
+    .otp-digit {
+      width: 42px;
+      height: 52px;
+      text-align: center;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #F5F5F5;
+      background: rgba(34, 34, 34, 0.7);
+      border: 2px solid #E8302F;
+      border-radius: 8px;
+      outline: none;
+        caret-color: transparent;
+      transition: all 0.3s ease;
+      margin: 0 1px;
+    }
+    .otp-digit:focus {
+      border-color: #F49B1C;
+      box-shadow: 0 0 10px rgba(244, 155, 28, 0.5);
+      transform: translateY(-2px);
+      animation: pulse 1.5s infinite;
+    }
+    .otp-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      gap: 10px;
+      margin-top: 0.5rem;
+      margin-bottom: 0.7rem;
+    }
+    .resend-btn {
+      background: none;
+      border: none;
+      color: #F49B1C;
+      cursor: pointer;
+      font-size: 0.98rem;
+      transition: color 0.2s;
+      padding: 0;
+    }
+    .resend-btn:hover {
+      color: #FEE03A;
+      text-decoration: underline;
+    }
+    .resend-btn:disabled {
+      color: #666666;
+      cursor: not-allowed;
+      text-decoration: none;
+    }
+    .verify-btn {
+      background: linear-gradient(90deg, #E8302F 0%, #B22222 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      font-size: 1.04rem;
+    }
+    .verify-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(232, 48, 47, 0.4);
+      background: linear-gradient(90deg, #F49B1C 0%, #E8302F 100%);
+    }
+    .verify-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      background: #444;
+    }
+    .security-notice {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1.5rem;
+      color: #CCCCCC;
+      font-size: 0.92rem;
+      opacity: 0.85;
+      text-align: center;
+    }
+    .shield-icon {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      background-image: url('shield-icon.svg');
+      margin-right: 8px;
+      background-size: cover;
+    }
+    .msg-bar {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 1.1rem;
+      border-radius: 7px;
+      font-size: 1.02rem;
+      text-align: center;
+      display: none;
+      font-family: inherit;
+      font-weight: 500;
+      transition: all 1s ease;
+      animation: fadeIn 1s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-50px); }
+      to { opacity: 1; }    
+    }
+    .msg-bar.error {
+      background: #ffebee;
+      color: #b71c1c;
+      border: 1.5px solid #e57373;
+    }
+    .msg-bar.success {
+      background: #e8f5e9;
+      color: #1b5e20;
+      border: 1.5px solid #81c784;
+    }
+    .msg-bar.info {
+      background: #e3f2fd;
+      color: #01579b;
+      border: 1.5px solid #64b5f6;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-5px); }
+      40%, 80% { transform: translateX(5px); }
+    }
+    .shake {
+      animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(244, 155, 28, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(244, 155, 28, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(244, 155, 28, 0); }
+    }
+    #countdown {
+      display: inline-block;
+      min-width: 20px;
+      text-align: center;
+    }
+    /* Mobile responsive */
+    @media (max-width: 600px) {
+      .otp-container {
+        padding: 1.3rem 0.4rem 1.1rem 0.4rem;
+        max-width: 90vw;
+        width: 85vw;
+      }
+      .otp-inputs {
+        gap: 7px;
+        margin: 1.2rem 0 1rem 0;
+      }
+      .otp-digit {
+        width: 34px;
+        height: 46px;
+        font-size: 1.25rem;
+        border-radius: 6px;
+      }
+      .otp-title {
+        font-size: 1.2rem;
+      }
+      .otp-subtitle {
+        font-size: 0.95rem;
+      }
+      .verify-btn, .resend-btn {
+        font-size: 0.97rem;
+        padding: 10px 10px;
+      }
+      .otp-footer {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+      }
+      .security-notice {
+        font-size: 0.82rem;
+      }
+      .game-logo img {
+        width: 40px;
+        height: 40px;
+      }
+      .msg-bar {
+        font-size: 0.94rem;
+        padding: 7px;
+      }
+    }
+    .audio-controls {
+            position: fixed;
+            bottom: 32px;
+            right: 36px;
+            z-index: 1300;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(232, 47, 47, 0.1), rgba(232, 47, 47, 0.2));
+            padding: 14px 24px;
+            border-radius: 50px;
+            box-shadow: 
+                0 8px 32px rgba(232, 47, 47, 0.15),
+                0 2px 8px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(232, 47, 47, 0.7);
+            gap: 100px;
+            font-family: 'Poppins', Arial, sans-serif;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .audio-controls:hover {
+            background: linear-gradient(135deg, rgba(232, 47, 47, 0.208), rgba(232, 47, 47, 0.295));
+            box-shadow: 
+                0 12px 40px rgba(232, 47, 47, 0.25),
+                0 4px 12px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .audio-controls button {
+            user-select: none;
+            background: linear-gradient(135deg, rgba(232, 47, 47, 0.1), rgba(232, 47, 47, 0.05));
+            border: 1px solid rgba(232, 47, 47, 0.3);
+            color: rgb(232, 47, 47);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 50%;
+            padding: 10px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .audio-controls button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(232, 47, 47, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .audio-controls button:hover ,.audio-controls button:focus{
+            background: linear-gradient(135deg, rgba(232, 47, 47, 0.2), rgba(232, 47, 47, 0.1));
+            border-color: rgba(232, 47, 47, 0.6);
+            color: #fff;
+            transform: scale(1.05);
+            box-shadow: 
+                0 4px 16px rgba(232, 47, 47, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .audio-controls button:hover::before {
+            opacity: 1;
+        }
+
+        .audio-controls button:active {
+            transform: scale(0.95);
+            box-shadow: 
+                0 2px 8px rgba(232, 47, 47, 0.2),
+                inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .audio-controls button[disabled] {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .audio-controls button[disabled]:hover {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border-color: rgba(232, 47, 47, 0.3);
+            color: rgb(232, 47, 47);
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Volume Range Wrapper */
+        .vol-range-wrapper {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 50px;
+            min-width: 60px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .vol-range-wrapper.show {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translateX(-50%) translateY(-50px);
+        }
+
+        .vol-range-wrapper input[type="range"] {
+            width: 140px;
+            height: 6px;
+            transform: rotate(-90deg);
+            margin: 24px 0;
+            background: linear-gradient(to left, #ff0000, #0000002e);
+            border-radius: 3px;
+            outline: none;
+            transition: all 0.2s ease;
+            appearance: none;
+        }
+
+        .vol-range-wrapper input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #E8302F, #E8302F);
+            cursor: pointer;
+            box-shadow: 
+                0 2px 8px rgba(232, 47, 47, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .vol-range-wrapper input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 
+                0 4px 12px rgba(232, 47, 47, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .vol-range-wrapper input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #E8302F, #E8502F);
+            cursor: pointer;
+            border: none;
+            box-shadow: 
+                0 2px 8px rgba(232, 47, 47, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .vol-display {
+            color: #E8302F;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+            min-width: 50px;
+            padding: 6px 12px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 12px;
+            border: 2px solid red;
+            backdrop-filter: blur(5px);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 700px) {
+            
+            .counters-wrapper {
+                top: 12px;
+                right: 12px;
+                gap: 8px;
+            }
+            .key-counter-container,
+            .cash-counter-container {
+                font-size: 1.1rem;
+                padding: 8px 16px 8px 12px;
+            }
+            .key-counter-icon,
+            .cash-counter-icon {
+                font-size: 1.4rem;
+            }
+            .key-counter-count,
+            .cash-counter-count {
+                font-size: 1.3rem;
+            }
+            
+            .audio-controls {
+                bottom: 16px;
+                right: 16px;
+                padding: 10px 16px;
+                gap: 12px;
+            }
+            
+            .audio-controls button {
+                font-size: 1rem;
+                width: 40px;
+                height: 40px;
+                padding: 8px;
+            }
+            
+            .vol-range-wrapper {
+                bottom: 70px;
+                padding: 16px 12px;
+                gap: 40px;
+                transform: translateX(-50%) translateY(-50px);
+            }
+            .vol-range-wrapper.show{
+                transform: translate(-50%,-10px);
+            }
+            .vol-range-wrapper input[type="range"] {
+                width: 100px;
+                margin: 20px 0;
+            }
+            
+            .vol-display {
+                font-size: 0.95rem;
+                min-width: 25px;
+            }
+            
+        }
+</style>
+</head>
+<body>
+    <div class="otp-container">
+      <div class="game-logo">
+        <img src="../static/front/padlock.png" alt="Game Name">
+      </div>
+      <div id="msgBar" class="msg-bar"></div>
+      <h2 class="otp-title">IDENTITY VERIFICATION GATE</h2>
+      <p class="otp-subtitle">Enter the 6-digit security code received on your device</p>
+      <div class="otp-inputs">
+        <input type="text" maxlength="1" class="otp-digit" data-index="1" autofocus>
+        <input type="text" maxlength="1" class="otp-digit" data-index="2">
+        <input type="text" maxlength="1" class="otp-digit" data-index="3">
+        <input type="text" maxlength="1" class="otp-digit" data-index="4">
+        <input type="text" maxlength="1" class="otp-digit" data-index="5">
+        <input type="text" maxlength="1" class="otp-digit" data-index="6">
+      </div>
+      <div class="otp-footer">
+        <button class="resend-btn" id="resendBtn">Resend Code (<span id="countdown">30</span>s)</button>
+        <button class="verify-btn">VERIFY IDENTITY</button>
+      </div>
+      <div class="security-notice">
+        <i class="shield-icon"></i>
+        <span>This session is secured with end-to-end encryption</span>
+      </div>
+    </div>
+    <div class="audio-controls" id="sbox">
+            <button id="volBtn" title="Volume Control">🔊</button>
+            <div id="volRangeWrapper" class="vol-range-wrapper">
+                <span id="volDisplay" class="vol-display">100%</span>
+                <input type="range" id="volRange" min="0" max="100" value="100" step="1">
+            </div>
+        </div>
+        <audio id="backgroundAudio" loop>
+        <source src="../static/front/the-last-piano.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+<script>
+  const audio = document.getElementById('backgroundAudio');
+        const LSvol = localStorage.getItem("gamesound");
+        if (LSvol==="M")
+        audio.muted = true;
+        else if(LSvol)
+          audio.volume = LSvol;
+        else
+          audio.volume = 1.0;
+          audio.play();
+          audio.loop=true;
+        const volBtn = document.getElementById('volBtn');
+        const volDisplay = document.getElementById('volDisplay');
+        const volRange = document.getElementById('volRange');
+        const volRangeWrapper = document.getElementById('volRangeWrapper');
+
+        let volumeTimeout;
+
+        updateVolDisplay();
+        function updateVolDisplay() {
+            const volume = audio.muted ? 0 : Math.round(audio.volume * 100);
+            volDisplay.textContent = audio.muted ? "Muted" : `${volume}%`;
+            
+            // Update button icon based on volume/mute state
+            if (audio.muted || audio.volume === 0) {
+                volBtn.textContent = "🔇";
+                volRange.value = 0;
+            } else if (audio.volume < 0.5) {
+                volBtn.textContent = "🔉";
+                volRange.value = Math.round(audio.volume * 100);
+            } else {
+                volBtn.textContent = "🔊";
+                volRange.value = Math.round(audio.volume * 100);
+            }
+            
+            volBtn.title=audio.muted?"unmuute":"mute";
+            // grab the live scene
+            //game.sound.volume = audio.muted ? 0 : audio.volume;
+            localStorage.setItem("gamesound",audio.muted ? "M" : audio.volume);
+
+            
+        }
+
+        function showVolumeSlider() {
+            clearTimeout(volumeTimeout);
+            volRangeWrapper.classList.add('show');
+        }
+
+        function hideVolumeSlider() {
+            volumeTimeout = setTimeout(() => {
+                volRangeWrapper.classList.remove('show');
+            }, 900);
+        }
+
+        // Volume button events - now handles both volume control and mute
+        volBtn.addEventListener('mouseenter', showVolumeSlider);
+        volBtn.addEventListener('mouseleave', hideVolumeSlider);
+        volBtn.addEventListener('click', () => {
+            // Toggle mute on click
+            audio.muted = !audio.muted;
+            //audio.volume=!audio.volume;
+            updateVolDisplay();
+        });
+
+        // Volume slider events
+        volRangeWrapper.addEventListener('mouseenter', () => {
+            clearTimeout(volumeTimeout);
+        });
+        volRangeWrapper.addEventListener('mouseleave', hideVolumeSlider);
+
+        volRange.addEventListener('input', function() {
+            const newVolume = parseInt(this.value) / 100;
+            audio.volume = newVolume;
+            audio.muted = newVolume === 0;
+            updateVolDisplay();
+        });
+
+        // Keyboard controls
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowUp' || e.key === '+') {
+                e.preventDefault();
+                const newVolume = Math.min(100, parseInt(volRange.value) + 5);
+                volRange.value = newVolume;
+                audio.volume = newVolume / 100;
+                audio.muted = false;
+                updateVolDisplay();
+                showVolumeSlider();
+                hideVolumeSlider();
+            }
+            if (e.key === 'ArrowDown' || e.key === '-') {
+                e.preventDefault();
+                const newVolume = Math.max(0, parseInt(volRange.value) - 5);
+                volRange.value = newVolume;
+                audio.volume = newVolume / 100;
+                audio.muted = newVolume === 0;
+                updateVolDisplay();
+                showVolumeSlider();
+                hideVolumeSlider();
+            }
+            if (e.key === 'm' || e.key === 'M') {
+                e.preventDefault();
+                volBtn.click();
+            }
+        });
+
+
+  const VERIFY_API = "https://ekadxkdpdg.execute-api.ap-south-1.amazonaws.com/sahasam-otp-verify";
+
+  function showMsgBar(message, type = "info", duration = 4000) {
+    const bar = document.getElementById('msgBar');
+    bar.className = 'msg-bar ' + type;
+    bar.textContent = message;
+    bar.style.display = 'block';
+    if (duration > 0) {
+      setTimeout(() => {
+        bar.style.display = 'none';
+      }, duration);
+    }
+  }
+showMsgBar(`Your OTP: ${Math.floor(100000 + Math.random() * 900000)}`, "info", 30000); // For testing purposes
+  document.querySelectorAll('.otp-digit').forEach(input => {
+    input.addEventListener('input', function(e) {
+      if (this.value.length === 1) {
+        const nextIndex = parseInt(this.dataset.index) + 1;
+        const nextInput = document.querySelector(`.otp-digit[data-index="${nextIndex}"]`);
+        if (nextInput) nextInput.focus();
+      }
+    });
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Backspace' && this.value.length === 0) {
+        const prevIndex = parseInt(this.dataset.index) - 1;
+        const prevInput = document.querySelector(`.otp-digit[data-index="${prevIndex}"]`);
+        if (prevInput) prevInput.focus();
+      }
+    });
+  });
+
+  // Handle paste event for OTP
+  document.querySelector('.otp-inputs').addEventListener('paste', function(e) {
+    e.preventDefault();
+    const pasteData = e.clipboardData.getData('text').trim();
+    if (/^\d{6}$/.test(pasteData)) {
+      const digits = pasteData.split('');
+      document.querySelectorAll('.otp-digit').forEach((input, index) => {
+        input.value = digits[index] || '';
+      });
+      document.querySelector('.verify-btn').focus();
+    } else {
+      showMsgBar('Please paste a valid 6-digit code.', 'error');
+    }
+  });
+
+  // Verification logic
+  document.querySelector('.verify-btn').addEventListener('click', async function() {
+    const otpDigits = Array.from(document.querySelectorAll('.otp-digit'))
+      .map(input => input.value)
+      .join('');
+    if (otpDigits.length === 6) {
+      this.disabled = true;
+      this.textContent = 'VERIFYING...';
+      this.style.background = 'linear-gradient(90deg, #F49B1C 0%, #FEE03A 100%)';
+      showMsgBar("Verifying OTP...", "info", 3000);
+      try {
+        const signupData2 = JSON.parse(localStorage.getItem("resenddata"));
+        const signupData1 = {
+          phone_number: signupData2.phone_number,
+          otp: otpDigits
+        };
+       
+        const response = await fetch(VERIFY_API, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(signupData1)
+        });
+        
+        const result = await response.json();
+        
+        if(result.message && response.ok)
+        {
+          localStorage.setItem("resenddata","");
+          showMsgBar(result.message || 'Verification Success', "success", 5000);
+          setTimeout(() => {
+            window.location.href = "../templates/Login.html";
+          }, 1500);
+        }
+        else{
+          showMsgBar(result.error||result.message || 'Verification failed. Try again.', "error", 5000);
+        }
+        //localStorage.setItem("token",result.token);
+        
+        this.textContent = 'VERIFY IDENTITY';
+        return result;
+      } catch (error) {
+        showMsgBar(error.message || 'Verification failed. Try again.', "error", 5000);
+        this.disabled = false;
+        this.textContent = 'VERIFY IDENTITY';
+        this.style.background = '';
+        return null;
+      }
+    } else {
+      showMsgBar("Enter all 6 digits of the OTP.", "error");
+      document.querySelector('.otp-inputs').classList.add('shake');
+      setTimeout(() => {
+        document.querySelector('.otp-inputs').classList.remove('shake');
+      }, 500);
+    }
+  });
+
+  // Resend code functionality with 30-second cooldown
+  const resendBtn = document.getElementById('resendBtn');
+  let countdown = 30;
+  let countdownInterval;
+
+  function startCountdown() {
+    resendBtn.disabled = true;
+    countdown = 30;
+    document.getElementById('countdown').textContent = countdown;
+    countdownInterval = setInterval(() => {
+      countdown--;
+      document.getElementById('countdown').textContent = countdown;
+      if (countdown <= 0) {
+        clearInterval(countdownInterval);
+        resendBtn.disabled = false;
+        resendBtn.innerHTML = 'Resend Code';
+      }
+    }, 1000);
+  }
+
+  resendBtn.addEventListener('click', () => {
+    resendBtn.innerHTML = 'Resend Code (<span id="countdown">30</span>s)';
+    startCountdown();
+    resend();
+  });
+
+  // Start the countdown when the page loads
+  startCountdown();
+
+  async function resend() {
+    const signupData = JSON.parse(localStorage.getItem("resenddata"));
+    if (!signupData || !signupData.phone_number) {
+      showMsgBar("Session expired or invalid. Please sign up again.", "error", 6000);
+      return;
+    }
+    showMsgBar("Resending OTP...", "info", 2500);
+    try {
+      const response = await fetch('https://ekadxkdpdg.execute-api.ap-south-1.amazonaws.com/sahasam-SignUp-handler', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(signupData)
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+
+      const result = await response.json();
+      showMsgBar("OTP sent again. Check your device.", "success", 3000);
+      // Optionally reset inputs for new code
+      document.querySelectorAll('.otp-digit').forEach(input => input.value = "");
+      document.querySelector('.otp-digit[data-index="1"]').focus();
+      return result;
+      location.reload();
+    } catch (error) {
+      showMsgBar(error.message || 'Failed to resend OTP.', "error", 5000);
+      return null;
+    }
+  }
+
+document.addEventListener("contextmenu", e =>{ e.preventDefault();showMsgBar("Can't do Right Click", "error");});
+
+document.addEventListener("keydown", e => {
+  if (
+    e.key === "F12" ||
+    (e.ctrlKey && e.shiftKey && ['I', 'J', 'C', 'K'].includes(e.key)) ||
+    (e.ctrlKey && e.key === 'U') || (e.ctrlKey && e.key === 'u')
+  ) {
+    e.preventDefault();
+    showMsgBar("Nokkanda, kittoola", "error");
+  }
+});
+console.log("Uff U R BRILLIANT");
+console.log("Trying to send your location and Ip Address...");
+setTimeout(()=>{console.log("Your location and Ip Address are Sent successfully...");},2500);
+</script>
+</body>
+</html>

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="../static/logo/favicon2.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sahasam - Privacy & Policy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    :root {
+      --bright-red: #003d46;
+      --dark-red: #003d46;
+      --orange: #F49B1C;
+      --yellow: #FEE03A;
+      --light-gray: #CCCCCC;
+      --dark-gray: #222222;
+      --white: #F5F5F5;
+      --black: #000000;
+      --lightning-yellow: #F4E44C;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--dark-gray);
+      color: var(--white);
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+    
+    header {
+      background: linear-gradient(to right, var(--dark-red), var(--bright-red));
+      color: var(--white);
+      padding: 30px 20px;
+      text-align: center;
+      border-bottom: 3px solid var(--orange);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    
+    h1 {
+      font-family: 'Cinzel Decorative', cursive;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      color: var(--yellow);
+      margin: 0;
+    }
+    
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 30px;
+      background-color: rgba(34, 34, 34, 0.9);
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      border: 1px solid var(--orange);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .container:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(to right, var(--orange), var(--yellow));
+    }
+
+    h2 {
+      color: var(--orange);
+      font-family: 'Cinzel Decorative', cursive;
+      border-bottom: 2px solid var(--yellow);
+      padding-bottom: 8px;
+      margin-top: 30px;
+    }
+    
+    ul {
+      padding-left: 25px;
+    }
+    
+    li {
+      margin-bottom: 10px;
+      position: relative;
+    }
+    
+    li:before {
+      content: "•";
+      color: var(--yellow);
+      font-weight: bold;
+      display: inline-block;
+      width: 1em;
+      margin-left: -1em;
+    }
+    
+    footer {
+      text-align: center;
+      font-size: 0.9em;
+      color: var(--light-gray);
+      margin: 40px 0;
+      padding: 20px;
+      background-color: rgba(34, 34, 34, 0.8);
+      border-top: 1px solid var(--orange);
+    }
+    
+    a {
+      color: var(--yellow);
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+    
+    a:hover {
+      color: var(--orange);
+      text-decoration: underline;
+      text-shadow: 0 0 8px rgba(244, 155, 28, 0.5);
+    }
+    
+    .scroll-to-top-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(to top, var(--dark-red), var(--bright-red));
+      color: var(--yellow);
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2em;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      cursor: pointer;
+      z-index: 1000;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+
+    .scroll-to-top-btn:hover {
+      transform: translateY(-5px);
+    }
+
+    .msg-bar {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: auto;
+      max-width: 90%;
+      padding: 10px 20px;
+      margin: 0 auto;
+      border-radius: 7px;
+      font-size: 1.02rem;
+      text-align: center;
+      font-family: inherit;
+      font-weight: 500;
+      opacity: 1;
+      transition: background 0.3s, color 0.3s;
+      z-index: 9999;
+      animation: slideup 0.3s ease-out;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .msg-bar.error {
+      background: #ffebee;
+      color: #b71c1c;
+      border: 1.5px solid #e57373;
+    }
+    .msg-bar.success {
+      background: #e8f5e9;
+      color: #1b5e20;
+      border: 1.5px solid #81c784;
+    }
+    .msg-bar.info {
+      background: #e3f2fd;
+      color: #01579b;
+      border: 1.5px solid #64b5f6;
+    }
+    @keyframes slideup {
+      0% {
+        transform: translate(-50%, -20px);
+        opacity: 0;
+      }
+      100% {
+        transform: translate(-50%, 0);
+        opacity: 1;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+        margin: 20px 15px;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      h2 {
+        font-size: 1.4rem;
+      }
+    }
+    body::-webkit-scrollbar{
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Sahasam Treasure Hunt - Privacy & Policy</h1>
+  </header>
+
+  <div class="container">
+    <h2>Introduction</h2>
+    <p>
+      Welcome to Sahasam, an adventure treasure hunt inspired by the Sahasam movie. We value your privacy and are committed to protecting your personal information while you enjoy the thrill of finding hidden treasures, solving mini-games, and exploring the underground maze.
+    </p>
+
+    <h2>Information We Collect</h2>
+    <p>
+      During registration and gameplay, we collect certain details to create your adventurer profile and enhance your experience:
+    </p>
+    <ul>
+      <li>Full Name(for account verification)</li>
+      <li>Phone Number (for account verification and OTPs)</li>
+      <li>Optional Referral ID (to track rewards)</li>
+      <li>Password (your Secret Code, stored securely)</li>
+      <li>Gameplay data such as scores, achievements, and rewards earned</li>
+    </ul>
+
+    <h2>How We Use Your Information</h2>
+    <p>
+      We use your information to:
+    </p>
+    <ul>
+      <li>Create and maintain your account</li>
+      <li>Send OTP verification codes via SMS</li>
+      <li>Allow you to participate in challenges, spin the reward wheel, and navigate the underground maze</li>
+      <li>Track your progress and display rewards, referrals, and leaderboard status</li>
+      <li>Improve the game experience and provide support when needed</li>
+    </ul>
+
+    <h2>Data Sharing</h2>
+    <p>
+      We do not sell or share your personal data with third parties except:
+    </p>
+    <ul>
+      <li>When required by law or legal process</li>
+      <li>With trusted service providers (e.g., SMS gateways) necessary to deliver OTPs and communications</li>
+    </ul>
+
+    <h2>Account Security</h2>
+    <p>
+      You are responsible for maintaining the secrecy of your Secret Code (password). Do not share your login credentials or solutions to game challenges publicly. Sharing solutions is strictly prohibited.
+    </p>
+
+    <h2>Age Requirements</h2>
+    <p>
+      Players must be at least 13 years old to participate in Sahasam.
+    </p>
+
+    <h2>Daily Play and Fair Use</h2>
+    <p>
+      Each player is allowed only one chance per day to guess the underground maze challenge. Cheating, using exploits, or maintaining multiple accounts may result in suspension or permanent disqualification.
+    </p>
+
+    <h2>Changes to this Policy</h2>
+    <p>
+      We may update this Privacy & Policy page to reflect changes in our practices. We encourage you to review this page regularly.
+    </p>
+
+    <h2>Contact Us</h2>
+    <p>
+      If you have questions or concerns about this policy, please contact our support team at <a href="mailto:support@sahasamgame.com">support@sahasamgame.com</a>.
+    </p>
+  </div>
+
+  <div class="scroll-to-top-btn">
+    <i class="fas fa-arrow-up"></i>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Scroll to top button logic
+      const scrollTopBtn = document.querySelector('.scroll-to-top-btn');
+
+      if (scrollTopBtn) {
+        window.addEventListener('scroll', () => {
+          if (window.scrollY > 300) {
+            scrollTopBtn.style.display = 'flex';
+          } else {
+            scrollTopBtn.style.display = 'none';
+          }
+        });
+
+        scrollTopBtn.addEventListener('click', () => {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        });
+      }
+
+      // Anti-cheat and message bar logic
+      function showMsgBar(msg="An error",type="error",d=2000){
+          const div=document.createElement("div");
+          div.className='msg-bar ' + type;
+          div.innerText=msg;
+          document.body.appendChild(div);
+          setTimeout(()=>{div.remove()},d);
+      }
+      document.addEventListener("contextmenu", e =>{ e.preventDefault();showMsgBar("Can't do Right Click", "error");});
+      document.addEventListener("keydown", e => {
+        if (
+          e.key === "F12" ||
+          (e.ctrlKey && e.shiftKey && ['I', 'J', 'C', 'K'].includes(e.key)) ||
+          (e.ctrlKey && e.key === 'U') || (e.ctrlKey && e.key === 'u')
+        ) {
+          e.preventDefault();
+          showMsgBar("Nokkanda, kittoola", "error");
+        }
+      });
+      console.log("Uff U R BRILLIANT");
+      console.log("Trying to send your location and Ip Address...");
+      setTimeout(()=>{console.log("Your location and Ip Address are Sent successfully...");},2500);
+    });
+  </script>
+</body>
+</html>

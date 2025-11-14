@@ -1,0 +1,2683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="./static/logo/favicon2.png">
+    <title>Sahasam Treasure Hunt</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Poppins:wght@300;400;600;700&display=swap">
+    <style>
+       
+@import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Bruno+Ace+SC&family=Henny+Penny&display=swap');
+
+        :root {
+            --bright-red: #E8302F;
+            --dark-red: #B22222;
+            --orange: #F49B1C;
+            --yellow: #FEE03A;
+            --light-gray: #CCCCCC;
+            --dark-gray: #222222;
+            --white: #F5F5F5;
+            --black: #000000;
+            --lightning-yellow: #F4E44C;
+            --magic-blue: #4D9DE0;
+            --dragon-green: #3BB273;
+            --treasure-gold: #FFD700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--dark-gray);
+            color: var(--white);
+            overflow-x: hidden;
+            zoom: 80%;
+                
+            user-select: none;
+        }
+
+        .login-btn {
+    padding: 6px 10px; 
+    color:  #00a6bf;
+    border:2px solid #00a6bf;
+    border-radius: 30px;
+    background-color: #000000;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px #003d46;
+    position: relative;
+    overflow: hidden;
+    font-size: 1.2rem; /* Reduced from 1.1rem */
+    z-index: 1;
+    width: 200px;
+    height: 50px;
+    transform: translate(0px);
+}
+        .login-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -50%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+            transition: all 0.5s;
+            z-index: -1;
+        }
+
+        .login-btn:hover {
+            transform: translate(00px,-3px);
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.6);
+        }
+
+        .login-btn:hover::before {
+            left: 50%;
+        }
+
+        .hero-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("./static/front/2NDLOOK-FB-ENG.jpg");
+  /*
+  background-image: url("/2NDLOOK-FB-ENG~3.jpg");
+  */
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: brightness(0.3);
+  box-shadow: inset 0 0 100px black;
+  z-index: 0;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+
+        .hero-logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .hero-logo-img {
+            height: 400px;
+            width: 100%;
+            filter: drop-shadow(0 0 15px rgba(244, 155, 28, 0.8));
+            animation: float 6s ease-in-out infinite;
+            -webkit-user-drag: none;
+        }
+
+        .hero-logo-text {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 2.5rem;
+            color: var(--yellow);
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+        }
+
+        .hero-tagline {
+            font-size: 1.2rem;
+            color: var(--yellow);
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero h1 {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            color: var(--black);
+            text-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+            position: relative;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .hero h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--black), var(--yellow));
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.5s ease;
+        }
+
+        .hero h1:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .hero h2 {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 2rem;
+            color: var(--bright-red);
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 1s ease-out 0.3s both;
+            line-height: 1.6;
+        }
+
+        .cta-btn {
+            padding: 15px 40px;
+            background: linear-gradient(to right, var(--dark-red), var(--bright-red));
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            animation: pulse 2s infinite 1s;
+            align-self: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+            transition: all 0.5s;
+            z-index: -1;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(184, 34, 34, 0.7);
+        }
+
+        .cta-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            position: relative;
+        }
+
+        .section-title {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            text-align: center;
+            position: relative;
+            color: var(--orange);
+            text-shadow: 0 0 10px rgba(244, 155, 28, 0.7);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(to right, var(--orange), var(--yellow));
+            margin: 15px auto;
+            box-shadow: 0 0 10px rgba(244, 155, 28, 0.5);
+        }
+
+        /* Game Info & Movie Info Cards */
+        .game-info, .movie-info {
+            background: #003d46;
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid rgba(244, 155, 28, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-info::before, .movie-info::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                transparent 0%,
+                transparent 45%,
+                rgba(244, 155, 28, 0.1) 50%,
+                transparent 55%,
+                transparent 100%
+            );
+            transform: rotate(30deg);
+            animation: shine 3s infinite;
+        }
+
+        .game-info:hover, .movie-info:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(244, 155, 28, 0.4);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+    
+
+        .prize-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.05"><path fill="%23F49B1C" d="M50 0 L60 40 L100 50 L60 60 L50 100 L40 60 L0 50 L40 40 Z"/></svg>');
+            background-size: 50px 50px;
+        }
+
+        .prize-amount {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--orange);
+            margin: 20px 0;
+            text-shadow: 0 0 10px rgba(244, 155, 28, 0.5);
+            position: relative;
+            display: inline-block;
+        }
+
+        .prize-amount::after {
+            /*content: '₹';*/
+            position: absolute;
+            left: -30px;
+            top: 0;
+            font-size: 2rem;
+            color: var(--yellow);
+        }
+
+        /* Countdown Timer */
+        .countdown {
+            text-align: center;
+            margin: 50px 0;
+            padding: 30px;
+            background: #346552;
+            border-radius: 15px;
+            border: 1px solid var(--orange);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .countdown::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.05"><circle cx="50" cy="50" r="40" stroke="%23F49B1C" stroke-width="2" fill="none" stroke-dasharray="5,5"/></svg>');
+        }
+
+        .countdown-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--orange);
+            text-shadow: 0 0 5px rgba(244, 155, 28, 0.5);
+        }
+
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .countdown-item {
+            background: #00000080;
+            border-radius: 10px;
+            padding: 25px;
+            min-width: 120px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            border: 1px solid var(--orange);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .countdown-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(244, 155, 28, 0.3);
+        }
+
+        .countdown-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--orange), var(--yellow));
+        }
+
+        .countdown-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--orange);
+            text-shadow: 0 0 10px rgba(244, 155, 28, 0.5);
+        }
+
+        .countdown-label {
+            font-size: 1rem;
+            opacity: 0.8;
+            color: var(--yellow);
+        }
+
+        /* Floating Shapes */
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.6;
+            animation: float 15s ease-in-out infinite;
+        }
+
+        .shape:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            border: 2px solid #E8302F;
+            border-radius: 50%;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #F49B1C, transparent);
+            transform: rotate(45deg);
+            top: 60%;
+            right: 15%;
+            animation-delay: -3s;
+        }
+
+        .shape:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            border: 1px solid #FEE03A;
+            border-radius: 20px;
+            top: 70%;
+            left: 20%;
+            animation-delay: -6s;
+        }
+
+        .shape:nth-child(4) {
+            width: 40px;
+            height: 40px;
+            background: #E8302F;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            top: 30%;
+            right: 30%;
+            animation-delay: -9s;
+        }
+
+        /* Particle System */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            background-color: #01571e;
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: particleFloat linear infinite;
+        }
+
+        /* Contributors Button & Modal */
+        .contributors-btn {
+            display: block;
+            margin: 40px auto;
+            padding: 15px 40px;
+            background: rgb(0, 0, 0);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(244, 155, 28, 0.4);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            border: 2px solid gold;
+        }
+
+        .contributors-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, #346552, transparent);
+            transition: all 0.5s;
+            z-index: -1;
+        }
+
+        .contributors-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(244, 155, 28, 0.6);
+        }
+
+        .contributors-btn:hover::before {
+            left: 100%;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000cc;
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.5s;
+        }
+
+        .modal-content {
+            background:#222;
+            
+            border-radius: 15px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            border: 2px solid var(--orange);
+            position: relative;
+            animation: slideUp 0.5s;
+            box-shadow: 0 0 30px rgba(244, 155, 28, 0.5);
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            font-size: 20px;
+            border-radius: 50%;
+            border: 2px solid gold;
+            color: var(--orange);
+            cursor: default;
+            transition: transform 0.3s;
+        }
+
+        .close-modal:hover {
+            
+            color: var(--yellow);
+        }
+
+        .team-members {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .team-member {
+            text-align: center;
+            padding: 15px;
+            background: #ffffff0d;
+            border-radius: 10px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-member::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--orange), var(--yellow));
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        .team-member:hover {
+            background: rgba(244, 155, 28, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px #f49b1c33;
+        }
+
+        .team-member:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(to right, #13683b, #0c934b );
+            padding: 30px 0;
+            text-align: center;
+            margin-top: 50px;
+            position: relative;
+            border-top: 1px solid var(--orange);
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.05"><path fill="%23FFFFFF" d="M50 0 L60 40 L100 50 L60 60 L50 100 L40 60 L0 50 L40 40 Z"/></svg>');
+            background-size: 50px 50px;
+        }
+
+        .footer p {
+            margin: 0;
+            opacity: 0.8;
+            position: relative;
+        }
+
+        .footer strong {
+            color: var(--yellow);
+        }
+
+        /* Treasure chest animation */
+        .treasure-chest {
+            width: 150px;
+            height: 100px;
+            position: relative;
+            margin: 0 auto 30px;
+            perspective: 1000px;
+        }
+
+        .chest-body {
+            width: 150px;
+            height: 80px;
+            background: linear-gradient(145deg, #b8860b, #daa520);
+            border-radius: 5px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(218, 165, 32, 0.4);
+        }
+
+        .chest-lid {
+            width: 150px;
+            height: 20px;
+            background: linear-gradient(145deg, #8b6914, #cd853f);
+            border-radius: 5px 5px 0 0;
+            position: absolute;
+            top: 0;
+            transform-origin: bottom center;
+            transform: rotateX(0deg);
+            transition: transform 0.5s ease;
+            box-shadow: 0 -5px 15px rgba(218, 165, 32, 0.3);
+        }
+
+        .treasure-chest:hover .chest-lid {
+            transform: rotateX(-120deg);
+        }
+
+        .glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(0, 255, 42, 0.8) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .treasure-chest:hover .glow {
+            opacity: 1;
+            animation: chest-glow 2s infinite alternate;
+        }
+
+        /* Typing animation */
+        .writing-line {
+            display: inline-block;
+            position: relative;
+        }
+
+        .writing-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            background: var(--yellow);
+            margin-left: 2px;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        @keyframes floatDragon {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+        }
+
+        @keyframes breatheFire {
+            0%, 60%, 100% { transform: translateY(0) rotate(0deg); }
+            10%, 30%, 50% { transform: translateY(-5px) rotate(1deg); }
+            20%, 40% { transform: translateY(-10px) rotate(-1deg); }
+        }
+
+        @keyframes flickerFire {
+            from { opacity: 0.7; transform: scale(1); }
+            to { opacity: 1; transform: scale(1.1); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(244, 155, 28, 0.4); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(244, 155, 28, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(244, 155, 28, 0); }
+        }
+
+        @keyframes shine {
+            0% { left: -50%; }
+            100% { left: 150%; }
+        }
+
+        @keyframes rocketFly {
+            0%, 100% { transform: translate(0, 0) rotate(25deg); }
+            25% { transform: translate(-10px, -15px) rotate(30deg); }
+            50% { transform: translate(10px, -30px) rotate(20deg); }
+            75% { transform: translate(-5px, -20px) rotate(25deg); }
+        }
+
+        @keyframes rocketFire {
+            from { height: 60px; opacity: 0.8; }
+            to { height: 80px; opacity: 1; }
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translate(100px, -100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes backgroundPulse {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.6; }
+        }
+
+        @keyframes patternMove {
+            0% { transform: translateX(0) translateY(0); }
+            100% { transform: translateX(-50%) translateY(-50%); }
+        }
+
+        @keyframes chest-glow {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.8; }
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-content {
+                width: 100%;
+                padding: 20px;
+                text-align: center;
+            }
+            .hero-logo {
+                justify-content: center;
+            }
+            .hero h1 { font-size: 2.5rem; }
+            .hero h2 { font-size: 1.5rem; }
+            .hero p {
+                max-width: 100%;
+                text-align: center;
+            }
+            .cta-btn {
+                align-self: center;
+            }
+            .countdown-item { min-width: 80px; padding: 15px; }
+            .countdown-number { font-size: 2rem; }
+            .team-members { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        /* Audio Popup Styles */
+        .audio-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 3000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.5s;
+        }
+        
+        .audio-popup-content {
+            background: rgba(34, 34, 34, 0.95);
+            border-radius: 15px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            border: 2px solid var(--orange);
+            text-align: center;
+            box-shadow: 0 0 30px rgba(244, 155, 28, 0.5);
+        }
+        
+        .audio-popup h2 {
+            color: var(--orange);
+            margin-bottom: 20px;
+        }
+        
+        .audio-popup p {
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .audio-popup-btn {
+            padding: 12px 30px;
+            background: linear-gradient(to right, var(--orange), var(--yellow));
+            border: none;
+            border-radius: 30px;
+            color: var(--dark-red);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(244, 155, 28, 0.4);
+            font-size: 1.1rem;
+            margin: 10px;
+        }
+        
+        .audio-popup-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(244, 155, 28, 0.6);
+        }
+        
+        .audio-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .audio-toggle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--orange);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+        }
+        
+        .audio-toggle:hover {
+            transform: scale(1.1);
+            background: var(--yellow);
+            color: var(--dark-red);
+        }
+/* Add these new styles to your existing CSS */
+.hero-content {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.hero-logo {
+    margin-bottom: 20px;
+}
+
+.hero-logo-img {
+    height: 320px;
+    margin-bottom: 30px;
+    animation: float 4s ease-in-out infinite;
+    mix-blend-mode:darken;
+}
+
+.treasure-hunt-title {
+    font-family: 'zel', serif;
+    font-size: 9rem;
+      font-weight: 900;
+    margin: 0px 0;
+    color: var(--lightning-yellow);
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.7); 
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    transform: translate(0px,-100px) scale(0.6);
+    animation: float1 6s ease-in-out infinite;
+}
+@keyframes float1 {
+    0%,100%{
+        transform: translate(0px,-100px) scale(0.6);
+    }
+    50%{
+        transform: translate(0px,-90px) scale(0.6);
+    }
+}
+
+.treasure-hunt-title::after {
+    /*content: '|';*/
+    position: absolute;
+    right: 0;
+    color: var(--yellow);
+    animation: blink 0.7s infinite;
+}
+
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+@keyframes blink {
+    from, to { opacity: 0 }
+    50% { opacity: 1 }
+}
+
+.hero-content h2 {
+    margin: 15px 0;
+    font-size: 1.8rem;
+}
+
+.hero-content p {
+    max-width: 600px;
+    margin: 20px auto 30px;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* Adjust the treasure chest position */
+.treasure-chest {
+    margin-bottom: 30px;
+}
+       .header-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-bottom: 5px solid var(--bright-red);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            animation: fadeIn 1.5s ease-in-out;
+        } 
+        /* About the Game Section Styles */
+.header-container {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    margin-bottom: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.header-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-bottom: 5px solid #003d46;
+    animation: fadeIn 1.5s ease-in-out;
+}
+#fullscreenVideoContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    z-index: 9999;
+}
+
+
+.game-info {
+    background: #003d46  ;
+    border: 1px solid #003d46;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 40px;
+    box-shadow: 0 10px 30px #003d46;
+    position: relative;
+    overflow: hidden;
+}
+
+.game-info::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        45deg,
+        transparent 0%,
+        rgba(244, 155, 28, 0.1) 50%,
+        transparent 100%
+    );
+    animation: shine 3s infinite;
+}
+
+.full-width-section {
+    padding: 40px 0;
+    margin: 30px 0;
+    position: relative;
+}
+
+.full-width-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(34, 34, 34, 0.7);
+    z-index: -1;
+    border-radius: 10px;
+}
+
+.section-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.how-to-play {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin: 40px 0;
+}
+
+.step {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 25px;
+    border-radius: 10px;
+    border-left: 4px solid var(--orange);
+    transition: all 0.3s ease;
+}
+
+.step:hover {
+    transform: translateY(-5px);
+    background: rgba(244, 155, 28, 0.1);
+    box-shadow: 0 10px 20px rgba(244, 155, 28, 0.2);
+}
+
+.treasure-icon {
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+.step-number {
+    color: var(--yellow);
+    margin-right: 10px;
+}
+
+.rules-list {
+    list-style-type: none;
+    margin: 30px 0;
+}
+
+.rules-list li {
+    padding: 15px;
+    margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-left: 4px solid var(--bright-red);
+    position: relative;
+}
+
+.reference-links {
+    margin-top: 40px;
+    padding: 20px;
+    background: rgba(244, 155, 28, 0.1);
+    border-radius: 10px;
+    text-align: center;
+}
+
+.reference-links a {
+    color: var(--yellow);
+    text-decoration: none;
+    margin: 0 10px;
+    transition: all 0.3s;
+}
+
+.reference-links a:hover {
+    color: var(--orange);
+    text-decoration: underline;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes shine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Base icon styles */
+.treasure-icon {
+  display: inline-block;
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
+
+/* Keyframe animations */
+@keyframes keyFloat {
+  0%, 100% { transform: translateY(0) rotate(-15deg); }
+  50% { transform: translateY(-8px) rotate(15deg); }
+}
+
+@keyframes compassSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes puzzleShake {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(5deg); }
+  75% { transform: rotate(-5deg); }
+}
+
+@keyframes coinBounce {
+  0%, 100% { 
+    transform: translateY(0) scale(1);
+    text-shadow: 0 0 5px gold;
+  }
+  50% { 
+    transform: translateY(-10px) scale(1.1);
+    text-shadow: 0 0 15px gold;
+  }
+}
+
+/* Apply animations to each icon */
+.step:nth-child(1) .treasure-icon { /* Key icon */
+  animation: keyFloat 3s ease-in-out infinite;
+}
+
+.step:nth-child(2) .treasure-icon { /* Compass icon */
+  animation: compassSpin 8s linear infinite;
+}
+
+.step:nth-child(3) .treasure-icon { /* Puzzle icon */
+  animation: puzzleShake 2s ease-in-out infinite;
+}
+
+.step:nth-child(4) .treasure-icon { /* Treasure icon */
+  animation: coinBounce 1.5s ease-in-out infinite;
+}
+
+/* Optional: Add color effects */
+.step:nth-child(1) .treasure-icon { color: #d4af37; } /* Gold for key */
+.step:nth-child(2) .treasure-icon { color: #3498db; } /* Blue for compass */
+.step:nth-child(3) .treasure-icon { color: #9b59b6; } /* Purple for puzzle */
+.step:nth-child(4) .treasure-icon { color: #f1c40f; } /* Yellow for treasure */
+
+.game-info::before {
+    content: none; /* Remove the shine effect */
+    /* Remove all other properties from this selector */
+}
+.game-info:hover, .movie-info:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(244, 155, 28, 0.4);
+    /* Remove the ::before animation reference */
+}
+
+/* CSS */
+.prize-card {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.2), #346552 );
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    border: 1px solid rgba(244, 155, 28, 0.3);
+    position: relative;
+    overflow: hidden;
+    margin: 20px 0;
+}
+
+.prize-animation {
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.prize-amount {
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--orange);
+    text-shadow: 0 0 10px rgba(244, 155, 28, 0.5);
+    transition: all 0.3s ease;
+}
+
+/* Final amount highlight animation */
+@keyframes prizeGlow {
+    0% {
+        transform: scale(1);
+        text-shadow: 0 0 10px rgba(244, 155, 28, 0.5);
+    }
+    50% {
+        transform: scale(1.05);
+        text-shadow: 0 0 20px rgba(244, 155, 28, 0.8);
+    }
+    100% {
+        transform: scale(1);
+        text-shadow: 0 0 10px rgba(244, 155, 28, 0.5);
+    }
+}
+
+.highlight-prize {
+    animation: prizeGlow 2s infinite;
+    color: var(--yellow);
+}
+body::-webkit-scrollbar{
+    display: none;
+}
+
+.vani{
+            animation: vv both;
+            animation-timeline: view(75% 25%);
+           }
+           @keyframes vv{
+            from{
+                opacity: 0;
+                transform: translateY(200px) scale(0.3);
+            }             
+           }
+.leftex{
+    animation: leftm 1s forwards;
+}
+@keyframes leftm {
+    10%{
+        filter: brightness(50);
+    }
+    90%{
+
+        filter: brightness(0) opacity(0);
+    }
+    100%{
+        transform: translateY(-200vh);
+    }
+}
+.rightex{
+    animation: rightm 1s forwards;
+}
+@keyframes rightm {
+    to{
+        transform: translate(200vh,-200vh);
+        opacity: 0.1;
+    }
+}
+@media (max-width: 768px) {
+  .hero-logo-img {
+    height: 250px;
+    width: auto;
+    max-width: 90%;
+  }
+  
+  .treasure-hunt-title {
+    font-size: 3.5rem;
+    transform: translate(0px, -50px) scale(0.6);
+  }
+  
+  .hero-content > div {
+    transform: translate(0px, -50px) !important;
+  }
+  
+  .login-btn {
+    width: 180px;
+    height: 45px;
+    font-size: 1rem;
+  }
+}
+@media (max-width: 768px) {
+  .countdown-item {
+    min-width: 70px;
+    padding: 15px 10px;
+  }
+  
+  .countdown-number {
+    font-size: 1.8rem;
+  }
+  
+  .countdown-label {
+    font-size: 0.9rem;
+  }
+}
+@media (max-width: 768px) {
+  .header-container {
+    height: 200px;
+  }
+  
+  .how-to-play {
+    grid-template-columns: 1fr;
+  }
+  
+  .step {
+    padding: 20px;
+  }
+}
+@media (max-width: 768px) {
+  .prize-amount {
+    font-size: 2.2rem;
+  }
+  
+  .prize-card {
+    padding: 20px;
+    margin: 15px 0;
+  }
+}
+@media (max-width: 768px) {
+  .movie-info {
+    padding: 20px;
+  }
+  
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+}
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+  }
+  
+  h1 {
+    font-size: 2.2rem;
+  }
+  
+  h2 {
+    font-size: 1.8rem;
+  }
+}
+@media (max-width: 768px) {
+  button, .login-btn, .cta-btn {
+    min-width: 120px;
+    min-height: 44px; /* Recommended touch target size */
+    padding: 12px 24px;
+  }
+}
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+  /* Timer adjustments - keep boxes in one line */
+  .countdown {
+    padding: 20px 10px;
+    margin: 30px 0;
+    overflow-x: auto; /* Enable horizontal scrolling if needed */
+    white-space: nowrap; /* Prevent wrapping */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  }
+  
+  .countdown-timer {
+    display: inline-flex; /* Changed from flex to inline-flex */
+    flex-wrap: nowrap; /* Prevent wrapping */
+    justify-content: center;
+    gap: 10px;
+    width: auto; /* Allow natural width */
+    padding-bottom: 10px; /* Space for scrollbar */
+  }
+  
+  .countdown-item {
+    min-width: 70px;
+    padding: 15px 10px;
+    display: inline-flex; /* Changed from block to inline-flex */
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .countdown-number {
+    font-size: 1.8rem;
+  }
+  
+  .countdown-label {
+    font-size: 0.9rem;
+    white-space: nowrap; /* Prevent label from wrapping */
+  }
+
+  /* Audio button circle fix */
+  .audio-toggle {
+    width: 44px; /* Standard touch target size */
+    height: 44px;
+    min-width: 44px; /* Ensure it doesn't shrink */
+    min-height: 44px;
+    padding: 0; /* Remove any padding */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .audio-toggle svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* Hero section adjustments */
+  .hero-logo-img {
+    height: 250px;
+    width: auto;
+    max-width: 90%;
+  }
+  
+  .treasure-hunt-title {
+    font-size: 3.5rem;
+    transform: translate(0px, -50px) scale(0.6);
+  }
+  
+  .hero-content > div {
+    transform: translate(0px, -50px) !important;
+  }
+  
+  .login-btn {
+    width: 180px;
+    height: 45px;
+    font-size: 1rem;
+  }
+
+  /* Header image adjustments */
+  .header-container {
+    height: 200px;
+  }
+  
+  /* How-to-play section */
+  .how-to-play {
+    grid-template-columns: 1fr;
+  }
+  
+  .step {
+    padding: 20px;
+  }
+
+  /* Prize card adjustments */
+  .prize-amount {
+    font-size: 2.2rem;
+  }
+  
+  .prize-card {
+    padding: 20px;
+    margin: 15px 0;
+  }
+
+  /* Movie info section */
+  .movie-info {
+    padding: 20px;
+  }
+  
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  /* General typography adjustments */
+  html {
+    font-size: 14px;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+  }
+  
+  h1 {
+    font-size: 2.2rem;
+  }
+  
+  h2 {
+    font-size: 1.8rem;
+  }
+
+  /* Button sizing */
+  button, .login-btn, .cta-btn {
+    min-width: 120px;
+    min-height: 44px; /* Recommended touch target size */
+    padding: 12px 24px;
+  }
+}
+
+/* Prevent horizontal scrolling on body */
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* Ensure audio button stays circular */
+.audio-toggle {
+  aspect-ratio: 1/1; /* Maintain perfect circle */
+  border-radius: 50%;
+  overflow: hidden; /* Prevent content from breaking circle */
+}
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+  /* Timer adjustments - keep boxes in one line */
+  .countdown {
+    padding: 20px 10px;
+    margin: 30px 0;
+    overflow-x: auto; /* Enable horizontal scrolling if needed */
+    white-space: nowrap; /* Prevent wrapping */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  }
+  
+  .countdown-timer {
+    display: inline-flex; /* Changed from flex to inline-flex */
+    flex-wrap: nowrap; /* Prevent wrapping */
+    justify-content: center;
+    gap: 10px;
+    width: auto; /* Allow natural width */
+    padding-bottom: 10px; /* Space for scrollbar */
+  }
+  
+  .countdown-item {
+    min-width: 70px;
+    padding: 15px 10px;
+    display: inline-flex; /* Changed from block to inline-flex */
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0; /* Prevent shrinking */
+  }
+  
+  .countdown-number {
+    font-size: 1.8rem;
+  }
+  
+  .countdown-label {
+    font-size: 0.9rem;
+    white-space: nowrap; /* Prevent label from wrapping */
+  }
+}
+ .character-bios-section {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: transparent; /* semi-transparent black */
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.character-bios-content {
+    background: #111;
+    border-radius: 15px;
+    padding: 30px;
+    max-width: 1000px;
+    height: 1000px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    color: #fff;
+    box-shadow: 0 0 30px rgba(244, 155, 28, 0.3);
+    margin: auto; /* helps with centering */
+}
+.character-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    /*grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));*/
+    gap: 25px;
+    margin-top: 30px;
+}
+.character-bios-content::-webkit-scrollbar {
+    display: none; /* Hide scrollbar */
+}
+.character-card {
+    background: #222;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(244, 155, 28, 0.2);
+    width: 200px;
+    height: 250px;
+}
+
+.character-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(244, 155, 28, 0.3);
+    border-color: var(--orange);
+}
+
+.character-image-container {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto 15px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--orange);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.character-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.character-card:hover .character-image {
+    transform: scale(1.05);
+}
+
+.character-card h3 {
+    font-size: 1.4rem;
+    margin: 15px 0 10px;
+    color: var(--orange);
+}
+
+.character-card p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #ddd;
+}
+
+.close-character-bios {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 28px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close-character-bios:hover {
+    color: var(--orange);
+}
+
+@media (max-width: 900px) {
+    .character-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .character-card[style*="grid-column"] {
+        grid-column: 1 / -1 !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .character-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .character-bios-content {
+        padding: 20px;
+    }
+    
+    .character-image-container {
+        width: 120px;
+        height: 120px;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+    @media (max-width: 900px) {
+    .character-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .character-card[style*="grid-column"] {
+        grid-column: 1 / -1 !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .character-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .character-bios-content {
+        padding: 20px;
+    }
+    
+    .character-image-container {
+        width: 120px;
+        height: 120px;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Modal Styling */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+
+    .modal-content {
+        margin: 5% auto;
+        padding: 20px;
+        border-radius: 10px;
+        width: 80%;
+        max-width: 700px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        position: relative;
+    }
+
+    .close-btn {
+        position: absolute;
+        right: 20px;
+        top: 10px;
+        font-size: 24px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .guide-content {
+        max-height: 60vh;
+        overflow-y: auto;
+        padding: 10px;
+    }
+
+    /* Ensure links are clickable */
+    #game-guide-link {
+        cursor: pointer;
+        color: #0066cc;
+        text-decoration: underline;
+    }
+    
+    </style>
+</head>
+<body>
+    <div class="audio-popup" id="audioPopup">
+        <div class="audio-popup-content">
+            <h2>Enable Background Music?</h2>
+            <p>For the full immersive experience, we recommend enabling background music. You can always change this later using the audio controls in the bottom right corner.</p>
+            <button class="audio-popup-btn" id="enableAudio">Enable Audio</button>
+            <button class="audio-popup-btn" id="disableAudio">No Thanks</button>
+        </div>
+    </div>
+    
+    <div class="audio-controls" id="audioControls">
+        <button class="audio-toggle" id="audioToggle">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        
+        <div class="particles" id="particles"></div>
+
+        <div class="hero-content">
+            <div class="treasure-chest">
+            </div>
+            
+            <div class="hero-logo">
+                 <img src="./static/front/sahasam.png" alt="Sahasam Logo" class="hero-logo-img">
+                 <!-- <img src="/sahasam.png" alt="Sahasam Logo" class="hero-logo-img"> -->
+
+                <h1 class="treasure-hunt-title" >The Treasure Hunt!</h1>
+                
+                <div style="transform: translate(0px,-100px);">
+                    <h2 id="typing-title"></h2>
+                    <p>The treasure cave awaits the brave. Finish thrilling tasks, crack the secrets, and stand a chance to win real cash prizes up to ₹1,00,000.
+    This isn't just a game — it's your adventure.</p>
+                    <button class="login-btn" onclick="ready();">Are you ready!!</button>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Countdown Timer -->
+        <div class="countdown">
+            <div class="countdown-title">Time Remaining Until Grand Prize Announcement</div>
+            <div class="countdown-timer">
+                <div class="countdown-item">
+                    <div class="countdown-number" id="days">00</div>
+                    <div class="countdown-label">Days</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="hours">00</div>
+                    <div class="countdown-label">Hours</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="minutes">00</div>
+                    <div class="countdown-label">Minutes</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="seconds">00</div>
+                    <div class="countdown-label">Seconds</div>
+                </div>
+            </div>
+        </div>
+            <!-- HTML -->
+<div class="prize-card">
+    <h3>Grand Prize</h3>
+    <div class="prize-animation">
+        <span class="prize-amount" id="prizeAmount">₹50,000</span>
+    </div>
+    <p>It all comes down to one final code. Will you be the one to break it?</p>
+</div>
+            
+    </div>
+    
+<div class="info-grid">
+            <div class="game-info">
+                <div class="header-container">
+        <img src="./static/front/castle.png" alt="Sahasam Game Banner" class="header-image">
+        <!-- <img src="/castle.png" alt="Sahasam Game Banner" class="header-image"> -->
+
+    </div>
+
+    <div class="container">
+        <h1 class="animate__animated animate__fadeInDown " style="font-size: 3rem;">About the Sahasam Game</h1>
+    </div>
+        
+    <!-- About Section -->
+    <div class="full-width-section animate__animated animate__fadeInUp vani">
+        <div class="section-content">
+            <h2> The Ultimate Treasure Hunt Adventure!</h2>
+            <p>Get ready to experience Sahasam, a thrilling treasure hunt game inspired by the blockbuster movie! In this exciting adventure, you will sign up as an explorer, create your own profile, and start a journey to uncover hidden treasures worth up to ₹1 lakh. The game begins by collecting 6 special keys from famous characters of the Sahasam movie, who will guide you through fun and challenging mini-games. Each mini-game brings you closer to the final treasure while you earn real rewards along the way. After gathering all the keys, you get to spin a prize wheel to instantly win up to ₹20.</p>
+            <p>But the excitement doesn't stop there—brace yourself for the ultimate underground maze challenge, where hidden treasures and big cash prizes await. You can even book your movie ticket, track your rewards, and invite friends using your referral ID to earn more. Whether you love solving puzzles, exploring stories, or just want to win amazing prizes, Sahasam offers an adventure like no other. Are you ready to join the hunt?</p>
+            <div class="reference-links animate__animated animate__pulse animate__delay-1s">
+                <h3>Reference Materials:</h3>
+                <p><a href="./templates/official_guidlines.html " target="_blank">Official Game Guide</a> | <a href="#character-bios">Character Bios</a></p>
+            </div>
+        </div>
+    </div>
+    
+   <div id="character-bios" class="character-bios-section" style="display: none;">
+    <div class="character-bios-content">
+        <button class="close-character-bios" onclick="hideCharacterBios()">×</button>
+        <h2>Meet the Characters</h2>
+        
+        <div class="character-grid">
+            <!-- Row 1 -->
+            <div class="character-card">
+                <div class="character-image-container">
+                    <img src="/static/assets/npc/gouri.jpg" alt="Gouri G. Kishan" class="character-image">
+                </div>
+                <h3>Gouri G. Kishan</h3>
+             
+            </div>
+            
+            <div class="character-card">
+                <div class="character-image-container">
+                    <img src="/static/assets/npc/althaf-salim.avif" alt="Althaf Salim" class="character-image">
+                </div>
+                <h3>Althaf Salim</h3>
+               
+            </div>
+            
+            <div class="character-card">
+                <div class="character-image-container">
+                    <img src="/static/assets/npc/jayasree.jpg" alt="Jayasree Sivadas" class="character-image">
+                </div>
+                <h3>Jayasree Sivadas</h3>
+               
+            </div>
+            
+            <!-- Row 2 -->
+            <div class="character-card">
+                <div class="character-image-container">
+                    <img src="/static/assets/npc/naz.jpg" alt="Narain" class="character-image">
+                </div>
+                <h3>Narain</h3>
+               
+            </div>
+            
+            <div class="character-card">
+                <div class="character-image-container">
+                    <img src="/static/assets/npc/baiju.jpg" alt="Baiju Santhosh" class="character-image">
+                </div>
+                <h3>Baiju Santhosh</h3>
+              
+            </div>
+            
+            <div class="character-card">
+                <div class="character-image-container">
+                    <img src="/static/assets/npc/aju-varghese-30512-18-04-2017-06-18-24.avif" alt="Aju Varghese" class="character-image">
+                </div>
+                <h3>Aju Varghese</h3>
+                
+            </div>
+            
+           
+            <div class="character-card" >
+                <div class="character-image-container">
+                    <img src="/static/assets/npc/babu.webp" alt="Babu Antony" class="character-image">
+                </div>
+                <h3>Babu Antony</h3>
+              
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- How to Play Section -->
+    <div class="full-width-section animate__animated animate__fadeInUp vani">
+    <div class="section-content">
+        <h2>How to Play</h2>
+        <div class="how-to-play">
+            <div class="step animate__animated animate__fadeIn animate__delay-1s">
+                <div class="treasure-icon">🗝️</div>
+                <h3><span class="step-number">1</span> Registration</h3>
+                <p>Embark on your journey by creating your adventurer profile. Enter your full name, choose an adventurous username, and set your secret code to protect your treasures. Verify your phone number with the OTP sent via SMS, and unlock the gateway to a world of hidden riches and thrilling challenges.</p>
+            </div>
+            <div class="step animate__animated animate__fadeIn animate__delay-1.2s">
+                <div class="treasure-icon">🧭</div>
+                <h3><span class="step-number">2</span> Exploration</h3>
+                <p>Step into your personal dashboard, the command center for your expedition. Here you can book tickets to watch the epic <em>Sahasam</em> movie, monitor your growing collection of rewards, and share your unique referral ID with fellow explorers to earn bonus treasures. Every action you take brings you closer to unlocking the grand prize.</p>
+            </div>
+            <div class="step animate__animated animate__fadeIn animate__delay-1.4s">
+                <div class="treasure-icon">🧩</div>
+                <h3><span class="step-number">3</span> Key Collection</h3>
+                <p>Prepare to meet legendary characters from the Sahasam movie who will be your guides and challengers. Engage with Aju Varghese, Althaf Salim, Gouri G. Kishan, and others as you test your skills in six captivating mini-games. Each victory earns you a powerful key, bringing you one step closer to unlocking the ultimate treasure chamber.</p>
+            </div>
+            <div class="step animate__animated animate__fadeIn animate__delay-1.6s">
+                <div class="treasure-icon">💰</div>
+                <h3><span class="step-number">4</span> Final Challenge</h3>
+                <p>With all six keys in hand, it’s time to spin the wheel of fortune for instant rewards up to ₹20. But the true test awaits underground—navigate a mysterious maze filled with hidden treasures and secret passages. Conquer every obstacle to claim cash prizes ranging from ₹10,000 to ₹1 lakh and etch your name among the greatest treasure hunters.</p>
+            </div>
+        </div>
+        
+        <div class="reference-links animate__animated animate__pulse animate__delay-2s">
+            
+            <p><a href="https://www.youtube.com/results?search_query=sahasam+movie+promo+videos+only" target="_blank">Watch Relevant Videos</a></p>
+        </div>
+    </div>
+</div>
+
+    
+    <!-- Rules Section -->
+    <div class="full-width-section animate__animated animate__fadeInUp">
+    <div class="section-content">
+        <h2>Game Rules & Regulations</h2>
+        <ul class="rules-list">
+            <li class="animate__animated animate__fadeInRight">Players must register with a valid phone number and verify it using the OTP sent via SMS.</li>
+            <li class="animate__animated animate__fadeInRight animate__delay-0.2s">Each player must create a unique adventurer profile and keep their secret code confidential at all times.</li>
+            <li class="animate__animated animate__fadeInRight animate__delay-0.4s">Only one account per player is permitted throughout the entire treasure hunt.</li>
+            <li class="animate__animated animate__fadeInRight animate__delay-0.6s">All six keys must be collected by successfully completing the mini-games hosted by the Sahasam movie characters.</li>
+            <li class="animate__animated animate__fadeInRight animate__delay-0.8s">Sharing answers, solutions, or walkthroughs publicly is strictly prohibited and will lead to disqualification.</li>
+            <li class="animate__animated animate__fadeInRight animate__delay-1s">After collecting all keys, players must spin the prize wheel before entering the underground maze challenge.</li>
+            <li class="animate__animated animate__fadeInRight animate__delay-1.2s">Cheating, using unauthorized tools, or exploiting glitches will result in immediate suspension of the account.</li>
+            <li class="animate__animated animate__fadeInRight animate__delay-1.4s">Rewards earned through gameplay and referrals will be credited to your profile wallet according to the terms.</li>
+            <li class="animate__animated animate__fadeInRight animate__delay-1.6s">Each player has only one chance per day to attempt the underground maze challenge.Choose your time wisely!</li>
+            <li class="animate__animated animate__fadeInRight animate__delay-1.8s">All decisions made by the game moderators are final and binding.</li>
+        </ul>
+        
+        <div class="reference-links animate__animated animate__pulse animate__delay-2s">
+            <h3>Official Rules Documents:</h3>
+            <p><a href="./templates/privacy_policy.html" target="_blank">Privacy & Policy</a> | <a href="./templates/faq.html" target="_blank">FAQs</a></p>
+        </div>
+    </div>
+</div>
+
+
+            </div>
+</div>
+<div class="movie-info">
+                <div class="writing-content">
+                    <h2 class="section-title">
+                        <span id="title-line" class="writing-line"></span>
+                    </h2>
+                    <div class="info-grid">
+                        <div>
+                            <h3 style="color: var(--orange);">
+                                <span id="film-line" class="writing-line"></span>
+                            </h3>
+                            <p>
+                                <strong id="title-text"></strong>
+                                <span id="film-text1" class="writing-line"></span>
+                            </p>
+                            <p>
+                                <span id="film-text2" class="writing-line"></span>
+                            </p>
+                        </div>
+                        <div>
+                            <h3 style="color: var(--orange);">
+                                <span id="cast-line" class="writing-line"></span>
+                            </h3>
+                            <ul style="display: flex;flex-direction:column;gap:5px;">
+                                <div>
+
+                                    <strong class="writing-line" id="director"></strong> <span id="director-text" class="writing-line"></span>
+                                </div>
+                                <div>
+
+                                    <strong class="writing-line" id="actor"></strong> <span id="actor-text" class="writing-line"></span>
+                                </div>
+                                <div>
+
+                                    <strong class="writing-line" id="actress"></strong> <span id="actress-text" class="writing-line"></span>
+                                </div>
+                                <div>
+
+                                    <strong class="writing-line" id="music"></strong> <span id="music-text" class="writing-line"></span>
+                                </div>
+                                <div>
+
+                                    <strong class="writing-line" id="date"></strong> <span id="date-text" class="writing-line"></span>
+                                </div>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Footer -->
+            <footer class="footer">
+                <div class="modal" id="contributorsModal">
+                    <div class="modal-content">
+                        
+                        <h2 class="section-title">The Creative Minds</h2>
+                        <p>This game was developed by the talented team at <br><strong>NarrowLabs Technologies Pvt. Ltd.</strong></p>
+                        
+                        <div class="team-members" title="click to view Linkedin profile">
+                            <div class="team-member" onclick="window.open('https://www.linkedin.com/in/arjundas2312','_blank')" ondblclick="window.open('https://www.instagram.com/the.real_arjundas?igsh=MTduZTVob3dmMGt5eg==','_blank')">
+                                <h3>Arjun Das</h3>
+                            </div>
+                            <div class="team-member" onclick="window.open('https://www.linkedin.com/in/godsonin','_blank')" ondblclick="window.open('https://www.instagram.com/godson.in_?igsh=MXB4dW9vYm0ybDhkbw==','_blank')">
+                                <h3>Godson M D</h3>
+                            </div>
+                            <div class="team-member" onclick="window.open('https://www.linkedin.com/in/anila-thomas-a31469276/','_blank')" ondblclick="window.open('https://www.instagram.com/_anila_142_?igsh=MTk2MmtlMTJjcGc3dg==','_blank')">
+                                <h3>Anila Thomas</h3>
+                            </div>
+                            <div class="team-member" onclick="window.open('https://www.linkedin.com/in/fatima-fida-049797269/','_blank')" ondblclick="window.open('https://www.instagram.com/fattma_fida?igsh=MXV1ancxaTl1Nnd0aw==','_blank')">
+                                <h3>Fatima Fida</h3>
+                            </div>
+                            <div class="team-member" onclick="window.open('https://www.linkedin.com/in/alfred-francis-csx','_blank')" ondblclick="window.open('https://www.instagram.com/dark_alal?igsh=MXI4MWpuc2wweDVuNw==','_blank')">
+                                <h3>Alfred Francis</h3>
+                            </div>
+                    <div class="team-member" onclick="window.open('https://www.linkedin.com/in/liya-fathima-p','_blank')" ondblclick="window.open('https://www.instagram.com/__liy_aaa_?igsh=MXViZGFhZmRsMmg4aQ%3D%3D&utm_source=qr','_blank')">
+                        <h3>Liya Fathima</h3>
+                    </div>
+                    <div class="team-member" onclick="window.open('https://www.linkedin.com/in/ridathariq','_blank')" ondblclick="window.open('https://www.instagram.com/ridathariq?igsh=bmNqOWJzcXoxanNm','_blank')">
+                        <h3>Rida Thariq</h3>
+                    </div>
+                    <div class="team-member" onclick="window.open('https://www.linkedin.com/in/akshay-sunil-5389b5228','_blank')" ondblclick="window.open('https://www.instagram.com/akshaaaaaayyyyyy?igsh=MTB6bDg0Z2xneTd4OA==','_blank')">
+                        <h3>Akshay Sunil</h3>
+                    </div>
+                    <div class="team-member" onclick="window.open('https://www.linkedin.com/in/hari-govind-120496315','_blank')" ondblclick="window.open('https://www.instagram.com/ha.riii8?igsh=dHE1eTNod3cybzVl&utm_source=qr','_blank')">
+                        <h3>Harigovind</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <p>© 2025 Sahasam Treasure Hunt. All rights reserved.</p>
+        <p>Developed by <strong>NarrowLabs Technologies Pvt. Ltd.</strong> | Officially associated with <strong>Sahasam Movie</strong> <button class="contributors-btn" id="contributorsBtn">Creators</button></p>
+    </footer>
+    
+    <!-- Audio Element (hidden) -->
+    <audio id="backgroundAudio" loop>
+        <source src="./static/front/the-last-piano.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    
+    <div id="fullscreenVideoContainer" style="display: none;">
+        <video id="introVideo"  playsinline style="width: 100vw; height: 100vh; object-fit: cover;">
+            <source src="./static/assets/videos/ai 2.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    
+    
+    <script>
+        
+        
+        const audio = document.getElementById('backgroundAudio');
+        function ready() {
+                    audio.pause();
+            document.body.style.zoom = "100%";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Hide all other content
+    document.body.querySelectorAll('.hero-section > *:not(#fullscreenVideoContainer)').forEach(el => {
+    
+        el.classList.add("leftex");
+    });
+
+    // Show the fullscreen video
+    const videoContainer = document.getElementById('fullscreenVideoContainer');
+const video = document.getElementById('introVideo');
+    setTimeout(()=>{
+    videoContainer.style.display = 'block';
+    video.currentTime = 0;
+    video.play();},500);
+
+    // Redirect after video ends
+    video.onended = function () {
+        window.location.href = './templates/signup.html'; 
+    };
+}
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Audio Control Functionality
+            const audioPopup = document.getElementById('audioPopup');
+            const enableAudioBtn = document.getElementById('enableAudio');
+            const disableAudioBtn = document.getElementById('disableAudio');
+            const audioControls = document.getElementById('audioControls');
+            const audioToggle = document.getElementById('audioToggle');
+
+            // Check if user has already made a choice
+            const audioPreference = localStorage.getItem('audioPreference');
+            
+            if (audioPreference === 'enabled') {
+                audioPopup.style.display = 'none';
+                audioControls.style.display = 'block';
+                // Try to play audio
+                audio.play().catch(e => {
+                    console.log('Audio play failed:', e);
+                    // Show controls if autoplay is blocked
+                    audioControls.style.display = 'block';
+                });
+            } else if (audioPreference === 'disabled') {
+                audioPopup.style.display = 'none';
+                audioToggle.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                            <line x1="23" y1="9" x2="17" y2="15"></line>
+                            <line x1="17" y1="9" x2="23" y2="15"></line>
+                        </svg>
+                    `;
+            } else {
+                // First visit - show popup
+                audioPopup.style.display = 'flex';
+            }
+
+            // Create particles
+            function createParticles() {
+                const particlesContainer = document.getElementById('particles');
+                const particleCount = 150;
+
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    
+                    // Random positioning and animation
+                    particle.style.left = Math.random() * 100 + 'vw';
+                    particle.style.top = Math.random() * 100 + 'vh';
+                    particle.style.width = (Math.random() * 5 + 3) + 'px';
+                    particle.style.height = particle.style.width;
+                    particle.style.animationDuration = (Math.random() * 10 + 5) + 's';
+                    particle.style.animationDelay = Math.random() * 5 + 's';
+                    particle.style.opacity = Math.random() * 0.5 + 0.3;
+                    
+                    // Random color (gold/yellow/orange)
+                    const colors = ['#FFD700', '#FEE03A', '#F49B1C'];
+                    particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    
+                    particlesContainer.appendChild(particle);
+                }
+                //setTimeout(createParticles(),10000);
+            }
+            
+            createParticles();
+
+            // Enable Audio Button
+            enableAudioBtn.addEventListener('click', function() {
+                audioPopup.style.display = 'none';
+                audioControls.style.display = 'block';
+                localStorage.setItem('audioPreference', 'enabled');
+                
+                // Play audio after user interaction
+                const playPromise = audio.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.log('Playback prevented:', error);
+                        // Show mute button if autoplay is blocked
+                        audioControls.style.display = 'block';
+                    });
+                }
+            });
+
+            // Disable Audio Button
+            disableAudioBtn.addEventListener('click', function() {
+                audioPopup.style.display = 'none';
+                audioToggle.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                            <line x1="23" y1="9" x2="17" y2="15"></line>
+                            <line x1="17" y1="9" x2="23" y2="15"></line>
+                        </svg>
+                    `;
+                localStorage.setItem('audioPreference', 'disabled');
+                audio.pause();
+            });
+
+            // Audio Toggle Button
+            audioToggle.addEventListener('click', function() {
+                if (audio.paused) {
+                    audio.play();
+                localStorage.setItem('audioPreference', 'enabled');
+                localStorage.setItem('gamesound', '');
+                    audioToggle.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                        </svg>
+                    `;
+                } else {
+                    audio.pause();
+                localStorage.setItem('audioPreference', 'disabled');
+                localStorage.setItem('gamesound', 'M');
+                    audioToggle.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                            <line x1="23" y1="9" x2="17" y2="15"></line>
+                            <line x1="17" y1="9" x2="23" y2="15"></line>
+                        </svg>
+                    `;
+                }
+            });
+
+            // Countdown Timer
+            function updateCountdown() {
+                const endDate = new Date("August 8, 2025 00:00:00").getTime();
+                const now = new Date().getTime();
+                const distance = endDate - now;
+                
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                document.getElementById("days").innerHTML = '00';
+                document.getElementById("hours").innerHTML = '00';
+                document.getElementById("minutes").innerHTML = '00';
+                document.getElementById("seconds").innerHTML = '00';
+            }
+            
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+
+            // Contributors Modal
+            const modal = document.getElementById("contributorsModal");
+            const btn = document.getElementById("contributorsBtn");
+            
+
+            btn.onclick = function() {
+                modal.style.display = "flex";
+            }
+
+            
+
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+
+            // Typing animation for movie info
+            const content = [
+                { id: 'title-line', text: 'About Sahasam Movie', speed: 0 },
+                { id: 'film-line', text: 'The Film', speed: 0, delay: 0 },
+                { id: 'title-text', text: 'Sahasam', speed: 0, delay: 0 },
+                { id: 'film-text1', text: ' is an upcoming action-adventure film directed by ', speed: 0, delay: 0 },
+                { id: 'film-text1', text: 'Bibin', append: true, speed: 0, delay: 0 },
+                { id: 'film-text1', text: ', releasing on ', append: true, speed: 0, delay: 0 },
+                { id: 'film-text1', text: 'August 8, 2025', append: true, speed: 0, delay: 0 },
+                { id: 'film-text1', text: '. The story follows explorers uncovering an ancient treasure in uncharted territory.', append: true, speed: 0, delay: 0 },
+                { id: 'film-text2', text: 'The treasure hunt game mirrors the film\'s adventurous spirit.', speed: 0, delay: 0 },
+                { id: 'cast-line', text: 'Cast & Crew', speed: 0, delay: 0 },
+                { id: 'director', text: 'Director:', speed: 0, delay: 0 },
+                { id: 'director-text', text: 'Bibin Krishna', speed: 0, delay: 0 },
+                { id: 'actor', text: 'Lead Actor:', speed: 0, delay: 0 },
+                { id: 'actor-text', text: 'Babu Antony,Ramzan Muhammed,Narain', speed: 0, delay: 0 },
+                { id: 'actress', text: 'Lead Actress:', speed: 0, delay: 0 },
+                { id: 'actress-text', text: 'Gouri G. Kishan', speed: 0, delay: 0 },
+                { id: 'music', text: 'Producer', speed: 0, delay: 0 },
+                { id: 'music-text', text: 'Rinish K N', speed: 0, delay: 0 },
+                { id: 'date', text: 'Release Date:', speed: 0, delay:0 },
+                { id: 'date-text', text: 'August 8, 2025', speed: 0, delay: 0 }
+            ];
+
+            let currentIndex = 0;
+            let timeoutId;
+
+            function setLineWithCursor(element, text, showCursor) {
+                let clean = text.replace(/<span[^>]class="writing-cursor"[^>]><\/span>/g, "");
+                if(showCursor) {
+                    element.innerHTML = clean + '<span class="writing-cursor"></span>';
+                } else {
+                    element.innerHTML = clean;
+                }
+            }
+
+            function hideAllCursors() {
+                document.querySelectorAll('.writing-line').forEach(line => {
+                    setLineWithCursor(line, line.textContent || '', false);
+                });
+            }
+
+            function writeNext() {
+                if (currentIndex >= content.length) {
+                    hideAllCursors();
+                    return;
+                }
+                const item = content[currentIndex];
+                const element = document.getElementById(item.id);
+                let initial = '';
+                if(item.append) {
+                    initial = element.textContent || '';
+                }
+                let i = 0;
+
+                function typeChar() {
+                    setLineWithCursor(element, initial + item.text.slice(0, i), true);
+                    if(i < item.text.length) {
+                        i++;
+                        timeoutId = setTimeout(typeChar, item.speed);
+                    } else {
+                        setLineWithCursor(element, initial + item.text, false);
+                        currentIndex++;
+                        setTimeout(writeNext, item.delay || 0);
+                    }
+                }
+
+                hideAllCursors();
+                typeChar();
+            }
+
+            hideAllCursors();
+            setTimeout(writeNext, 1000);
+
+            window.addEventListener('beforeunload', () => {
+                clearTimeout(timeoutId);
+            });
+        });
+        // Typing animation for the title
+document.addEventListener('DOMContentLoaded', function() {
+    const title = "Face the Challenge.  Find the Treasure.  Become the Legend";
+    const element = document.getElementById('typing-title');
+    let i = 0;
+  // pause at end before deleting
+
+    function typeWriter() {
+        if (i < title.length) {
+            element.innerHTML += title.charAt(i);
+            i++;
+            setTimeout(typeWriter, 50); // Adjust speed here (milliseconds)
+        } 
+    }
+    
+    // Start the typing animation after a short delay
+    setTimeout(typeWriter, 1000);
+});
+   document.addEventListener('click', function(e) {
+            const particles = 5;
+            for (let i = 0; i < particles; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                const size = Math.random() * 10 + 5;
+                const posX = e.clientX;
+                const posY = e.clientY;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}px`;
+                particle.style.top = `${posY}px`;
+                
+                document.body.appendChild(particle);
+                
+                // Animation
+                const animation = particle.animate([
+                    { 
+                        transform: `translate(0, 0) rotate(0deg)`,
+                        opacity: 1 
+                    },
+                    { 
+                        transform: `translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) rotate(360deg)`,
+                        opacity: 0 
+                    }
+                ], {
+                    duration: 1000,
+                    easing: 'cubic-bezier(0, .9, .57, 1)',
+                });
+                
+                animation.onfinish = () => particle.remove();
+            }
+        });
+
+        // Scroll animations
+        document.addEventListener('DOMContentLoaded', () => {
+            const animateOnScroll = () => {
+                const elements = document.querySelectorAll('[data-aos]');
+                elements.forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    const isVisible = (rect.top <= window.innerHeight * 0.75) && 
+                                    (rect.bottom >= window.innerHeight * 0.25);
+                    
+                    if (isVisible) {
+                        el.classList.add('aos-animate');
+                    }
+                });
+            };
+            
+            window.addEventListener('scroll', animateOnScroll);
+            animateOnScroll(); // Initial check
+        });
+        // JavaScript
+// OPTION 1: Run animation every time the element comes into view (Intersection Observer)
+document.addEventListener('DOMContentLoaded', function() {
+    const prizeElement = document.getElementById('prizeAmount');
+    let isAnimating = false;
+    
+    function runPrizeAnimation() {
+        if (isAnimating) return; // Prevent multiple simultaneous animations
+        isAnimating = true;
+        
+        let currentAmount = 50000;
+        const targetAmount = 100000;
+        let increment = 100;
+        let baseSpeed = 60;
+        
+        // Reset the display
+        prizeElement.classList.remove('highlight-prize');
+        prizeElement.textContent = `₹${currentAmount.toLocaleString('en-IN')}`;
+        
+        function animatePrize() {
+            if (currentAmount < targetAmount) {
+                const progress = (currentAmount - 50000) / (targetAmount - 50000);
+                
+                if (progress < 0.2) {
+                    increment += Math.floor(Math.random() * 50) + 50;
+                    baseSpeed = 60;
+                } else if (progress < 0.6) {
+                    increment += Math.floor(Math.random() * 100) + 100;
+                    baseSpeed = 50;
+                } else if (progress < 0.85) {
+                    increment += Math.floor(Math.random() * 200) + 200;
+                    baseSpeed = 40;
+                } else {
+                    increment += Math.floor(Math.random() * 500) + 300;
+                    baseSpeed = 30;
+                }
+                
+                if (currentAmount + increment > targetAmount) {
+                    currentAmount = targetAmount;
+                } else {
+                    currentAmount += increment;
+                }
+                
+                const speedVariation = Math.floor(Math.random() * 11) - 5;
+                const finalSpeed = Math.max(25, baseSpeed + speedVariation);
+                
+                prizeElement.textContent = `₹${currentAmount.toLocaleString('en-IN')}`;
+                setTimeout(animatePrize, finalSpeed);
+            } else {
+                prizeElement.textContent = '₹1,00,000';
+                prizeElement.classList.add('highlight-prize');
+                isAnimating = false; // Animation complete
+            }
+        }
+        
+        setTimeout(animatePrize, 500);
+    }
+    
+    // Intersection Observer - triggers when element comes into view
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                runPrizeAnimation();
+            }
+        });
+    }, {
+        threshold: 0.5 // Trigger when 50% of element is visible
+    });
+    
+    observer.observe(prizeElement);
+});
+// Detect mobile devices
+function isMobile() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+if (isMobile()) {
+  // Adjust timer container for mobile
+  const countdownTimer = document.querySelector('.countdown-timer');
+  if (countdownTimer) {
+    countdownTimer.style.flexWrap = 'nowrap';
+    countdownTimer.style.overflowX = 'auto';
+    countdownTimer.style.paddingBottom = '10px';
+    
+    // Make sure items don't wrap
+    document.querySelectorAll('.countdown-item').forEach(item => {
+      item.style.flexShrink = '0'; // Prevent shrinking
+    });
+  }
+  
+  // Disable complex animations on mobile for performance
+  document.querySelectorAll('.shape').forEach(el => el.style.display = 'none');
+  
+  // Reduce particle count on mobile
+  const particlesContainer = document.getElementById('particles');
+  if (particlesContainer) {
+    particlesContainer.innerHTML = ''; // Clear existing particles
+    createParticles(50); // Reduced from 150
+  }
+}  
+
+// Show character bios when link is clicked
+    document.querySelector('a[href="#character-bios"]').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('character-bios').style.display = 'block';
+        document.getElementById('character-bios').scrollIntoView({
+  behavior: 'smooth', // Smooth scrolling
+  block: 'start' // Aligns the element to the top of the viewport
+})
+    });
+
+    // Hide character bios
+    function hideCharacterBios() {
+        document.getElementById('character-bios').style.display = 'none';
+    }
+const modal = document.getElementById("game-guide-modal");
+const guideLink = document.getElementById("game-guide-link");
+const closeBtn = document.querySelector(".close-btn");
+
+guideLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    modal.style.display = "block";
+});
+
+closeBtn.addEventListener("click", () => {
+    modal.style.display = "none";
+});
+
+window.addEventListener("click", (e) => {
+    if (e.target === modal) {
+        modal.style.display = "none";
+    }
+});
+</script>
+</body>
+<style>
+         .msg-bar {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: 90%;
+  padding: 10px 20px;
+  margin: 0 auto;
+  border-radius: 7px;
+  font-size: 1.02rem;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 500;
+  opacity: 1;
+  transition: background 0.3s, color 0.3s;
+  z-index: 9999;
+  animation: slideup 0.3s ease-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+    .msg-bar.error {
+      background: #ffebee;
+      color: #b71c1c;
+      border: 1.5px solid #e57373;
+    }
+    .msg-bar.success {
+      background: #e8f5e9;
+      color: #1b5e20;
+      border: 1.5px solid #81c784;
+    }
+    .msg-bar.info {
+      background: #e3f2fd;
+      color: #01579b;
+      border: 1.5px solid #64b5f6;
+    }
+   @keyframes slideup {
+  0% {
+    transform: translate(-50%, -20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+    </style>
+    <script>
+function showMsgBar(msg="An error",type="error",d=2000){
+    const div=document.createElement("div");
+    div.className='msg-bar ' + type;
+    div.innerText=msg;
+    document.body.appendChild(div);
+    setTimeout(()=>{div.remove()},d);
+
+}
+document.addEventListener("contextmenu", e =>{ e.preventDefault();showMsgBar("Can't do Right Click", "error");});
+document.addEventListener("keydown", e => {
+  if (
+    e.key === "F12" ||
+    (e.ctrlKey && e.shiftKey && ['I', 'J', 'C', 'K'].includes(e.key)) ||
+    (e.ctrlKey && e.key === 'U') || (e.ctrlKey && e.key === 'u')
+  ) {
+    e.preventDefault();
+    showMsgBar("Nokkanda, kittoola", "error");
+  }
+});
+console.log("Uff U R BRILLIANT");
+console.log("Trying to send your location and Ip Address...");
+setTimeout(()=>{console.log("Your location and Ip Address are Sent successfully...");},2500);
+    </script>
+</html>

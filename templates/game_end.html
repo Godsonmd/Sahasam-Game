@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Movie Poster Puzzle</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="../static/logo/favicon2.png">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100dvh;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, black, #017205, #000);
+      color: #f0f0f0;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    h1 img {
+      width: 70%;
+      max-width: 700px;
+      margin: 0;
+    }
+
+    #timer {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 30px;
+      color: #ffcc00;
+      text-shadow: 0 0 5px #ffcc00, 0 0 10px #ff9900, 0 0 15px #ff6600;
+      margin: 10px 0;
+      letter-spacing: 2px;
+    }
+
+    #puzzle {
+      width: 90%;
+      max-width: 800px;
+      aspect-ratio: 3000 / 1348;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 1px;
+      border: .5px solid #444;
+      touch-action: none;
+    }
+
+    .tile {
+      background-image: url("../static/Mini Games/rida/2NDLOOK-INSTA-ENG.jpg"); 
+      background-size: 500% 300%; 
+      background-repeat: no-repeat;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      border: 1px solid #333;
+      touch-action: none;
+    }
+
+    #message-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: linear-gradient(145deg, #FFD700, #FFA500);
+      color: #fff;
+      padding: 35px 60px;
+      border-radius: 20px;
+      box-shadow: 0 0 25px #e3342f, 0 0 40px #ffa500 inset, 0 0 60px #ffcc00;
+      font-size: 2.5em;
+      font-weight: 900;
+      font-family: 'Orbitron', cursive;
+      text-align: center;
+      text-shadow: 2px 2px 8px #c62828;
+      z-index: 1000;
+      transition: transform 0.4s ease;
+    }
+
+    #message-popup.show {
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .popup-container {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+
+    .popup-box {
+      background: linear-gradient(to bottom right, #e3342f, #ff6600);
+      color: #fff;
+      padding: 30px 40px;
+      border-radius: 20px;
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      font-family: 'Orbitron', sans-serif;
+      box-shadow: 0 0 20px #ff8800;
+    }
+
+    .popup-box h2 {
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+
+    .popup-box p {
+      font-size: 1em;
+      margin-bottom: 20px;
+    }
+
+    .popup-buttons button {
+      font-size: 16px;
+      margin: 5px 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px #333;
+      box-shadow: 0 0 10px #fff;
+      transition: transform 0.2s ease;
+    }
+
+    .popup-buttons button:first-child {
+      background: #34d399; 
+      color: #000;
+    }
+
+    .popup-buttons button:last-child {
+      background: #60a5fa; 
+      color: #000;
+    }
+
+    .popup-buttons button:hover {
+      transform: scale(1.05);
+    }
+
+    .popup-icon {
+      font-size: 3em;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 600px) {
+      #puzzle {
+        width: 95%;
+      }
+
+      .popup-box {
+        padding: 20px;
+      }
+    }
+
+    @keyframes tileMoveEffect {
+      0% { box-shadow: 0 0 0px rgba(255, 255, 255, 0.3); transform: scale(1); }
+      50% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.6); transform: scale(1.05); }
+      100% { box-shadow: 0 0 0px rgba(255, 255, 255, 0); transform: scale(1); }
+    }
+
+    .tile.moved {
+      animation: tileMoveEffect 0.3s ease;
+      z-index: 1;
+    }
+    .audio-controls {
+            position: fixed;
+            bottom: 32px;
+            right: 36px;
+            z-index: 1300;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(40, 40, 10, 0.95), rgba(60, 60, 16, 0.9));
+            padding: 14px 24px;
+            border-radius: 50px;
+            box-shadow: 
+                0 8px 32px rgba(255, 215, 0, 0.15),
+                0 2px 8px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 215, 0, 0.7);
+            gap: 100px;
+            font-family: 'Poppins', Arial, sans-serif;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .audio-controls:hover {
+            background: linear-gradient(135deg, rgba(60, 60, 16, 0.98), rgba(80, 80, 20, 0.95));
+            box-shadow: 
+                0 12px 40px rgba(255, 215, 0, 0.25),
+                0 4px 12px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .audio-controls button {
+            user-select: none;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            color: #FFD700;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 50%;
+            padding: 10px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .audio-controls button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .audio-controls button:hover,.audio-controls button:focus {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+            border-color: rgba(255, 215, 0, 0.6);
+            color: #fff;
+            transform: scale(1.05);
+            box-shadow: 
+                0 4px 16px rgba(255, 215, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .audio-controls button:hover::before {
+            opacity: 1;
+        }
+
+        .audio-controls button:active {
+            transform: scale(0.95);
+            box-shadow: 
+                0 2px 8px rgba(255, 215, 0, 0.2),
+                inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .audio-controls button[disabled] {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .audio-controls button[disabled]:hover {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border-color: rgba(255, 215, 0, 0.3);
+            color: #FFD700;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Volume Range Wrapper */
+        .vol-range-wrapper {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 50px;
+            min-width: 60px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .vol-range-wrapper.show {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translateX(-50%) translateY(-50px);
+        }
+
+        .vol-range-wrapper input[type="range"] {
+            width: 140px;
+            height: 6px;
+            transform: rotate(-90deg);
+            margin: 24px 0;
+            background: linear-gradient(to right, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+            border-radius: 3px;
+            outline: none;
+            transition: all 0.2s ease;
+            appearance: none;
+        }
+
+        .vol-range-wrapper input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            cursor: pointer;
+            box-shadow: 
+                0 2px 8px rgba(255, 215, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .vol-range-wrapper input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 
+                0 4px 12px rgba(255, 215, 0, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .vol-range-wrapper input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            cursor: pointer;
+            border: none;
+            box-shadow: 
+                0 2px 8px rgba(255, 215, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .vol-display {
+            color: #FFD700;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+            min-width: 50px;
+            padding: 6px 12px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 700px) {
+            
+            .counters-wrapper {
+                top: 12px;
+                right: 12px;
+                gap: 8px;
+            }
+            .key-counter-container,
+            .cash-counter-container {
+                font-size: 1.1rem;
+                padding: 8px 16px 8px 12px;
+            }
+            .key-counter-icon,
+            .cash-counter-icon {
+                font-size: 1.4rem;
+            }
+            .key-counter-count,
+            .cash-counter-count {
+                font-size: 1.3rem;
+            }
+            
+            .audio-controls {
+                bottom: 16px;
+                right: 16px;
+                padding: 10px 16px;
+                gap: 12px;
+            }
+            
+            .audio-controls button {
+                font-size: 1rem;
+                width: 40px;
+                height: 40px;
+                padding: 8px;
+            }
+            
+            .vol-range-wrapper {
+                bottom: 70px;
+                padding: 16px 12px;
+                gap: 40px;
+                transform: translateX(-50%) translateY(-50px);
+            }
+            .vol-range-wrapper.show{
+                transform: translate(-50%,-10px);
+            }
+            .vol-range-wrapper input[type="range"] {
+                width: 100px;
+                margin: 20px 0;
+            }
+            
+            .vol-display {
+                font-size: 0.95rem;
+                min-width: 25px;
+            }
+            
+        }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <h1><img src="../static/Mini Games/rida/sahasam.png" alt="Sahasam" /></h1>
+    <div id="timer">Time Left: 35</div>
+    <div id="puzzle"></div>
+  </div>
+
+  <div id="message-popup">Congratulations! You Win!</div>
+
+  <div id="timeout-popup" class="popup-container">
+    <div class="popup-box">
+      <div class="popup-icon"></div>
+      <h2>TIME'S UP!</h2>
+      <p>The treasure remains locked! Your time has run out, but don't give up - try again!</p>
+      <div class="popup-buttons">
+        <button onclick="initPuzzle()">Play Again</button>
+      </div>
+    </div>
+  </div>
+
+  <audio id="winSound" src="../static/Mini Games/rida/game-bonus-144751.mp3"></audio>
+  <audio id="moveSound" src="../static/Mini Games/rida/level-up-05-326133.mp3" preload="auto"></audio>
+  <audio id="loseSound" src="../static/Mini Games/rida/fail-234710.mp3" preload="auto"></audio>
+  <div class="audio-controls" id="sbox">
+            <button id="volBtn" title="Volume Control">🎻</button>
+            <div id="volRangeWrapper" class="vol-range-wrapper">
+                <span id="volDisplay" class="vol-display">100%</span>
+                <input type="range" id="volRange" min="0" max="100" value="100" step="1">
+            </div>
+    </div>
+    <audio id="backgroundAudio" loop>
+        <source src="../static/ground/bg.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+  <script>
+    const audio = document.getElementById('backgroundAudio');
+        const LSvol = localStorage.getItem("gamesound");
+        if (LSvol==="M")
+        audio.muted = true;
+        else if(LSvol)
+          audio.volume = LSvol;
+        else
+          audio.volume = 1.0;
+          audio.play();
+          audio.loop=true;
+        const volBtn = document.getElementById('volBtn');
+        const volDisplay = document.getElementById('volDisplay');
+        const volRange = document.getElementById('volRange');
+        const volRangeWrapper = document.getElementById('volRangeWrapper');
+
+        let volumeTimeout;
+
+        updateVolDisplay();
+        function updateVolDisplay() {
+            const volume = audio.muted ? 0 : Math.round(audio.volume * 100);
+            volDisplay.textContent = audio.muted ? "Muted" : `${volume}%`;
+            
+            // Update button icon based on volume/mute state
+            if (audio.muted || audio.volume === 0) {
+                volBtn.textContent = "🔕";
+                volRange.value = 0;
+            } else if (audio.volume < 0.5) {
+              volBtn.textContent = "🎶";
+              volRange.value = Math.round(audio.volume * 100);
+            } else {
+              volBtn.textContent = "🎻";
+                volRange.value = Math.round(audio.volume * 100);
+            }
+            
+            volBtn.title=audio.muted?"unmuute":"mute";
+            // grab the live scene
+            //game.sound.volume = audio.muted ? 0 : audio.volume;
+            localStorage.setItem("gamesound",audio.muted ? "M" : audio.volume);
+
+            
+        }
+
+        function showVolumeSlider() {
+            clearTimeout(volumeTimeout);
+            volRangeWrapper.classList.add('show');
+        }
+
+        function hideVolumeSlider() {
+            volumeTimeout = setTimeout(() => {
+                volRangeWrapper.classList.remove('show');
+            }, 900);
+        }
+
+        // Volume button events - now handles both volume control and mute
+        volBtn.addEventListener('mouseenter', showVolumeSlider);
+        volBtn.addEventListener('mouseleave', hideVolumeSlider);
+        volBtn.addEventListener('click', () => {
+            // Toggle mute on click
+            audio.muted = !audio.muted;
+            //audio.volume=!audio.volume;
+            updateVolDisplay();
+        });
+
+        // Volume slider events
+        volRangeWrapper.addEventListener('mouseenter', () => {
+            clearTimeout(volumeTimeout);
+        });
+        volRangeWrapper.addEventListener('mouseleave', hideVolumeSlider);
+
+        volRange.addEventListener('input', function() {
+            const newVolume = parseInt(this.value) / 100;
+            audio.volume = newVolume;
+            audio.muted = newVolume === 0;
+            updateVolDisplay();
+        });
+
+        // Keyboard controls
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowUp' || e.key === '+') {
+                e.preventDefault();
+                const newVolume = Math.min(100, parseInt(volRange.value) + 5);
+                volRange.value = newVolume;
+                audio.volume = newVolume / 100;
+                audio.muted = false;
+                updateVolDisplay();
+                showVolumeSlider();
+                hideVolumeSlider();
+            }
+            if (e.key === 'ArrowDown' || e.key === '-') {
+                e.preventDefault();
+                const newVolume = Math.max(0, parseInt(volRange.value) - 5);
+                volRange.value = newVolume;
+                audio.volume = newVolume / 100;
+                audio.muted = newVolume === 0;
+                updateVolDisplay();
+                showVolumeSlider();
+                hideVolumeSlider();
+            }
+            if (e.key === 'm' || e.key === 'M') {
+                e.preventDefault();
+                volBtn.click();
+            }
+        });
+    const puzzle = document.getElementById("puzzle");
+    const timerDisplay = document.getElementById("timer");
+    const messagePopup = document.getElementById("message-popup");
+    const winSound = document.getElementById("winSound");
+    const timeoutPopup = document.getElementById("timeout-popup");
+
+    const cols = 5;
+    const rows = 3;
+    const totalTiles = cols * rows;
+    let tiles = [];
+    let timeLeft = 35;
+    let timer;
+
+    function initPuzzle() {
+      puzzle.innerHTML = "";
+      tiles = [];
+      timeLeft = 35;
+      timerDisplay.textContent = `Time Left: ${timeLeft}`;
+      messagePopup.classList.remove("show");
+      timeoutPopup.style.display = "none";
+
+      const indices = [...Array(totalTiles).keys()];
+      do {
+        indices.sort(() => Math.random() - 0.5);
+      } while (!isSolvable(indices));
+
+      indices.forEach((index, i) => {
+        const tile = document.createElement("div");
+        tile.className = "tile";
+        tile.dataset.correct = index;
+        tile.dataset.current = i;
+
+        const col = index % cols;
+        const row = Math.floor(index / cols);
+        tile.style.backgroundPosition = `${(col / (cols - 1)) * 100}% ${(row / (rows - 1)) * 100}%`;
+
+        tile.draggable = true;
+        puzzle.appendChild(tile);
+        tiles.push(tile);
+      });
+
+      enableDragDrop();
+      startTimer();
+    }
+
+    function enableDragDrop() {
+      tiles.forEach(tile => {
+        tile.addEventListener("dragstart", dragStart);
+        tile.addEventListener("dragover", e => e.preventDefault());
+        tile.addEventListener("drop", dropTile);
+
+        tile.addEventListener("touchstart", handleTouchStart, { passive: true });
+        tile.addEventListener("touchend", handleTouchEnd);
+      });
+    }
+
+    let draggedTile = null;
+    let touchStartTile = null;
+
+    function dragStart(e) {
+      draggedTile = this;
+    }
+
+    function dropTile(e) {
+      const targetTile = this;
+      swapTiles(draggedTile, targetTile);
+    }
+
+    function handleTouchStart(e) {
+      touchStartTile = e.currentTarget;
+    }
+
+    function handleTouchEnd(e) {
+      const touch = e.changedTouches[0];
+      const target = document.elementFromPoint(touch.clientX, touch.clientY);
+      if (target && target.classList.contains('tile') && target !== touchStartTile) {
+        swapTiles(touchStartTile, target);
+      }
+    }
+
+    function swapTiles(tile1, tile2) {
+      const draggedIndex = Array.from(puzzle.children).indexOf(tile1);
+      const targetIndex = Array.from(puzzle.children).indexOf(tile2);
+
+      puzzle.insertBefore(tile1, tile2);
+      if (draggedIndex < targetIndex) {
+        puzzle.insertBefore(tile2, puzzle.children[draggedIndex]);
+      } else {
+        puzzle.insertBefore(tile2, puzzle.children[draggedIndex + 1]);
+      }
+
+      document.getElementById('moveSound').currentTime = 0;
+      document.getElementById('moveSound').play();
+
+      tile1.classList.add('moved');
+      tile2.classList.add('moved');
+
+      setTimeout(() => {
+        tile1.classList.remove('moved');
+        tile2.classList.remove('moved');
+      }, 300);
+
+      checkWin();
+    }
+
+    function checkWin() {
+      const currentTiles = Array.from(puzzle.children);
+      const correct = currentTiles.every((tile, index) => tile.dataset.correct == index);
+      if (correct) {
+        clearInterval(timer);
+        winSound.play();
+        messagePopup.classList.add("show");
+        setTimeout(()=>{finishChallenge("ridacompleted",100)},2000);
+      }
+    }
+
+    function startTimer() {
+      clearInterval(timer);
+      timer = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = `Time Left: ${timeLeft}`;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          solvePuzzle();
+        }
+      }, 1000);
+    }
+
+    function solvePuzzle() {
+      document.getElementById('loseSound').currentTime = 0;
+      document.getElementById('loseSound').play();
+      timeoutPopup.style.display = "flex";
+    }
+
+    function isSolvable(arr) {
+      let inv = 0;
+      for (let i = 0; i < arr.length - 1; i++) {
+        for (let j = i + 1; j < arr.length; j++) {
+          if (arr[i] > arr[j]) inv++;
+        }
+      }
+      return inv % 2 === 0;
+    }
+    
+    initPuzzle();
+    function finishChallenge(text,value) {
+            // This is the most important part!
+            // We are sending a message to the PARENT window (our Phaser game).
+            // The message is a simple object. We can send any data we want.
+            const result = {
+                challengeStatus: text,
+                score: value // You can send back points, items, etc.
+            };
+
+            // window.parent refers to the main page that holds the iframe.
+            // '*' is a wildcard for the origin. For security, you could replace it
+            // with your actual domain when you deploy the game.
+            window.parent.postMessage(result, '*');
+        }
+  </script>
+</body>
+<style>
+         .msg-bar {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: 90%;
+  padding: 10px 20px;
+  margin: 0 auto;
+  border-radius: 7px;
+  font-size: 1.02rem;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 500;
+  opacity: 1;
+  transition: background 0.3s, color 0.3s;
+  z-index: 9999;
+  animation: slideup 0.3s ease-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+    .msg-bar.error {
+      background: #ffebee;
+      color: #b71c1c;
+      border: 1.5px solid #e57373;
+    }
+    .msg-bar.success {
+      background: #e8f5e9;
+      color: #1b5e20;
+      border: 1.5px solid #81c784;
+    }
+    .msg-bar.info {
+      background: #e3f2fd;
+      color: #01579b;
+      border: 1.5px solid #64b5f6;
+    }
+   @keyframes slideup {
+  0% {
+    transform: translate(-50%, -20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+    </style>
+    <script>
+function showMsgBar(msg="An error",type="error",d=2000){
+    const div=document.createElement("div");
+    div.className='msg-bar ' + type;
+    div.innerText=msg;
+    document.body.appendChild(div);
+    setTimeout(()=>{div.remove()},d);
+
+}
+document.addEventListener("contextmenu", e =>{ e.preventDefault();showMsgBar("Can't do Right Click", "error");});
+document.addEventListener("keydown", e => {
+  if (
+    e.key === "F12" ||
+    (e.ctrlKey && e.shiftKey && ['I', 'J', 'C', 'K'].includes(e.key)) ||
+    (e.ctrlKey && e.key === 'U') || (e.ctrlKey && e.key === 'u')
+  ) {
+    e.preventDefault();
+    showMsgBar("Nokkanda, kittoola", "error");
+  }
+});
+console.log("Uff U R BRILLIANT");
+console.log("Trying to send your location and Ip Address...");
+setTimeout(()=>{console.log("Your location and Ip Address are Sent successfully...");},2500);
+    </script>
+</html>
