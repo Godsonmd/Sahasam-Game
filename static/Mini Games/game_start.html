@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="/static/logo/favicon2.png">
+  <title>Sahasam - Puzzle Start</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Montserrat:wght@500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Montserrat:wght@500&family=Rajdhani:wght@400;600&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      height: 100%;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    /*.background {
+      background: url("{{ url_for('static', filename='/Mini Games/rida/poster.jpg')}}") no-repeat center center/cover;
+      height: 100vh;
+      width: 100%;
+      position: relative;
+    }*/
+    .background {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: radial-gradient(circle at center, #1c1c1c 0%, #000000 100%);
+}
+
+.background::before,
+.background::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  background: repeating-conic-gradient(
+    from 0deg,
+    #ffb300,
+    #ff8c00 15deg,
+    #1a1a1a 30deg,
+    #ffb300 45deg
+  );
+  opacity: 0.05;
+  animation: rotateSquares 60s linear infinite;
+  z-index: 0;
+}
+
+.background::after {
+  background: repeating-conic-gradient(
+    from 0deg,
+    #ff8c00,
+    #ffd700 15deg,
+    #1a1a1a 30deg,
+    #ff8c00 45deg
+  );
+  opacity: 0.03;
+  animation-duration: 90s;
+}
+@keyframes rotateSquares {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65); 
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .logo {
+      max-width: 85%;
+      height: auto;
+      margin-bottom: 50px;
+    }
+
+    .subheading {
+      font-size: 2.7em;
+      font-weight: bold;
+      color: #FFD700;
+      font-family: 'Orbitron', sans-serif;
+      margin-bottom: 30px;
+      text-shadow:
+        0 0 5px #FFD700,
+        0 0 10px #FFA500,
+        0 0 20px #FF8C00,
+        0 0 30px #FF8C00,
+        0 0 40px #FFA500;
+    }
+
+    /*.instruction {
+      font-size: 1.3em;
+      color: #ffffff;
+      max-width: 800px;
+      margin-bottom: 50px;
+      text-shadow: 1px 1px 3px #000;
+      line-height: 1.6;
+    }*/
+    .instruction {
+  font-size: 1.5em;
+  color: #ffffff;
+  max-width: 800px;
+  margin-bottom: 50px;
+  line-height: 1.6;
+  font-family: 'Rajdhani', sans-serif;
+  letter-spacing: 0.5px;
+  text-shadow:
+    0 0 4px #ffd700,
+    0 0 8px #ff8c00;
+}
+
+
+
+    .start-btn {
+      font-size: 2em;
+      background: linear-gradient(to right, #FFD700, #FFA500);
+      color: #891313;
+      padding: 15px 50px;
+      border: none;
+      border-radius: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 20px #FFD700;
+      transition: all 0.3s ease;
+    }
+
+    .start-btn:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 25px #ffa500;
+    }
+
+    @media (max-width: 600px) {
+      .subheading {
+        font-size: 1.8em;
+      }
+
+      .instruction {
+        font-size: 1em;
+      }
+
+      .start-btn {
+        font-size: 1.2em;
+        padding: 12px 35px;
+      }
+    }
+    .background::before,
+.background::after {
+  pointer-events: none;
+}
+.audio-controls {
+            position: fixed;
+            bottom: 32px;
+            right: 36px;
+            z-index: 1300;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(40, 40, 10, 0.95), rgba(60, 60, 16, 0.9));
+            padding: 14px 24px;
+            border-radius: 50px;
+            box-shadow: 
+                0 8px 32px rgba(255, 215, 0, 0.15),
+                0 2px 8px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 215, 0, 0.7);
+            gap: 100px;
+            font-family: 'Poppins', Arial, sans-serif;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .audio-controls:hover {
+            background: linear-gradient(135deg, rgba(60, 60, 16, 0.98), rgba(80, 80, 20, 0.95));
+            box-shadow: 
+                0 12px 40px rgba(255, 215, 0, 0.25),
+                0 4px 12px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .audio-controls button {
+            user-select: none;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            color: #FFD700;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 50%;
+            padding: 10px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .audio-controls button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .audio-controls button:hover,.audio-controls button:focus {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+            border-color: rgba(255, 215, 0, 0.6);
+            color: #fff;
+            transform: scale(1.05);
+            box-shadow: 
+                0 4px 16px rgba(255, 215, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .audio-controls button:hover::before {
+            opacity: 1;
+        }
+
+        .audio-controls button:active {
+            transform: scale(0.95);
+            box-shadow: 
+                0 2px 8px rgba(255, 215, 0, 0.2),
+                inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .audio-controls button[disabled] {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .audio-controls button[disabled]:hover {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border-color: rgba(255, 215, 0, 0.3);
+            color: #FFD700;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Volume Range Wrapper */
+        .vol-range-wrapper {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 50px;
+            min-width: 60px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .vol-range-wrapper.show {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translateX(-50%) translateY(-50px);
+        }
+
+        .vol-range-wrapper input[type="range"] {
+            width: 140px;
+            height: 6px;
+            transform: rotate(-90deg);
+            margin: 24px 0;
+            background: linear-gradient(to right, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+            border-radius: 3px;
+            outline: none;
+            transition: all 0.2s ease;
+            appearance: none;
+        }
+
+        .vol-range-wrapper input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            cursor: pointer;
+            box-shadow: 
+                0 2px 8px rgba(255, 215, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .vol-range-wrapper input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 
+                0 4px 12px rgba(255, 215, 0, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .vol-range-wrapper input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            cursor: pointer;
+            border: none;
+            box-shadow: 
+                0 2px 8px rgba(255, 215, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .vol-display {
+            color: #FFD700;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+            min-width: 50px;
+            padding: 6px 12px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 700px) {
+            
+            .counters-wrapper {
+                top: 12px;
+                right: 12px;
+                gap: 8px;
+            }
+            .key-counter-container,
+            .cash-counter-container {
+                font-size: 1.1rem;
+                padding: 8px 16px 8px 12px;
+            }
+            .key-counter-icon,
+            .cash-counter-icon {
+                font-size: 1.4rem;
+            }
+            .key-counter-count,
+            .cash-counter-count {
+                font-size: 1.3rem;
+            }
+            
+            .audio-controls {
+                bottom: 16px;
+                right: 16px;
+                padding: 10px 16px;
+                gap: 12px;
+            }
+            
+            .audio-controls button {
+                font-size: 1rem;
+                width: 40px;
+                height: 40px;
+                padding: 8px;
+            }
+            
+            .vol-range-wrapper {
+                bottom: 70px;
+                padding: 16px 12px;
+                gap: 40px;
+                transform: translateX(-50%) translateY(-50px);
+            }
+            .vol-range-wrapper.show{
+                transform: translate(-50%,-10px);
+            }
+            .vol-range-wrapper input[type="range"] {
+                width: 100px;
+                margin: 20px 0;
+            }
+            
+            .vol-display {
+                font-size: 0.95rem;
+                min-width: 25px;
+            }
+            
+        }
+  </style>
+</head>
+<body>
+  <div class="background">
+    <div class="overlay">
+      <img src="/rida/sahasam.png" alt="Sahasam Logo" class="logo" />
+      <div class="subheading">UNSCRAMBLE THE TILES</div>
+      <div class="instruction">
+        Complete this task to enter the main game.<br />
+        <strong>10 points will be awarded on completion.</strong><br />
+        Unscramble the tiles in order to form the poster.
+      </div>
+      <button class="start-btn" onclick="window.location.href='/game_end.html'">START</button>
+    </div>
+  </div>
+    <div class="audio-controls" id="sbox">
+            <button id="volBtn" title="Volume Control">🔊</button>
+            <div id="volRangeWrapper" class="vol-range-wrapper">
+                <span id="volDisplay" class="vol-display">100%</span>
+                <input type="range" id="volRange" min="0" max="100" value="100" step="1">
+            </div>
+    </div>
+    <audio id="backgroundAudio" loop>
+        <source src="/rida/the-last-piano.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+</body>
+<style>
+         .msg-bar {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: 90%;
+  padding: 10px 20px;
+  margin: 0 auto;
+  border-radius: 7px;
+  font-size: 1.02rem;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 500;
+  opacity: 1;
+  transition: background 0.3s, color 0.3s;
+  z-index: 9999;
+  animation: slideup 0.3s ease-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+    .msg-bar.error {
+      background: #ffebee;
+      color: #b71c1c;
+      border: 1.5px solid #e57373;
+    }
+    .msg-bar.success {
+      background: #e8f5e9;
+      color: #1b5e20;
+      border: 1.5px solid #81c784;
+    }
+    .msg-bar.info {
+      background: #e3f2fd;
+      color: #01579b;
+      border: 1.5px solid #64b5f6;
+    }
+   @keyframes slideup {
+  0% {
+    transform: translate(-50%, -20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+    </style>
+    <script>
+function showMsgBar(msg="An error",type="error",d=2000){
+    const div=document.createElement("div");
+    div.className='msg-bar ' + type;
+    div.innerText=msg;
+    document.body.appendChild(div);
+    setTimeout(()=>{div.remove()},d);
+
+}
+const audio = document.getElementById('backgroundAudio');
+        const LSvol = localStorage.getItem("gamesound");
+        if (LSvol==="M")
+        audio.muted = true;
+        else if(LSvol)
+          audio.volume = LSvol;
+        else
+          audio.volume = 1.0;
+          audio.play();
+          audio.loop=true;
+        const volBtn = document.getElementById('volBtn');
+        const volDisplay = document.getElementById('volDisplay');
+        const volRange = document.getElementById('volRange');
+        const volRangeWrapper = document.getElementById('volRangeWrapper');
+
+        let volumeTimeout;
+
+        updateVolDisplay();
+        function updateVolDisplay() {
+            const volume = audio.muted ? 0 : Math.round(audio.volume * 100);
+            volDisplay.textContent = audio.muted ? "Muted" : `${volume}%`;
+            
+            // Update button icon based on volume/mute state
+            if (audio.muted || audio.volume === 0) {
+                volBtn.textContent = "🔇";
+                volRange.value = 0;
+            } else if (audio.volume < 0.5) {
+                volBtn.textContent = "🔉";
+                volRange.value = Math.round(audio.volume * 100);
+            } else {
+                volBtn.textContent = "🔊";
+                volRange.value = Math.round(audio.volume * 100);
+            }
+            
+            volBtn.title=audio.muted?"unmuute":"mute";
+            // grab the live scene
+            //game.sound.volume = audio.muted ? 0 : audio.volume;
+            localStorage.setItem("gamesound",audio.muted ? "M" : audio.volume);
+
+            
+        }
+
+        function showVolumeSlider() {
+            clearTimeout(volumeTimeout);
+            volRangeWrapper.classList.add('show');
+        }
+
+        function hideVolumeSlider() {
+            volumeTimeout = setTimeout(() => {
+                volRangeWrapper.classList.remove('show');
+            }, 900);
+        }
+
+        // Volume button events - now handles both volume control and mute
+        volBtn.addEventListener('mouseenter', showVolumeSlider);
+        volBtn.addEventListener('mouseleave', hideVolumeSlider);
+        volBtn.addEventListener('click', () => {
+            // Toggle mute on click
+            audio.muted = !audio.muted;
+            //audio.volume=!audio.volume;
+            updateVolDisplay();
+        });
+
+        // Volume slider events
+        volRangeWrapper.addEventListener('mouseenter', () => {
+            clearTimeout(volumeTimeout);
+        });
+        volRangeWrapper.addEventListener('mouseleave', hideVolumeSlider);
+
+        volRange.addEventListener('input', function() {
+            const newVolume = parseInt(this.value) / 100;
+            audio.volume = newVolume;
+            audio.muted = newVolume === 0;
+            updateVolDisplay();
+        });
+
+        // Keyboard controls
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowUp' || e.key === '+') {
+                e.preventDefault();
+                const newVolume = Math.min(100, parseInt(volRange.value) + 5);
+                volRange.value = newVolume;
+                audio.volume = newVolume / 100;
+                audio.muted = false;
+                updateVolDisplay();
+                showVolumeSlider();
+                hideVolumeSlider();
+            }
+            if (e.key === 'ArrowDown' || e.key === '-') {
+                e.preventDefault();
+                const newVolume = Math.max(0, parseInt(volRange.value) - 5);
+                volRange.value = newVolume;
+                audio.volume = newVolume / 100;
+                audio.muted = newVolume === 0;
+                updateVolDisplay();
+                showVolumeSlider();
+                hideVolumeSlider();
+            }
+            if (e.key === 'm' || e.key === 'M') {
+                e.preventDefault();
+                volBtn.click();
+            }
+        });
+document.addEventListener("contextmenu", e =>{ e.preventDefault();showMsgBar("Can't do Right Click", "error");});
+document.addEventListener("keydown", e => {
+  if (
+    e.key === "F12" ||
+    (e.ctrlKey && e.shiftKey && ['I', 'J', 'C', 'K'].includes(e.key)) ||
+    (e.ctrlKey && e.key === 'U') || (e.ctrlKey && e.key === 'u')
+  ) {
+    e.preventDefault();
+    showMsgBar("Nokkanda, kittoola", "error");
+  }
+});
+console.log("Uff U R BRILLIANT");
+console.log("Trying to send your location and Ip Address...");
+setTimeout(()=>{console.log("Your location and Ip Address are Sent successfully...");},2500);
+
+
+    </script>
+</html>

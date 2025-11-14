@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ancient Gateway Puzzle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+        body::-webkit-scrollbar{
+      display: none;
+    }
+        .font-bangers {
+            font-family: 'Bangers', cursive;
+        }
+        .hidden {
+            display: none;
+        }
+        /* Basic fade-in animation */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        /* --- NEW: Watermark Style --- */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: url('sahasam.png'); /* The watermark image */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            opacity: 0.05; /* Adjust for desired faintness */
+            z-index: -1;   /* Places it behind all content */
+        }
+      
+    </style>
+</head>
+<body class="bg-gradient-to-br from-[#1a1a1a] to-[#2d2d2d] text-white flex flex-col items-center justify-center min-h-screen p-4 ">
+
+    <!-- Introduction Screen -->
+    <div id="intro" class="text-center text-slate-300 animate-fade-in max-w-2xl mx-auto">
+        <h1 class="font-bangers text-6xl md:text-8xl text-amber-500 tracking-wider" style="text-shadow: 4px 4px 0px #000">
+            Ancient Gateway Puzzle
+        </h1>
+        <p class="text-lg md:text-xl mt-2 mb-8 italic">A puzzle adventure presented by Front Row Productions...</p>
+        
+        <div class="border-2 border-amber-600/50 rounded-lg p-6 max-w-lg mx-auto bg-black/20 backdrop-blur-sm">
+            <h2 class="font-bangers text-3xl text-amber-400 mb-4 tracking-wide">Rules</h2>
+            <ul class="space-y-3 text-left list-disc list-inside">
+                <li>The gateway is protected by three rings with six symbols: Earth 🌍, Fire 🔥, Breeze 🍃, Water 💧, Lightning ⚡, and Sun ☀️.</li>
+                <li>Your goal is to align the correct three symbols at the top indicator. A hint will be provided.</li>
+                <li>Use the arrow buttons to rotate each ring individually.</li>
+                <li>Once you believe the combination is correct, press the "Unlock" button.</li>
+                <li>You have <strong>30 seconds</strong> to solve the puzzle before the gateway seals!</li>
+            </ul>
+        </div>
+
+        <button id="start-btn" class="mt-10 bg-amber-500 hover:bg-amber-400 text-gray-900 font-bold font-bangers text-3xl tracking-widest py-3 px-12 rounded-lg shadow-lg shadow-amber-500/20 transform hover:scale-105 transition-all duration-300">
+            Start Puzzle
+        </button>
+    </div>
+
+    <!-- Game Area -->
+    <div id="game-area" class="hidden flex-col items-center justify-center w-full animate-fade-in">
+        <div class="w-full max-w-4xl flex justify-between items-center mb-4 px-2">
+            <div id="timer" class="font-bangers text-3xl text-amber-400">⏳ Time Left: 30s</div>
+            <div id="hint" class="text-sm md:text-base text-slate-400 italic text-right">Hint will appear here...</div>
+        </div>
+
+        <div class="relative w-[230px] h-[230px] md:w-[410px] md:h-[410px] flex items-center justify-center mb-6">
+            <div class="absolute -top-3 text-4xl text-amber-400">▼</div>
+            <!-- --- MODIFIED: Lock icon size is now responsive --- -->
+            <div id="lock-icon" class="absolute text-1xl md:text-5xl transition-colors duration-1000 text-slate-600">🔒</div>
+            
+            <div id="outer-ring" class="absolute rounded-full flex items-start justify-center transition-transform duration-500 ease-in-out w-[220px] h-[220px] md:w-[400px] md:h-[400px] border-8 border-red-500/80">
+                <span id="outer-symbol" class="text-1xl md:text-4xl"></span>
+            </div>
+            <div id="middle-ring" class="absolute rounded-full flex items-start justify-center transition-transform duration-500 ease-in-out w-[150px] h-[150px] md:w-[280px] md:h-[280px] border-8 border-orange-500/80">
+                <span id="middle-symbol" class="text-1xl md:text-4xl"></span>
+            </div>
+            <div id="inner-ring" class="absolute rounded-full flex items-start justify-center transition-transform duration-500 ease-in-out w-[80px] h-[80px] md:w-[160px] md:h-[160px] border-8 border-slate-300/80">
+                <span id="inner-symbol" class="text-1xl md:text-4xl"></span>
+            </div>
+        </div>
+
+        <div id="win-message" class="hidden text-center animate-pulse">
+            <h2 class="font-bangers text-5xl text-green-400">Gateway Unlocked!</h2>
+            <p class="text-xl text-slate-300 mt-2">The path is open!</p>
+        </div>
+
+        <div id="controls">
+            <div id="status-message" class="h-8 mb-4 text-center font-bangers text-3xl tracking-wider"></div>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mb-6">
+                <div class="flex items-center gap-3 bg-black/20 p-2 rounded-lg">
+                    <button data-ring="outer" data-direction="-1" class="ring-control text-4xl transform hover:scale-125 transition-transform duration-200">⬅️</button>
+                    <span class="font-bangers text-xl w-20 text-center capitalize text-amber-400">Outer Ring</span>
+                    <button data-ring="outer" data-direction="1" class="ring-control text-4xl transform hover:scale-125 transition-transform duration-200">➡️</button>
+                </div>
+                <div class="flex items-center gap-3 bg-black/20 p-2 rounded-lg">
+                    <button data-ring="middle" data-direction="-1" class="ring-control text-4xl transform hover:scale-125 transition-transform duration-200">⬅️</button>
+                    <span class="font-bangers text-xl w-20 text-center capitalize text-amber-400">Middle Ring</span>
+                    <button data-ring="middle" data-direction="1" class="ring-control text-4xl transform hover:scale-125 transition-transform duration-200">➡️</button>
+                </div>
+                <div class="flex items-center gap-3 bg-black/20 p-2 rounded-lg">
+                    <button data-ring="inner" data-direction="-1" class="ring-control text-4xl transform hover:scale-125 transition-transform duration-200">⬅️</button>
+                    <span class="font-bangers text-xl w-20 text-center capitalize text-amber-400">Inner Ring</span>
+                    <button data-ring="inner" data-direction="1" class="ring-control text-4xl transform hover:scale-125 transition-transform duration-200">➡️</button>
+                </div>
+            </div>
+            <button id="unlock-btn" class="w-full bg-amber-500 hover:bg-amber-400 text-gray-900 font-bold font-bangers text-3xl tracking-widest py-3 px-16 rounded-lg shadow-lg shadow-amber-500/20 transform hover:scale-105 transition-all duration-300">
+                🔓 Unlock
+            </button>
+        </div>
+    </div>
+
+    <!-- Failure Popup -->
+    <div id="failure-popup" class="hidden fixed inset-0 bg-black/80 items-center justify-center z-50 animate-fade-in">
+        <div class="bg-gradient-to-br from-[#1a1a1a] to-[#2d2d2d] border-2 border-red-500/50 rounded-lg p-8 md:p-12 text-center shadow-2xl shadow-red-500/20">
+            <h2 class="font-bangers text-6xl md:text-7xl text-red-500" style="text-shadow: 3px 3px 0px #000">Time's Up!</h2>
+            <p class="text-slate-300 text-lg mt-2 mb-8">The gateway has sealed shut...</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button id="try-again-btn" class="bg-amber-500 hover:bg-amber-400 text-gray-900 font-bold font-bangers text-2xl tracking-widest py-2 px-8 rounded-lg shadow-lg shadow-amber-500/20 transform hover:scale-105 transition-all duration-300">
+                    Try Again
+                </button>
+                <button id="back-to-menu-btn" onclick="finishChallenge('failed',0)" class="bg-slate-600 hover:bg-slate-500 text-white font-bold font-bangers text-2xl tracking-widest py-2 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300">
+                    Back to Menu
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio files -->
+    <audio id="audio-bg" loop src="/akshay/bg-music.wav" preload="auto"></audio>
+    <audio id="audio-rotate" src="/akshay/gear.flac" preload="auto"></audio>
+    <audio id="audio-click" src="/akshay/click.wav" preload="auto"></audio>
+    <audio id="audio-victory" src="/akshay/victory.mp3" preload="auto"></audio>
+    <audio id="audio-fail" src="/akshay/fail.mp3" preload="auto"></audio>
+    <audio id="audio-incorrect" src="/akshay/fail.mp3" preload="auto"></audio>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- CONSTANTS & STATE ---
+            const SYMBOLS = ['🌍', '🔥', '🍃', '💧', '⚡', '☀️'];
+            const SYMBOL_NAMES = { '🌍': 'Earth', '🔥': 'Fire', '🍃': 'Breeze', '💧': 'Water', '⚡': 'Lightning', '☀️': 'Sun' };
+            const INITIAL_TIME = 45;
+
+            let ringState = { outer: 0, middle: 0, inner: 0 };
+            let correctCombo = [];
+            let timeLeft = INITIAL_TIME;
+            let timerInterval = null;
+            let isWon = false;
+
+            // --- DOM ELEMENTS ---
+            const introScreen = document.getElementById('intro');
+            const gameArea = document.getElementById('game-area');
+            const failurePopup = document.getElementById('failure-popup');
+            const startBtn = document.getElementById('start-btn');
+            const ringControls = document.querySelectorAll('.ring-control');
+            const unlockBtn = document.getElementById('unlock-btn');
+            const tryAgainBtn = document.getElementById('try-again-btn');
+            
+            
+            const timerDisplay = document.getElementById('timer');
+            const hintDisplay = document.getElementById('hint');
+            const statusMessage = document.getElementById('status-message');
+            const lockIcon = document.getElementById('lock-icon');
+            const winMessage = document.getElementById('win-message');
+            const controlsDiv = document.getElementById('controls');
+
+            const rings = {
+                outer: { el: document.getElementById('outer-ring'), symbolEl: document.getElementById('outer-symbol') },
+                middle: { el: document.getElementById('middle-ring'), symbolEl: document.getElementById('middle-symbol') },
+                inner: { el: document.getElementById('inner-ring'), symbolEl: document.getElementById('inner-symbol') },
+            };
+
+            // --- AUDIO ---
+            const playSound = (id) => {
+                const audio = document.getElementById(id);
+                if (audio) {
+                    audio.currentTime = 0;
+                    audio.play().catch(e => console.error(`Audio ${id} failed to play`, e));
+                    if(id=="audio-rotate")
+                    setTimeout(()=>{audio.pause();},500);
+                }
+            };
+            
+            const playBgMusic = () => {
+                const audio = document.getElementById('audio-bg');
+                if (audio) {
+                    audio.volume = 0.2;
+                    audio.play().catch(e => console.error("BG music failed to play", e));
+                }
+            };
+
+            // --- GAME LOGIC ---
+            const updateSymbols = () => {
+                for (const ringName in ringState) {
+                    const state = ringState[ringName];
+                    const ring = rings[ringName];
+                    const rotation = state * (360 / SYMBOLS.length);
+                    ring.el.style.transform = `rotate(${rotation}deg)`;
+                    ring.symbolEl.textContent = SYMBOLS[state];
+                    ring.symbolEl.style.transform = `rotate(-${rotation}deg)`;
+                }
+            };
+
+            const generateCombo = () => {
+                const shuffled = [...SYMBOLS].sort(() => 0.5 - Math.random());
+                correctCombo = shuffled.slice(0, 3);
+                const hintNames = [...correctCombo].sort(() => 0.5 - Math.random()).map(s => SYMBOL_NAMES[s]);
+                hintDisplay.textContent = `Hint: The combination includes ${hintNames.join(', ')}.`;
+            };
+
+            const resetGame = () => {
+                clearInterval(timerInterval);
+                timeLeft = INITIAL_TIME;
+                isWon = false;
+                ringState = { outer: 0, middle: 0, inner: 0 };
+                
+                timerDisplay.textContent = `⏳ Time Left: ${timeLeft}s`;
+                statusMessage.textContent = '';
+                lockIcon.textContent = '🔒';
+                lockIcon.classList.remove('text-green-400');
+                lockIcon.classList.add('text-slate-600');
+                
+                winMessage.classList.add('hidden');
+                controlsDiv.classList.remove('hidden');
+
+                generateCombo();
+                updateSymbols();
+            };
+
+            const startGame = () => {
+                resetGame();
+                introScreen.classList.add('hidden');
+                gameArea.classList.remove('hidden');
+                gameArea.classList.add('flex');
+                
+                playBgMusic();
+
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    timerDisplay.textContent = `⏳ Time Left: ${timeLeft}s`;
+                    if (timeLeft <= 0) {
+                        handleLose();
+                    }
+                }, 1000);
+            };
+            
+            const rotateRing = (ringName, direction) => {
+                if (isWon) return;
+                playSound('audio-rotate');
+                ringState[ringName] = (ringState[ringName] + direction + SYMBOLS.length) % SYMBOLS.length;
+                updateSymbols();
+            };
+            
+            const checkUnlock = () => {
+                if (isWon) return;
+                playSound('audio-click');
+                const currentCombo = [
+                    SYMBOLS[ringState.inner],
+                    SYMBOLS[ringState.middle],
+                    SYMBOLS[ringState.outer],
+                ];
+
+                if (JSON.stringify(currentCombo) === JSON.stringify(correctCombo)) {
+                    handleWin();
+                } else {
+                    playSound('audio-incorrect');
+                    statusMessage.textContent = 'Incorrect!';
+                    statusMessage.classList.remove('text-green-400');
+                    statusMessage.classList.add('text-red-500');
+                    setTimeout(() => { statusMessage.textContent = ''; }, 2000);
+                }
+            };
+
+            const handleWin = () => {
+                isWon = true;
+                clearInterval(timerInterval);
+                playSound('audio-victory');
+                statusMessage.textContent = 'Correct!';
+                statusMessage.classList.remove('text-red-500');
+                statusMessage.classList.add('text-green-400');
+                lockIcon.textContent = '🔓';
+                lockIcon.classList.remove('text-slate-600');
+                lockIcon.classList.add('text-green-400');
+                
+                winMessage.classList.remove('hidden');
+                controlsDiv.classList.add('hidden');
+                setTimeout(()=>{finishChallenge("completed",100)},2000);
+            };
+
+            const handleLose = () => {
+                clearInterval(timerInterval);
+                playSound('audio-fail');
+                gameArea.classList.add('hidden');
+                gameArea.classList.remove('flex');
+                failurePopup.classList.remove('hidden');
+                failurePopup.classList.add('flex');
+            };
+            
+            const tryAgain = () => {
+                playSound('audio-click');
+                failurePopup.classList.add('hidden');
+                failurePopup.classList.remove('flex');
+                startGame();
+            };
+
+            const backToMenu = () => {
+                playSound('audio-click');
+                failurePopup.classList.add('hidden');
+                failurePopup.classList.remove('flex');
+                gameArea.classList.add('hidden');
+                gameArea.classList.remove('flex');
+                introScreen.classList.remove('hidden');
+                resetGame(); // Reset state even when going to menu
+            };
+
+            // --- EVENT LISTENERS ---
+            startBtn.addEventListener('click', () => {
+                playSound('audio-click');
+                startGame();
+            });
+            
+            unlockBtn.addEventListener('click', checkUnlock);
+
+            ringControls.forEach(button => {
+                button.addEventListener('click', () => {
+                    const ring = button.dataset.ring;
+                    const direction = parseInt(button.dataset.direction);
+                    rotateRing(ring, direction);
+                });
+            });
+
+            tryAgainBtn.addEventListener('click', tryAgain);
+            
+
+            // --- INITIALIZE ---
+            updateSymbols();
+        });
+        function finishChallenge(text,value) {
+            setTimeout(() => {
+                location.reload();
+            }, 2000);
+        }
+    </script>
+</body>
+<style>
+         .msg-bar {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: 90%;
+  padding: 10px 20px;
+  margin: 0 auto;
+  border-radius: 7px;
+  font-size: 1.02rem;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 500;
+  opacity: 1;
+  transition: background 0.3s, color 0.3s;
+  z-index: 9999;
+  animation: slideup 0.3s ease-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+    .msg-bar.error {
+      background: #ffebee;
+      color: #b71c1c;
+      border: 1.5px solid #e57373;
+    }
+    .msg-bar.success {
+      background: #e8f5e9;
+      color: #1b5e20;
+      border: 1.5px solid #81c784;
+    }
+    .msg-bar.info {
+      background: #e3f2fd;
+      color: #01579b;
+      border: 1.5px solid #64b5f6;
+    }
+   @keyframes slideup {
+  0% {
+    transform: translate(-50%, -20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+    </style>
+    <script>
+function showMsgBar(msg="An error",type="error",d=2000){
+    const div=document.createElement("div");
+    div.className='msg-bar ' + type;
+    div.innerText=msg;
+    document.body.appendChild(div);
+    setTimeout(()=>{div.remove()},d);
+
+}
+document.addEventListener("contextmenu", e =>{ e.preventDefault();showMsgBar("Can't do Right Click", "error");});
+document.addEventListener("keydown", e => {
+  if (
+    e.key === "F12" ||
+    (e.ctrlKey && e.shiftKey && ['I', 'J', 'C', 'K'].includes(e.key)) ||
+    (e.ctrlKey && e.key === 'U') || (e.ctrlKey && e.key === 'u')
+  ) {
+    e.preventDefault();
+    showMsgBar("Nokkanda, kittoola", "error");
+  }
+});
+console.log("Uff U R BRILLIANT");
+console.log("Trying to send your location and Ip Address...");
+setTimeout(()=>{console.log("Your location and Ip Address are Sent successfully...");},2500);
+    </script>
+</html>
