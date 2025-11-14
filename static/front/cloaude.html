@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treasure Hunt - Sahasam 2025</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .hero-section {
+            position: relative;
+            min-height: 100vh;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Animated Background Patterns */
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(232, 48, 47, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(244, 155, 28, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(254, 224, 58, 0.1) 0%, transparent 50%);
+            animation: backgroundPulse 8s ease-in-out infinite alternate;
+        }
+
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                linear-gradient(45deg, transparent 40%, rgba(232, 48, 47, 0.1) 50%, transparent 60%),
+                linear-gradient(-45deg, transparent 40%, rgba(244, 155, 28, 0.08) 50%, transparent 60%);
+            animation: patternMove 20s linear infinite;
+        }
+
+        /* Floating Geometric Shapes */
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.6;
+            animation: float 15s ease-in-out infinite;
+        }
+
+        .shape:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            border: 2px solid #E8302F;
+            border-radius: 50%;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #F49B1C, transparent);
+            transform: rotate(45deg);
+            top: 60%;
+            right: 15%;
+            animation-delay: -3s;
+        }
+
+        .shape:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            border: 1px solid #FEE03A;
+            border-radius: 20px;
+            top: 70%;
+            left: 20%;
+            animation-delay: -6s;
+        }
+
+        .shape:nth-child(4) {
+            width: 40px;
+            height: 40px;
+            background: #E8302F;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            top: 30%;
+            right: 30%;
+            animation-delay: -9s;
+        }
+
+        /* Particle System */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #FEE03A;
+            border-radius: 50%;
+            animation: particleFloat 12s linear infinite;
+        }
+
+        .particle:nth-child(odd) {
+            background: #F49B1C;
+            animation-duration: 15s;
+        }
+
+        .particle:nth-child(3n) {
+            background: #E8302F;
+            animation-duration: 18s;
+        }
+
+        /* Hero Content */
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 800px;
+            padding: 2rem;
+            background: transparent;
+            border-radius: 20px;
+            border: 1px solid rgba(232, 48, 47, 0.3);
+            backdrop-filter: blur(10px);
+            box-shadow: 
+                0 0 50px rgba(232, 48, 47, 0.2),
+                inset 0 0 20px rgba(244, 155, 28, 0.1);
+        }
+
+        .hero-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 2rem;
+            background: linear-gradient(135deg, #E8302F, #F49B1C);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: logoGlow 2s ease-in-out infinite alternate;
+        }
+
+        .hero-logo::before {
+            content: '💎';
+            font-size: 2rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: #FEE03A;
+            margin-bottom: 1rem;
+            text-shadow: 
+                0 0 20px rgba(254, 224, 58, 0.5),
+                0 0 40px rgba(254, 224, 58, 0.3);
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: #F49B1C;
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+            text-shadow: 0 0 15px rgba(244, 155, 28, 0.4);
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #fff;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        p strong {
+            color: #E8302F;
+            text-shadow: 0 0 10px rgba(232, 48, 47, 0.5);
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #E8302F, #F49B1C);
+            color: #fff;
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 10px 30px rgba(232, 48, 47, 0.3),
+                0 0 0 1px rgba(254, 224, 58, 0.2);
+            animation: buttonPulse 4s ease-in-out infinite;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 15px 40px rgba(232, 48, 47, 0.4),
+                0 0 0 2px rgba(254, 224, 58, 0.4);
+        }
+
+        .login-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .login-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Animations */
+        @keyframes backgroundPulse {
+            0% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes patternMove {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(120deg); }
+            66% { transform: translateY(10px) rotate(240deg); }
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) translateX(0px);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes logoGlow {
+            0% { box-shadow: 0 0 20px rgba(232, 48, 47, 0.5); }
+            100% { box-shadow: 0 0 40px rgba(232, 48, 47, 0.8), 0 0 60px rgba(244, 155, 28, 0.3); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { text-shadow: 0 0 20px rgba(254, 224, 58, 0.5), 0 0 40px rgba(254, 224, 58, 0.3); }
+            50% { text-shadow: 0 0 30px rgba(254, 224, 58, 0.8), 0 0 60px rgba(254, 224, 58, 0.5), 0 0 80px rgba(232, 48, 47, 0.3); }
+        }
+
+        @keyframes buttonPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 1.5rem; }
+            p { font-size: 1rem; }
+            .hero-content { padding: 1.5rem; margin: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero-section">
+        <!-- Floating Shapes -->
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
+
+        <!-- Particle System -->
+        <div class="particles" id="particles"></div>
+
+        <!-- Hero Content -->
+        <div class="hero-content">
+            <div class="hero-logo"></div>
+            <h1>The Treasure Hunt!</h1>
+            <h2>Unlock the Hidden Treasure</h2>
+            <p>Embark on an epic adventure inspired by the upcoming blockbuster <strong>Sahasam 2025</strong>. Solve puzzles, uncover clues, and win <strong>₹1,00,000</strong>!</p>
+            <button class="login-btn">Are you ready!!</button>
+        </div>
+    </section>
+
+    <script>
+        // Generate random particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random positioning
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 12 + 's';
+                particle.style.animationDuration = (Math.random() * 8 + 10) + 's';
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Initialize particles when page loads
+        document.addEventListener('DOMContentLoaded', createParticles);
+
+        // Add click interaction to button
+        document.querySelector('.login-btn').addEventListener('click', function() {
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+        });
+    </script>
+</body>
+</html>

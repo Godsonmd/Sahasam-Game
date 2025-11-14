@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sahasam Adventure Game</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --bright-red: #E8302F;
+            --dark-red: #B22222;
+            --orange: #F49B1C;
+            --yellow: #FEE03A;
+            --light-gray: #CCCCCC;
+            --dark-gray: #222222;
+            --white: #F5F5F5;
+            --black: #000000;
+            --lightning-yellow: #F4E44C;
+            --treasure-gold: #FFD700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: var(--dark-gray);
+            color: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .header-container {
+            width: 100%;
+            height: 40vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-bottom: 5px solid var(--bright-red);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            color: var(--orange);
+            text-align: center;
+            margin: 30px 0;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px var(--dark-red);
+            animation: fadeInDown 1s ease-out;
+        }
+
+        h2 {
+            color: var(--yellow);
+            margin: 25px 0 15px;
+            border-bottom: 2px solid var(--bright-red);
+            padding-bottom: 8px;
+            font-size: 1.8rem;
+            animation: fadeIn 1s ease-out 0.2s both;
+        }
+
+        h3 {
+            color: var(--lightning-yellow);
+            margin: 20px 0 10px;
+            font-size: 1.4rem;
+        }
+
+        p, li {
+            margin-bottom: 15px;
+            color: var(--light-gray);
+        }
+
+        a {
+            color: var(--orange);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        a:hover {
+            color: var(--yellow);
+            text-decoration: underline;
+            text-shadow: 0 0 5px var(--orange);
+        }
+
+        .full-width-section {
+            width: 100vw;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+            background-color: rgba(0,0,0,0.7);
+            padding: 25px 0;
+            margin-bottom: 30px;
+            border-left: 4px solid var(--orange);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .section-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .how-to-play {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .step {
+            background-color: var(--dark-gray);
+            padding: 25px;
+            border-radius: 8px;
+            border-top: 3px solid var(--bright-red);
+            flex: 1;
+            min-width: 250px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(232, 48, 47, 0.3);
+            border-top: 3px solid var(--treasure-gold);
+        }
+
+        .step:hover .step-number {
+            background-color: var(--treasure-gold);
+            transform: scale(1.1);
+        }
+
+        .step-number {
+            display: inline-block;
+            background-color: var(--orange);
+            color: var(--dark-gray);
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .rules-list {
+            list-style-type: none;
+        }
+
+        .rules-list li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 12px;
+            transition: all 0.3s;
+        }
+
+        .rules-list li:hover {
+            color: var(--white);
+            transform: translateX(5px);
+        }
+
+        .rules-list li:before {
+            content: "★";
+            color: var(--lightning-yellow);
+            position: absolute;
+            left: 0;
+            transition: all 0.3s;
+        }
+
+        .rules-list li:hover:before {
+            transform: rotate(15deg) scale(1.2);
+            color: var(--treasure-gold);
+        }
+
+        .reference-links {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--black);
+            border-radius: 5px;
+            border: 1px solid var(--bright-red);
+            animation: fadeIn 1s ease-out;
+        }
+
+        .reference-links:hover {
+            border-color: var(--treasure-gold);
+            box-shadow: 0 0 15px rgba(244, 224, 76, 0.3);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--black);
+            margin-top: 40px;
+            border-top: 3px solid var(--bright-red);
+            animation: fadeIn 1s ease-out;
+        }
+
+        .footer p {
+            color: var(--light-gray);
+        }
+
+        /* Treasure chest animation */
+        .treasure-icon {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 24px;
+            animation: bounce 2s infinite;
+        }
+
+        /* Scroll animations */
+        [data-aos] {
+            transition: all 0.8s ease;
+        }
+
+        .aos-fade {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .aos-fade.aos-animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Keyframe animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from { 
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Particle effects */
+        .particle {
+            position: absolute;
+            background-color: var(--treasure-gold);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                height: 30vh;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .full-width-section {
+                padding: 15px 0;
+            }
+            
+            .how-to-play {
+                flex-direction: column;
+            }
+
+            .step {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Image (40% of screen height) -->
+    <div class="header-container">
+        <img src="/castle.png" alt="Sahasam Game Banner" class="header-image">
+    </div>
+
+    <div class="container">
+        <h1 class="animate__animated animate__fadeInDown">About the Sahasam Game</h1>
+    </div>
+        
+    <!-- About Section -->
+    <div class="full-width-section animate__animated animate__fadeInUp">
+        <div class="section-content">
+            <h2>The Ultimate Treasure Hunting Experience</h2>
+            <p>Sahasam is an immersive adventure game that takes you on an epic journey through ancient ruins, mysterious temples, and treacherous landscapes. Inspired by Indian mythology and archaeology, this game challenges players to solve intricate puzzles, decode hidden messages, and uncover legendary treasures.</p>
+            <p>With stunning visuals and an engaging storyline, Sahasam brings the thrill of exploration right to your fingertips. Whether you're a casual player or a hardcore puzzle solver, Sahasam offers challenges for all skill levels.</p>
+            
+            <div class="reference-links animate__animated animate__pulse animate__delay-1s">
+                <h3>Reference Materials:</h3>
+                <p><a href="#game-guide">Official Game Guide</a> | <a href="#storyline">Full Storyline</a> | <a href="#character-bios">Character Bios</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- How to Play Section -->
+    <div class="full-width-section animate__animated animate__fadeInUp">
+        <div class="section-content">
+            <h2>How to Play</h2>
+            <div class="how-to-play">
+                <div class="step animate__animated animate__fadeIn animate__delay-1s">
+                    <div class="treasure-icon">🗝️</div>
+                    <h3><span class="step-number">1</span> Registration</h3>
+                    <p>Create your adventurer profile and choose your character. Each character comes with unique abilities that will help you on your quest.</p>
+                </div>
+                <div class="step animate__animated animate__fadeIn animate__delay-1.2s">
+                    <div class="treasure-icon">🧭</div>
+                    <h3><span class="step-number">2</span> Exploration</h3>
+                    <p>Navigate through different environments, from dense jungles to ancient ruins. Interact with objects and characters to find clues.</p>
+                </div>
+                <div class="step animate__animated animate__fadeIn animate__delay-1.4s">
+                    <div class="treasure-icon">🧩</div>
+                    <h3><span class="step-number">3</span> Puzzle Solving</h3>
+                    <p>Solve a variety of puzzles including pattern recognition, logic problems, and cryptography challenges to unlock new areas.</p>
+                </div>
+                <div class="step animate__animated animate__fadeIn animate__delay-1.6s">
+                    <div class="treasure-icon">💰</div>
+                    <h3><span class="step-number">4</span> Treasure Collection</h3>
+                    <p>Collect artifacts and treasures to increase your score and unlock special abilities. Compete with other players on the leaderboard.</p>
+                </div>
+            </div>
+            
+            <div class="reference-links animate__animated animate__pulse animate__delay-2s">
+                <h3>Gameplay References:</h3>
+                <p><a href="#tutorial-videos">Tutorial Videos</a> | <a href="#puzzle-solutions">Puzzle Solutions (SPOILERS)</a> | <a href="#map-guide">Interactive Map</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Rules Section -->
+    <div class="full-width-section animate__animated animate__fadeInUp">
+        <div class="section-content">
+            <h2>Game Rules & Regulations</h2>
+            <ul class="rules-list">
+                <li class="animate__animated animate__fadeInRight">Players must be at least 13 years old to participate</li>
+                <li class="animate__animated animate__fadeInRight animate__delay-0.2s">Only one account per player is allowed</li>
+                <li class="animate__animated animate__fadeInRight animate__delay-0.4s">Sharing solutions publicly is prohibited</li>
+                <li class="animate__animated animate__fadeInRight animate__delay-0.6s">All decisions by game moderators are final</li>
+                <li class="animate__animated animate__fadeInRight animate__delay-0.8s">Cheating or using exploits will result in disqualification</li>
+                <li class="animate__animated animate__fadeInRight animate__delay-1s">Weekly challenges must be completed within the given timeframe</li>
+            </ul>
+            
+            <div class="reference-links animate__animated animate__pulse animate__delay-1.5s">
+                <h3>Official Rules Documents:</h3>
+                <p><a href="#full-rules">Complete Rulebook</a> | <a href="#faq">FAQs</a> | <a href="#appeals">Appeal Process</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple particle effect on click
+        document.addEventListener('click', function(e) {
+            const particles = 5;
+            for (let i = 0; i < particles; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                const size = Math.random() * 10 + 5;
+                const posX = e.clientX;
+                const posY = e.clientY;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}px`;
+                particle.style.top = `${posY}px`;
+                
+                document.body.appendChild(particle);
+                
+                // Animation
+                const animation = particle.animate([
+                    { 
+                        transform: `translate(0, 0) rotate(0deg)`,
+                        opacity: 1 
+                    },
+                    { 
+                        transform: `translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) rotate(360deg)`,
+                        opacity: 0 
+                    }
+                ], {
+                    duration: 1000,
+                    easing: 'cubic-bezier(0, .9, .57, 1)',
+                });
+                
+                animation.onfinish = () => particle.remove();
+            }
+        });
+
+        // Scroll animations
+        document.addEventListener('DOMContentLoaded', () => {
+            const animateOnScroll = () => {
+                const elements = document.querySelectorAll('[data-aos]');
+                elements.forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    const isVisible = (rect.top <= window.innerHeight * 0.75) && 
+                                    (rect.bottom >= window.innerHeight * 0.25);
+                    
+                    if (isVisible) {
+                        el.classList.add('aos-animate');
+                    }
+                });
+            };
+            
+            window.addEventListener('scroll', animateOnScroll);
+            animateOnScroll(); // Initial check
+        });
+    </script>
+</body>
+</html>

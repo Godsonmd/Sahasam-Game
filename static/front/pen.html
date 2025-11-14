@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sahasam 2025 Full Content Writing Animation</title>
+    <style>
+        :root {
+            --orange: #ff6b00;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            perspective: 1000px;
+        }
+        .paper-container {
+            position: relative;
+            width: 800px;
+            transform-style: preserve-3d;
+            transform: rotateY(-15deg);
+            box-shadow: -15px 0 30px rgba(0, 0, 0, 0.2);
+        }
+        .movie-info {
+            background-color: white;
+            border-radius: 2px;
+            padding: 30px;
+            width: 100%;
+            position: relative;
+            border-left: 1px solid #eee;
+            box-shadow: inset 1px 0 3px rgba(0,0,0,0.1);
+            transform-origin: left center;
+        }
+        .section-title {
+            color: var(--orange);
+            margin-top: 0;
+            border-bottom: 2px solid var(--orange);
+            padding-bottom: 10px;
+            position: relative;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            position: relative;
+        }
+        h3 { margin-top: 0; position: relative; }
+        ul { padding-left: 20px; position: relative; }
+        li { margin-bottom: 8px; position: relative; }
+        p { position: relative; }
+        .writing-placeholder { visibility: hidden; }
+        .writing-content { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .writing-line {
+            position: relative;
+            display: inline-block;
+            min-width: 2px;
+        }
+        .writing-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.2em;
+            background: black;
+            vertical-align: bottom;
+            margin-left: 1px;
+            animation: blink 1s steps(1) infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .paper-edge {
+            position: absolute;
+            left: -10px;
+            top: 0;
+            width: 10px;
+            height: 100%;
+            background: linear-gradient(to right, #ddd, #f5f5f5);
+            transform-origin: right center;
+            transform: rotateY(-60deg);
+            border-radius: 2px 0 0 2px;
+        }
+        @media (max-width: 900px) {
+            .paper-container { width: 98vw; }
+        }
+        @media (max-width: 600px) {
+            .paper-container { width: 100vw; min-width: 0; }
+            .movie-info { padding: 14px; }
+            .info-grid { grid-template-columns: 1fr; gap: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="paper-container">
+        <div class="paper-edge"></div>
+        <div class="movie-info">
+            <div class="writing-placeholder">
+                <h2 class="section-title">About Sahasam 2025</h2>
+                <div class="info-grid">
+                    <div>
+                        <h3 style="color: var(--orange);">The Film</h3>
+                        <p><strong class="title-placeholder">Sahasam</strong> is an upcoming action-adventure film directed by <strong class="director-placeholder">Bibin</strong>, releasing on <strong class="date-placeholder">August 7, 2025</strong>. The story follows explorers uncovering an ancient treasure in uncharted territory.</p>
+                        <p>The treasure hunt game mirrors the film's adventurous spirit.</p>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--orange);">Cast & Crew</h3>
+                        <ul>
+                            <li><strong>Director:</strong> <span class="director-placeholder">Bibin</span></li>
+                            <li><strong>Lead Actor:</strong> <span class="actor-placeholder">[Actor Name]</span></li>
+                            <li><strong>Lead Actress:</strong> <span class="actress-placeholder">[Actress Name]</span></li>
+                            <li><strong>Music:</strong> <span class="music-placeholder">[Composer Name]</span></li>
+                            <li><strong>Release Date:</strong> <span class="date-placeholder">August 7, 2025</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="writing-content">
+                <h2 class="section-title">
+                    <span id="title-line" class="writing-line"></span>
+                </h2>
+                <div class="info-grid">
+                    <div>
+                        <h3 style="color: var(--orange);">
+                            <span id="film-line" class="writing-line"></span>
+                        </h3>
+                        <p>
+                            <strong id="title-text"></strong>
+                            <span id="film-text1" class="writing-line"></span>
+                        </p>
+                        <p>
+                            <span id="film-text2" class="writing-line"></span>
+                        </p>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--orange);">
+                            <span id="cast-line" class="writing-line"></span>
+                        </h3>
+                        <ul>
+                            <li><strong>Director:</strong> <span id="director-text" class="writing-line"></span></li>
+                            <li><strong>Lead Actor:</strong> <span id="actor-text" class="writing-line"></span></li>
+                            <li><strong>Lead Actress:</strong> <span id="actress-text" class="writing-line"></span></li>
+                            <li><strong>Music:</strong> <span id="music-text" class="writing-line"></span></li>
+                            <li><strong>Release Date:</strong> <span id="date-text" class="writing-line"></span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Content to be written
+    const content = [
+        { id: 'title-line', text: 'About Sahasam 2025', speed: 80 },
+        { id: 'film-line', text: 'The Film', speed: 80, delay: 500 },
+        { id: 'title-text', text: 'Sahasam', speed: 100, delay: 800 },
+        { id: 'film-text1', text: ' is an upcoming action-adventure film directed by ', speed: 30, delay: 900 },
+        { id: 'film-text1', text: 'Bibin', append: true, speed: 100, delay: 0 },
+        { id: 'film-text1', text: ', releasing on ', append: true, speed: 30, delay: 100 },
+        { id: 'film-text1', text: 'August 7, 2025', append: true, speed: 50, delay: 0 },
+        { id: 'film-text1', text: '. The story follows explorers uncovering an ancient treasure in uncharted territory.', append: true, speed: 30, delay: 100 },
+        { id: 'film-text2', text: 'The treasure hunt game mirrors the film\'s adventurous spirit.', speed: 40, delay: 300 },
+        { id: 'cast-line', text: 'Cast & Crew', speed: 80, delay: 500 },
+        { id: 'director-text', text: 'Bibin', speed: 100, delay: 300 },
+        { id: 'actor-text', text: '[Actor Name]', speed: 100, delay: 100 },
+        { id: 'actress-text', text: '[Actress Name]', speed: 100, delay: 100 },
+        { id: 'music-text', text: '[Composer Name]', speed: 100, delay: 100 },
+        { id: 'date-text', text: 'August 7, 2025', speed: 50, delay: 100 }
+    ];
+
+    let currentIndex = 0;
+    let timeoutId;
+
+    // Helper to show cursor at the end of current text
+    function setLineWithCursor(element, text, showCursor) {
+        // Remove any cursor already in the text
+        let clean = text.replace(/<span[^>]class="writing-cursor"[^>]><\/span>/g, "");
+        if(showCursor) {
+            element.innerHTML = clean + '<span class="writing-cursor"></span>';
+        } else {
+            element.innerHTML = clean;
+        }
+    }
+
+    // Hide all cursors
+    function hideAllCursors() {
+        document.querySelectorAll('.writing-line').forEach(line => {
+            setLineWithCursor(line, line.textContent || '', false);
+        });
+    }
+
+    function writeNext() {
+        if (currentIndex >= content.length) {
+            hideAllCursors();
+            return;
+        }
+        const item = content[currentIndex];
+        const element = document.getElementById(item.id);
+        // If appending, get current text, else reset
+        let initial = '';
+        if(item.append) {
+            initial = element.textContent || '';
+        }
+        let i = 0;
+
+        function typeChar() {
+            setLineWithCursor(element, initial + item.text.slice(0, i), true);
+            if(i < item.text.length) {
+                i++;
+                timeoutId = setTimeout(typeChar, item.speed);
+            } else {
+                setLineWithCursor(element, initial + item.text, false);
+                currentIndex++;
+                setTimeout(writeNext, item.delay || 0);
+            }
+        }
+
+        hideAllCursors();
+        typeChar();
+    }
+
+    hideAllCursors();
+    setTimeout(writeNext, 1000);
+
+    window.addEventListener('beforeunload', () => {
+        clearTimeout(timeoutId);
+    });
+});
+</script>
+</body>
+</html>
