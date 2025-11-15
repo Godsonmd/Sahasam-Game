@@ -1,5 +1,6 @@
 # **Sahasam – Web-Based Adventure Game (Prototype)**
 
+### [Play Now](https://godsonmd.github.io/Sahasam-Game/Front_Page.html)
 A Phaser.js–powered web adventure game developed as part of an internship project at **NarrowLabs Ltd.**
 The game was originally created to promote the Malayalam movie ***Sahasam***, but the campaign was shelved before release.
 The current build is a **fully playable prototype**, with several planned features pending implementation.
