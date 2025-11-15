@@ -88,7 +88,7 @@ Despite this, **the overworld and all mini-games are playable**.
 
 *Add screenshots of the overworld, mini-games, and UI here.*
 
-```
+
 ![sahasam-thumbnail](https://godsonmd.github.io/Godsonmd/images/sahasam-thumbnail.png)
 
 *Front Page*
@@ -101,7 +101,7 @@ Despite this, **the overworld and all mini-games are playable**.
 
 *Login Page*
 
-```
+
 
 ---
 
