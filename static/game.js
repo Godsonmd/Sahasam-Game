@@ -765,7 +765,7 @@ handleChallengeResult(data) {
                     if(Number(this.keyss)>0 && !(Number(this.keyss)%2))
                     {loadingScreen.style.display = 'block';
                     gameContainer.style.visibility = 'visible';
-                    comic.src="/spin3";
+                    comic.src="../templates/spin3.html";
                     document.getElementById("keyCounter").style.display="none";
                     }
                     
@@ -1724,4 +1724,5 @@ const game = new Phaser.Game(config);
                 e.preventDefault();
                 volBtn.click();
             }
+
         });
