@@ -1893,7 +1893,7 @@ body {
             <p>But the excitement doesn't stop there—brace yourself for the ultimate underground maze challenge, where hidden treasures and big cash prizes await. You can even book your movie ticket, track your rewards, and invite friends using your referral ID to earn more. Whether you love solving puzzles, exploring stories, or just want to win amazing prizes, Sahasam offers an adventure like no other. Are you ready to join the hunt?</p>
             <div class="reference-links animate__animated animate__pulse animate__delay-1s">
                 <h3>Reference Materials:</h3>
-                <p><a href="./templates/official_guidlines.html " target="_blank">Official Game Guide</a> | <a href="#character-bios">Character Bios</a></p>
+                <p><a href="./templates/official_guidlines.html " target="_blank">Official Game Guide</a> | <a onclick="showCharacterBios();">Character Bios</a></p>
             </div>
         </div>
     </div>
@@ -1907,7 +1907,7 @@ body {
             <!-- Row 1 -->
             <div class="character-card">
                 <div class="character-image-container">
-                    <img src="./static/assets/npc/gouri.jpg" alt="Gouri G. Kishan" class="character-image">
+                    <img src="/static/assets/npc/gouri.jpg" alt="Gouri G. Kishan" class="character-image">
                 </div>
                 <h3>Gouri G. Kishan</h3>
              
@@ -1915,7 +1915,7 @@ body {
             
             <div class="character-card">
                 <div class="character-image-container">
-                    <img src="./static/assets/npc/althaf-salim.avif" alt="Althaf Salim" class="character-image">
+                    <img src="/static/assets/npc/althaf-salim.avif" alt="Althaf Salim" class="character-image">
                 </div>
                 <h3>Althaf Salim</h3>
                
@@ -1923,7 +1923,7 @@ body {
             
             <div class="character-card">
                 <div class="character-image-container">
-                    <img src="./static/assets/npc/jayasree.jpg" alt="Jayasree Sivadas" class="character-image">
+                    <img src="/static/assets/npc/jayasree.jpg" alt="Jayasree Sivadas" class="character-image">
                 </div>
                 <h3>Jayasree Sivadas</h3>
                
@@ -1932,7 +1932,7 @@ body {
             <!-- Row 2 -->
             <div class="character-card">
                 <div class="character-image-container">
-                    <img src="./static/assets/npc/naz.jpg" alt="Narain" class="character-image">
+                    <img src="/static/assets/npc/naz.jpg" alt="Narain" class="character-image">
                 </div>
                 <h3>Narain</h3>
                
@@ -1940,7 +1940,7 @@ body {
             
             <div class="character-card">
                 <div class="character-image-container">
-                    <img src="./static/assets/npc/baiju.jpg" alt="Baiju Santhosh" class="character-image">
+                    <img src="/static/assets/npc/baiju.jpg" alt="Baiju Santhosh" class="character-image">
                 </div>
                 <h3>Baiju Santhosh</h3>
               
@@ -1948,7 +1948,7 @@ body {
             
             <div class="character-card">
                 <div class="character-image-container">
-                    <img src="./static/assets/npc/aju-varghese-30512-18-04-2017-06-18-24.avif" alt="Aju Varghese" class="character-image">
+                    <img src="/static/assets/npc/aju-varghese-30512-18-04-2017-06-18-24.avif" alt="Aju Varghese" class="character-image">
                 </div>
                 <h3>Aju Varghese</h3>
                 
@@ -1957,7 +1957,7 @@ body {
            
             <div class="character-card" >
                 <div class="character-image-container">
-                    <img src="./static/assets/npc/babu.webp" alt="Babu Antony" class="character-image">
+                    <img src="/static/assets/npc/babu.webp" alt="Babu Antony" class="character-image">
                 </div>
                 <h3>Babu Antony</h3>
               
@@ -2574,14 +2574,14 @@ if (isMobile()) {
 }  
 
 // Show character bios when link is clicked
-    document.querySelector('a[href="#character-bios"]').addEventListener('click', function(e) {
-        e.preventDefault();
+ function showCharacterBios() {
         document.getElementById('character-bios').style.display = 'block';
         document.getElementById('character-bios').scrollIntoView({
-  behavior: 'smooth', // Smooth scrolling
-  block: 'start' // Aligns the element to the top of the viewport
-})
-    });
+        behavior: 'smooth', // Smooth scrolling
+        block: 'start' // Aligns the element to the top of the viewport
+        });
+}
+    
 
     // Hide character bios
     function hideCharacterBios() {
@@ -2680,5 +2680,4 @@ console.log("Uff U R BRILLIANT");
 console.log("Trying to send your location and Ip Address...");
 setTimeout(()=>{console.log("Your location and Ip Address are Sent successfully...");},2500);
     </script>
-
 </html>
