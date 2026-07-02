@@ -6,7 +6,6 @@ The game was originally created to promote the Malayalam movie ***Sahasam***, bu
 The current build is a **fully playable prototype**, with several planned features pending implementation.
 
 ---
-
 ## 🚀 **Overview**
 
 **Sahasam** is a 2D adventure game inspired by classic **GBA Pokémon** titles.
@@ -15,7 +14,6 @@ Players explore a jungle-themed overworld and an underground castle floor, compl
 The world was built using **Tiled** and fantasy/medieval tileset resources.
 
 ---
-
 ## 🎮 **Gameplay Features**
 
 ### 🌍 **Overworld**
